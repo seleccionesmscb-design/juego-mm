@@ -1,0 +1,248 @@
+/**
+ * MISIÓN MUNI — Code.gs (VERSIÓN MEJORADA 2026)
+ * Simulador de Gestión para Mandos Medios — Municipalidad de Bariloche
+ * 
+ * CAMBIOS REALIZADOS:
+ * - Validación de legajo ahora busca en la hoja "Agentes"
+ * - validarLegajo() es más flexible (acepta letras, números, guiones)
+ * - iniciarPartida() usa los datos reales del agente encontrado
+ */
+
+const SS_ID = "1vOVwStSPmihkk9d4WzLKBjju_shRR_jrPDDRcQaSraU";
+
+function doGet() {
+  return HtmlService.createTemplateFromFile('Index').evaluate()
+    .setTitle('Misión Muni')
+    .addMetaTag('viewport', 'width=device-width, initial-scale=1');
+}
+
+// ─────────────────────────────────────────────
+// VALIDAR LEGAJO (MEJORADO)
+// ─────────────────────────────────────────────
+function validarLegajo(legajo) {
+  // Validación básica: legajo debe tener 3-20 caracteres (números, letras, guiones)
+  const num = String(legajo).trim();
+  if (!/^[a-zA-Z0-9\-]{3,20}$/.test(num)) {
+    return { valido: false, mensaje: "El legajo debe tener 3-20 caracteres (números, letras)." };
+  }
+  return { valido: true, mensaje: "Legajo válido" };
+}
+
+// ─────────────────────────────────────────────
+// BUSCAR AGENTE POR LEGAJO
+// ─────────────────────────────────────────────
+function buscarAgente(legajo) {
+  const ss = SpreadsheetApp.openById(SS_ID);
+  const hoja = ss.getSheetByName("Agentes");
+  if (!hoja) return { encontrado: false };
+  
+  const datos = hoja.getDataRange().getValues().slice(1); // saltar cabecera
+  const legajoStr = String(legajo).trim();
+  
+  for (const fila of datos) {
+    if (String(fila[0]).trim() === legajoStr) {
+      return {
+        encontrado: true,
+        legajo: fila[0],
+        nombre: fila[1],
+        direccion: fila[2]
+      };
+    }
+  }
+  return { encontrado: false };
+}
+
+// ─────────────────────────────────────────────
+// EQUIPO POR DIRECCIÓN
+// ─────────────────────────────────────────────
+function obtenerEquipo(direccion) {
+  const equipos = {
+    "Hacienda": [
+      { nombre: "Laura Ibáñez",    rol: "Contadora General",        avatar: "👩‍💼", especialidad: "Finanzas" },
+      { nombre: "Marcos Soria",    rol: "Administrativo Tesorería", avatar: "🧑‍💼", especialidad: "Pagos" },
+      { nombre: "Paula Gutiérrez", rol: "Analista de Compras",      avatar: "👩‍💻", especialidad: "Procuraciones" }
+    ],
+    "Servicios Públicos": [
+      { nombre: "Diego Mansilla",  rol: "Capataz de Cuadrilla",     avatar: "👷",   especialidad: "Obras" },
+      { nombre: "Romina Valdés",   rol: "Chofer y Operaria",        avatar: "👩‍🔧", especialidad: "Mantenimiento" },
+      { nombre: "Sebastián Ruiz",  rol: "Técnico de Mantenimiento", avatar: "🧑‍🔧", especialidad: "Reparaciones" }
+    ],
+    "Capital Humano": [
+      { nombre: "Claudia Ferreyra",rol: "Técnica de Selección",      avatar: "👩‍🏫", especialidad: "RRHH" },
+      { nombre: "Emilio Núñez",    rol: "Especialista en Personal",  avatar: "🧑‍💼", especialidad: "Gestión" },
+      { nombre: "Natalia Bravo",   rol: "Analista de Modernización", avatar: "👩‍💻", especialidad: "Procesos" }
+    ],
+    "Obras Particulares": [
+      { nombre: "Roberto Chávez",  rol: "Inspector de Obras",       avatar: "👷‍♂️", especialidad: "Inspecciones" },
+      { nombre: "Valeria Méndez",  rol: "Visadora de Catastro",     avatar: "👩‍🔬", especialidad: "Catastro" },
+      { nombre: "Tomás Ríos",      rol: "Administrativo Catastro",  avatar: "🧑‍💼", especialidad: "Registros" }
+    ]
+  };
+  return equipos[direccion] || [];
+}
+
+function obtenerIndicadoresIniciales(direccion) {
+  const base = {
+    "Hacienda":           { clima: 3, desempenio: 2, desarrollo: 3, recursos: 4 },
+    "Servicios Públicos": { clima: 4, desempenio: 3, desarrollo: 2, recursos: 3 },
+    "Capital Humano":     { clima: 3, desempenio: 3, desarrollo: 4, recursos: 2 },
+    "Obras Particulares": { clima: 2, desempenio: 4, desarrollo: 3, recursos: 3 }
+  };
+  return base[direccion] || { clima: 3, desempenio: 3, desarrollo: 3, recursos: 3 };
+}
+
+// ─────────────────────────────────────────────
+// INICIO DEL JUEGO (MEJORADO)
+// ─────────────────────────────────────────────
+function iniciarPartida(legajo, direccion, nombreEquipo, nombreLider) {
+  const ss = SpreadsheetApp.openById(SS_ID);
+  
+  // Validación básica
+  const val = validarLegajo(legajo);
+  if (!val.valido) return { error: val.mensaje };
+  
+  // Buscar el agente en la base de datos
+  const agente = buscarAgente(legajo);
+  if (!agente.encontrado) {
+    return { error: "Legajo no encontrado. Por favor, verificá que sea correcto." };
+  }
+  
+  // Usar los datos reales del agente
+  const estado = {
+    legajo:       String(agente.legajo).trim(),
+    nombreAgente: agente.nombre,
+    nombreEquipo: nombreEquipo,
+    nombreLider:  nombreLider,
+    direccion:    agente.direccion,
+    equipo:       obtenerEquipo(agente.direccion),
+    casillero:    0,
+    recursos:     { comunicacion: 0, liderazgo: 0, bienestar: 0, planificacion: 0 },
+    herramientas: [],
+    insignias:    [],
+    indicadores:  obtenerIndicadoresIniciales(agente.direccion),
+    encuentro:    1
+  };
+  
+  return {
+    estado:     estado,
+    situacion:  obtenerSituacionAleatoria(ss, estado.direccion),
+    cartas:     cargarAcciones(ss, []),
+    biblioteca: cargarHerramientas(ss)
+  };
+}
+
+// ─────────────────────────────────────────────
+// HERRAMIENTAS / MICROLEARNING
+// ─────────────────────────────────────────────
+function cargarHerramientas(ss) {
+  const hoja = ss.getSheetByName("Herramientas");
+  if (!hoja) return [];
+  return hoja.getDataRange().getValues().slice(1).map(f => ({
+    id:         String(f[0]).trim(),
+    nombre:     f[1],
+    contenido:  f[2],
+    area:       f[3],
+    insigniaID: f[4],
+    pregunta:   f[5] || "¿Confirmás la lectura del módulo?",
+    respuesta:  String(f[6] || "si").trim().toLowerCase(),
+    duracion:   f[7] || "5 min"
+  }));
+}
+
+function completarCapacitacion(estado, toolID, insigniaID) {
+  if (!estado.herramientas.includes(toolID)) estado.herramientas.push(toolID);
+  if (insigniaID && !estado.insignias.includes(insigniaID)) estado.insignias.push(insigniaID);
+  const ss = SpreadsheetApp.openById(SS_ID);
+  return { estado, cartas: cargarAcciones(ss, estado.herramientas) };
+}
+
+// ─────────────────────────────────────────────
+// ACCIONES / CARTAS
+// ─────────────────────────────────────────────
+function cargarAcciones(ss, herramientasUsuario) {
+  const hoja = ss.getSheetByName("Acciones");
+  if (!hoja) return [];
+  return hoja.getDataRange().getValues().slice(1).map(f => {
+    const req = String(f[3] || "").trim();
+    return {
+      id:              String(f[0]),
+      cat:             f[1],
+      texto:           f[2],
+      microlearning:   f[8] || "",
+      req:             req,
+      recursoGanado:   f[4] || "comunicacion",
+      cantidadRecurso: Number(f[5]) || 1,
+      impactoInd:      f[6] || "desempenio",
+      valorImpacto:    Number(f[7]) || 1,
+      bloqueada:       req !== "" ? !herramientasUsuario.includes(req) : false
+    };
+  });
+}
+
+// ─────────────────────────────────────────────
+// SITUACIONES
+// ─────────────────────────────────────────────
+function obtenerSituacionAleatoria(ss, area) {
+  const hoja = ss.getSheetByName("Situaciones");
+  if (!hoja) return { titulo: "Sin datos", desc: "Verificá la hoja 'Situaciones'.", tipo: "situacion" };
+  const datos = hoja.getDataRange().getValues().slice(1);
+  let filtrados = datos.filter(f => f[3] && f[3].toString().toLowerCase() === area.toLowerCase());
+  if (!filtrados.length) filtrados = datos;
+  const e = filtrados[Math.floor(Math.random() * filtrados.length)];
+  return { titulo: e[1], desc: e[2], tipo: e[4] || "situacion" };
+}
+
+// ─────────────────────────────────────────────
+// PROCESAR ACCIÓN
+// ─────────────────────────────────────────────
+function procesarAccion(estado, accionID, cat, recursoGanado, cantidadRecurso, impactoInd, valorImpacto) {
+  const ss = SpreadsheetApp.openById(SS_ID);
+  estado.casillero += 1;
+
+  if (estado.recursos.hasOwnProperty(recursoGanado)) {
+    estado.recursos[recursoGanado] += cantidadRecurso;
+  } else {
+    if (cat === "Profesional") { 
+      estado.recursos.liderazgo += 150; 
+      estado.recursos.planificacion += 1; 
+    }
+    else { 
+      estado.recursos.comunicacion += 1;  
+      estado.recursos.bienestar += 1; 
+    }
+  }
+
+  if (estado.indicadores.hasOwnProperty(impactoInd)) {
+    estado.indicadores[impactoInd] = Math.min(5, Math.max(1, estado.indicadores[impactoInd] + valorImpacto));
+  }
+
+  const esFinalizado = estado.casillero >= 12;
+  const esEncuentro  = !esFinalizado && estado.casillero % 4 === 0;
+  if (esEncuentro) estado.encuentro += 1;
+
+  return {
+    estado,
+    situacion:    esFinalizado
+      ? { titulo: "¡MISIÓN CUMPLIDA!", desc: "Llegaste al encuentro final con los recursos para transformar la gestión.", tipo: "final" }
+      : obtenerSituacionAleatoria(ss, estado.direccion),
+    cartas:       esFinalizado ? [] : cargarAcciones(ss, estado.herramientas),
+    finalizado:   esFinalizado,
+    encuentro:    esEncuentro,
+    nroEncuentro: estado.encuentro
+  };
+}
+
+// ─────────────────────────────────────────────
+// PUNTAJE FINAL
+// ─────────────────────────────────────────────
+function calcularPuntajeFinal(estado) {
+  const i = estado.indicadores;
+  const prom = (i.clima + i.desempenio + i.desarrollo + i.recursos) / 4;
+  const recTot = estado.recursos.comunicacion + estado.recursos.liderazgo + estado.recursos.bienestar + estado.recursos.planificacion;
+  return {
+    promedioIndicadores: prom.toFixed(1),
+    totalRecursos: recTot,
+    insignias: estado.insignias.length,
+    nivel: prom >= 4 ? "Excelente" : prom >= 3 ? "Bueno" : "En desarrollo"
+  };
+}
