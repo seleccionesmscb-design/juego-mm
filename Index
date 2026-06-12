@@ -90,106 +90,58 @@ body{font-family:'Crimson Text',Georgia,serif;background:var(--perg);color:var(-
   position:absolute;inset:0;
 }
 
-/* Panel derecho: registro + reglas */
-.welcome-panel{
-  width:340px;flex-shrink:0;
-  background:rgba(237,224,186,.96);
-  border-left:2px solid rgba(28,46,74,.25);
-  display:flex;flex-direction:column;
-  overflow-y:auto;
+/* ── CARD FLOTANTE DE REGISTRO (centrada sobre el mapa) ── */
+.welcome-card{
+  position:absolute;
+  top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  z-index:10;
+  width:380px;
+  background:rgba(237,224,186,.97);
+  border:2px solid rgba(28,46,74,.3);
+  border-top:4px solid var(--gold-br);
+  box-shadow:0 8px 40px rgba(28,46,74,.35);
+  padding:28px 30px 24px;
 }
-
-/* Tabs dentro del panel */
-.panel-tabs{
-  display:flex;flex-shrink:0;
-  border-bottom:2px solid rgba(28,46,74,.2);
-}
-.ptab{
-  flex:1;padding:10px 6px;
-  font-family:'Cinzel',serif;font-size:9px;font-weight:700;
-  letter-spacing:2px;text-transform:uppercase;
-  color:var(--navy-md);background:var(--perg-mid);
-  border:none;cursor:pointer;transition:.18s;
-  border-right:1px solid rgba(28,46,74,.15);
-}
-.ptab:last-child{border-right:none;}
-.ptab.active{background:var(--navy);color:var(--gold-br);}
-.ptab:hover:not(.active){background:rgba(28,46,74,.08);}
-
-.tab-content{display:none;flex:1;overflow-y:auto;}
-.tab-content.active{display:flex;flex-direction:column;}
-
-/* Tab Registrarse */
-.reg-section{padding:22px 22px 0;}
 .reg-eyebrow{font-family:'Cinzel',serif;font-size:8px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:6px;display:flex;align-items:center;gap:6px;}
 .reg-eyebrow::after{content:'';flex:1;height:1px;background:var(--gold);opacity:.3;}
-.reg-h1{font-family:'Cinzel',serif;font-size:18px;font-weight:900;color:var(--navy);line-height:1.2;margin-bottom:6px;}
-.reg-p{font-size:14px;line-height:1.6;color:var(--navy-md);margin-bottom:18px;}
-
-/* Campo legajo */
-.legajo-box{
-  background:rgba(255,255,255,.6);
-  border:2px solid rgba(28,46,74,.2);
-  padding:16px 18px;margin-bottom:16px;
-}
+.reg-h1{font-family:'Cinzel',serif;font-size:20px;font-weight:900;color:var(--navy);line-height:1.2;margin-bottom:6px;}
+.reg-p{font-size:13px;line-height:1.6;color:var(--navy-md);margin-bottom:16px;}
+.legajo-box{background:rgba(255,255,255,.6);border:2px solid rgba(28,46,74,.2);padding:14px 16px;margin-bottom:14px;}
 .legajo-lbl{font-family:'Cinzel',serif;font-size:8px;letter-spacing:2.5px;text-transform:uppercase;color:var(--navy-md);margin-bottom:8px;display:block;}
 .legajo-row{display:flex;gap:8px;}
-.legajo-inp{
-  flex:1;padding:11px 14px;
-  background:rgba(255,255,255,.8);
-  border:1.5px solid rgba(28,46,74,.3);
-  font-family:'Cinzel',serif;font-size:16px;font-weight:700;
-  color:var(--navy);outline:none;letter-spacing:2px;transition:.18s;
-}
+.legajo-inp{flex:1;padding:11px 14px;background:rgba(255,255,255,.8);border:1.5px solid rgba(28,46,74,.3);font-family:'Cinzel',serif;font-size:16px;font-weight:700;color:var(--navy);outline:none;letter-spacing:2px;transition:.18s;}
 .legajo-inp:focus{border-color:var(--gold-br);background:white;}
 .legajo-inp::placeholder{color:#b0a070;font-weight:400;font-size:13px;letter-spacing:.5px;}
-.btn-validar{
-  padding:11px 18px;
-  background:var(--navy);color:var(--perg);
-  border:2px solid var(--gold-br);
-  font-family:'Cinzel',serif;font-size:11px;font-weight:700;
-  letter-spacing:2px;cursor:pointer;transition:.18s;white-space:nowrap;
-}
+.btn-validar{padding:11px 18px;background:var(--navy);color:var(--perg);border:2px solid var(--gold-br);font-family:'Cinzel',serif;font-size:11px;font-weight:700;letter-spacing:2px;cursor:pointer;transition:.18s;white-space:nowrap;}
 .btn-validar:hover{background:var(--gold-br);color:var(--navy);}
-
-/* Estado de búsqueda */
 .legajo-status{font-size:12px;margin-top:8px;min-height:16px;}
 .legajo-status.ok{color:var(--grn);font-weight:700;}
 .legajo-status.err{color:var(--red);}
 .legajo-status.loading{color:var(--navy-md);font-style:italic;}
-
-/* Card resultado agente */
-.agente-card{
-  display:none;
-  background:rgba(28,46,74,.07);
-  border:1px solid rgba(28,46,74,.2);
-  padding:14px 16px;margin-top:10px;
-}
+.agente-card{display:none;background:rgba(28,46,74,.07);border:1px solid rgba(28,46,74,.2);padding:12px 14px;margin-top:10px;}
 .agente-card.visible{display:block;}
 .ac-nombre{font-family:'Cinzel',serif;font-size:14px;font-weight:700;color:var(--navy);margin-bottom:2px;}
-.ac-info{font-size:13px;color:var(--navy-md);margin-bottom:10px;}
-.ac-avatar-row{display:flex;align-items:center;gap:12px;margin-bottom:12px;}
-.ac-avatar-svg{width:64px;height:64px;flex-shrink:0;}
-.ac-equipo-nm{font-family:'Cinzel',serif;font-size:13px;font-weight:700;color:var(--teal);}
-.ac-equipo-rol{font-size:12px;color:var(--navy-md);font-style:italic;}
-
-.btn-comenzar{
-  width:100%;padding:13px;
-  background:var(--teal);color:var(--perg-lt);
-  border:2px solid rgba(42,106,74,.4);
-  font-family:'Cinzel',serif;font-size:14px;font-weight:700;
-  letter-spacing:4px;cursor:pointer;transition:.18s;margin-top:4px;
-}
+.ac-info{font-size:13px;color:var(--navy-md);margin-bottom:4px;}
+.ac-equipo-nm{font-family:'Cinzel',serif;font-size:12px;font-weight:700;color:var(--teal);}
+.btn-comenzar{width:100%;padding:13px;background:var(--teal);color:var(--perg-lt);border:2px solid rgba(42,106,74,.4);font-family:'Cinzel',serif;font-size:14px;font-weight:700;letter-spacing:4px;cursor:pointer;transition:.18s;margin-top:10px;}
 .btn-comenzar:hover{background:var(--navy);border-color:var(--gold-br);}
+.card-footer{display:flex;justify-content:center;margin-top:14px;}
+.btn-reglas{background:none;border:none;font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);cursor:pointer;padding:4px 8px;text-decoration:underline;text-underline-offset:3px;}
+.btn-reglas:hover{color:var(--navy);}
 
-/* Tab Reglas */
-.reglas-body{padding:18px 20px;}
-.reglas-body h3{font-family:'Cinzel',serif;font-size:14px;font-weight:900;color:var(--navy);letter-spacing:2px;margin-bottom:16px;border-bottom:2px solid var(--perg-dk);padding-bottom:8px;}
-.rule-it{display:flex;gap:11px;margin-bottom:13px;}
-.rule-n{font-family:'Cinzel',serif;font-size:18px;color:var(--gold-br);flex-shrink:0;width:22px;font-weight:700;}
-.rule-it p{font-size:14px;line-height:1.6;color:var(--navy-md);padding-top:1px;}
+/* ── MODAL REGLAS ── */
+#modal-reglas{display:none;position:fixed;inset:0;z-index:5000;background:rgba(28,46,74,.75);align-items:center;justify-content:center;}
+#modal-reglas.open{display:flex;}
+.reglas-box{background:var(--perg-lt);border:3px solid var(--navy);border-top:5px solid var(--gold-br);max-width:520px;width:90%;max-height:80vh;overflow-y:auto;padding:30px 36px;}
+.reglas-box h3{font-family:'Cinzel',serif;font-size:16px;font-weight:900;color:var(--navy);letter-spacing:2px;margin-bottom:20px;border-bottom:2px solid var(--perg-dk);padding-bottom:10px;}
+.rule-it{display:flex;gap:12px;margin-bottom:14px;}
+.rule-n{font-family:'Cinzel',serif;font-size:20px;color:var(--gold-br);flex-shrink:0;width:24px;font-weight:700;}
+.rule-it p{font-size:14px;line-height:1.65;color:var(--navy-md);padding-top:2px;}
 .rule-it p strong{color:var(--navy);}
 .rules-hr{height:1px;background:var(--perg-dk);margin:14px 0;}
+.btn-cerrar-reglas{width:100%;padding:12px;margin-top:20px;background:var(--navy);color:var(--perg);border:2px solid var(--gold-br);font-family:'Cinzel',serif;font-size:11px;font-weight:700;letter-spacing:3px;cursor:pointer;transition:.18s;}
+.btn-cerrar-reglas:hover{background:var(--gold-br);color:var(--navy);}
 
 /* ══════════════════════════════════════
    PANTALLA 2: PRESENTACIÓN DEL AGENTE
@@ -210,16 +162,6 @@ body{font-family:'Crimson Text',Georgia,serif;background:var(--perg);color:var(-
 .ap-grid{display:grid;grid-template-columns:auto 1fr auto;gap:28px;align-items:start;margin-bottom:24px;}
 
 /* Avatar grande */
-.ap-avatar-wrap{
-  width:120px;height:120px;
-  border-radius:50%;
-  border:4px solid var(--navy);
-  box-shadow:0 4px 16px rgba(28,46,74,.3);
-  overflow:hidden;display:flex;align-items:center;justify-content:center;
-  background:var(--perg-mid);
-  flex-shrink:0;
-}
-.ap-avatar-wrap svg{width:100%;height:100%;}
 
 /* Info central */
 .ap-info{}
@@ -295,8 +237,6 @@ body{font-family:'Crimson Text',Georgia,serif;background:var(--perg);color:var(-
 
 /* Avatar pequeño en header */
 .app-hdr-avatar{display:flex;align-items:center;gap:10px;}
-.hdr-av-circle{width:32px;height:32px;border-radius:50%;border:2px solid var(--gold-br);overflow:hidden;background:var(--perg-mid);}
-.hdr-av-circle svg{width:100%;height:100%;}
 .hdr-player-info{font-family:'Cinzel',serif;font-size:8px;letter-spacing:1px;color:var(--perg-dk);text-align:right;line-height:1.7;}
 .hdr-player-info strong{color:var(--perg);font-size:9px;}
 
@@ -362,8 +302,6 @@ body{font-family:'Crimson Text',Georgia,serif;background:var(--perg);color:var(-
 
 /* Mini avatar panel izq */
 .mini-agente{display:flex;align-items:center;gap:8px;padding-bottom:10px;border-bottom:1px solid var(--perg-dk);margin-bottom:10px;}
-.mini-av-c{width:40px;height:40px;border-radius:50%;border:2px solid var(--navy);overflow:hidden;background:var(--perg-mid);flex-shrink:0;}
-.mini-av-c svg{width:100%;height:100%;}
 .mini-nm{font-family:'Cinzel',serif;font-size:11px;font-weight:700;color:var(--navy);}
 .mini-dir{font-size:11px;color:var(--navy-md);font-style:italic;}
 .mini-equipo{font-family:'Cinzel',serif;font-size:10px;font-weight:700;color:var(--teal);}
@@ -596,8 +534,6 @@ body{font-family:'Crimson Text',Georgia,serif;background:var(--perg);color:var(-
 .final-box{background:var(--perg-lt);border:4px solid var(--gold-br);max-width:540px;width:97%;padding:44px;text-align:center;}
 .final-tag{font-family:'Cinzel',serif;font-size:9px;letter-spacing:5px;text-transform:uppercase;color:var(--gold);margin-bottom:7px;}
 .final-box h1{font-family:'Cinzel',serif;font-size:30px;font-weight:900;color:var(--navy);letter-spacing:3px;margin-bottom:6px;}
-.final-av{width:80px;height:80px;border-radius:50%;border:3px solid var(--gold-br);overflow:hidden;background:var(--perg-mid);margin:0 auto 12px;}
-.final-av svg{width:100%;height:100%;}
 .final-score{font-family:'Cinzel',serif;font-size:58px;font-weight:900;color:var(--gold-br);line-height:1;margin:10px 0;}
 .final-nivel{font-family:'Cinzel',serif;font-size:12px;letter-spacing:5px;text-transform:uppercase;color:var(--navy-md);margin-bottom:13px;}
 .final-detail{font-family:'Cinzel',serif;font-size:11px;letter-spacing:1px;color:var(--navy-md);margin-top:12px;line-height:2.3;}
@@ -622,9 +558,9 @@ body{font-family:'Crimson Text',Georgia,serif;background:var(--perg);color:var(-
     <div class="hdr-tag">Municipalidad de San Carlos de Bariloche<br>Dirección de Recursos Humanos · 2026</div>
   </div>
 
-  <div class="welcome-body">
+  <div class="welcome-body" style="position:relative;flex:1;overflow:hidden;">
     <!-- Tablero visual sobre el mapa -->
-    <div class="tablero-fondo">
+    <div class="tablero-fondo" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;">
       <!-- SVG del tablero que flota sobre el mapa -->
       <svg id="tablero-svg" viewBox="0 0 800 420" xmlns="http://www.w3.org/2000/svg">
         <!-- Decoración brújula -->
@@ -704,66 +640,44 @@ body{font-family:'Crimson Text',Georgia,serif;background:var(--perg);color:var(-
       </svg>
     </div>
 
-    <!-- Panel derecho con tabs -->
-    <div class="welcome-panel">
-      <div class="panel-tabs">
-        <button class="ptab active" onclick="showTab('tab-reg',this)">⚑ INGRESAR</button>
-        <button class="ptab" onclick="showTab('tab-rules',this)">📋 REGLAS</button>
+    <!-- Card de registro flotante centrada -->
+    <div class="welcome-card">
+      <span class="reg-eyebrow">Registro Municipal</span>
+      <h1 class="reg-h1">Liderá personas.<br>Tomá decisiones.</h1>
+      <p class="reg-p">Ingresá tu legajo para acceder al juego. Tu equipo y dirección ya están asignados.</p>
+      <div class="legajo-box">
+        <span class="legajo-lbl">Número de legajo</span>
+        <div class="legajo-row">
+          <input id="inp-legajo" class="legajo-inp" type="number" placeholder="Ej: 14567" maxlength="10">
+          <button class="btn-validar" onclick="validarLegajo()">VALIDAR</button>
+        </div>
+        <div id="legajo-status" class="legajo-status"></div>
       </div>
-
-      <!-- TAB REGISTRARSE -->
-      <div id="tab-reg" class="tab-content active">
-        <div class="reg-section">
-          <span class="reg-eyebrow">Registro Municipal</span>
-          <h1 class="reg-h1">Liderá personas.<br>Tomá decisiones.</h1>
-          <p class="reg-p">Ingresá tu legajo para acceder al juego. Tu equipo y dirección ya están asignados.</p>
-
-          <div class="legajo-box">
-            <span class="legajo-lbl">Número de legajo</span>
-            <div class="legajo-row">
-              <input id="inp-legajo" class="legajo-inp" type="number" placeholder="Ej: 14567" maxlength="10">
-              <button class="btn-validar" onclick="validarLegajo()">VALIDAR</button>
-            </div>
-            <div id="legajo-status" class="legajo-status"></div>
-          </div>
-
-          <!-- Card resultado del agente (aparece después de validar) -->
-          <div id="agente-card" class="agente-card">
-            <div class="ac-avatar-row">
-              <div class="ac-avatar-svg" id="ac-avatar-display"></div>
-              <div>
-                <div class="ac-nombre" id="ac-nombre"></div>
-                <div class="ac-info" id="ac-info"></div>
-                <div class="ac-equipo-nm" id="ac-equipo"></div>
-                <div class="ac-equipo-rol" id="ac-avatar-animal"></div>
-              </div>
-            </div>
-            <button class="btn-comenzar" onclick="mostrarPresentacion()">▶ COMENZAR MISIÓN</button>
-          </div>
-        </div>
-        <!-- Spacer para que el contenido respire -->
-        <div style="flex:1;padding:12px 22px 22px;">
-          <div style="border:1px solid rgba(28,46,74,.12);padding:12px;background:rgba(255,255,255,.3);">
-            <div style="font-family:'Cinzel',serif;font-size:8px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:8px;">🔒 Tus datos están protegidos</div>
-            <p style="font-size:12px;line-height:1.6;color:var(--navy-md);">Solo el equipo de RRHH tiene acceso a la información del juego. Tu participación queda registrada para el encuentro presencial.</p>
-          </div>
-        </div>
+      <div id="agente-card" class="agente-card">
+        <div class="ac-nombre" id="ac-nombre"></div>
+        <div class="ac-info" id="ac-info"></div>
+        <div class="ac-equipo-nm" id="ac-equipo"></div>
+        <button class="btn-comenzar" onclick="mostrarPresentacion()">▶ COMENZAR MISIÓN</button>
       </div>
-
-      <!-- TAB REGLAS -->
-      <div id="tab-rules" class="tab-content">
-        <div class="reglas-body">
-          <h3>⚑ REGLAS DE MISIÓN MUNI</h3>
-          <div class="rule-it"><div class="rule-n">1</div><p>Tu legajo define tu <strong>equipo y dirección</strong>. No elegís — ya estás asignado junto a tus compañeros del programa.</p></div>
-          <div class="rule-it"><div class="rule-n">2</div><p>Avanzás por <strong>12 casilleros</strong> en 3 Eras. Cada era tiene un tema: Organizar el trabajo, Gestionar el desempeño y Desarrollar el equipo.</p></div>
-          <div class="rule-it"><div class="rule-n">3</div><p>En cada turno aparece una <strong>situación o crisis</strong>. Elegís una carta de acción. Las decisiones modifican tus 4 indicadores.</p></div>
-          <div class="rule-it"><div class="rule-n">4</div><p>Las cartas <strong>PROFESIONALES</strong> están bloqueadas. Estudiás el módulo de capacitación, respondés una pregunta y las desbloqueás — ganando una insignia.</p></div>
-          <div class="rule-it"><div class="rule-n">5</div><p>Al terminar cada era llegás a un <strong>encuentro presencial</strong> donde llevás los recursos acumulados para trabajar con otros equipos.</p></div>
-          <div class="rules-hr"></div>
-          <div class="rule-it"><div class="rule-n">🏆</div><p>Gana quien mejor <strong>equilibra indicadores</strong> y usa estratégicamente los recursos. No gana quien más acumula, sino quien mejor gestiona.</p></div>
-        </div>
+      <div class="card-footer">
+        <button class="btn-reglas" onclick="abrirReglas()">📋 Ver reglas del juego</button>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- MODAL REGLAS -->
+<div id="modal-reglas">
+  <div class="reglas-box">
+    <h3>⚑ REGLAS DE MISIÓN MUNI</h3>
+    <div class="rule-it"><div class="rule-n">1</div><p>Tu legajo define tu <strong>equipo y dirección</strong>. No elegís — ya estás asignado junto a tus compañeros del programa.</p></div>
+    <div class="rule-it"><div class="rule-n">2</div><p>Avanzás por <strong>12 casilleros</strong> en 3 Eras. Cada era tiene un tema: Organizar el trabajo, Gestionar el desempeño y Desarrollar el equipo.</p></div>
+    <div class="rule-it"><div class="rule-n">3</div><p>En cada turno aparece una <strong>situación o crisis</strong>. Elegís una carta de acción. Las decisiones modifican tus 4 indicadores.</p></div>
+    <div class="rule-it"><div class="rule-n">4</div><p>Las cartas <strong>PROFESIONALES</strong> están bloqueadas. Estudiás el módulo de capacitación, respondés una pregunta y las desbloqueás — ganando una insignia.</p></div>
+    <div class="rule-it"><div class="rule-n">5</div><p>Al terminar cada era llegás a un <strong>encuentro presencial</strong> donde llevás los recursos acumulados para trabajar con otros equipos.</p></div>
+    <div class="rules-hr"></div>
+    <div class="rule-it"><div class="rule-n">🏆</div><p>Gana quien mejor <strong>equilibra indicadores</strong> y usa estratégicamente los recursos. No gana quien más acumula, sino quien mejor gestiona.</p></div>
+    <button class="btn-cerrar-reglas" onclick="cerrarReglas()">✕ CERRAR</button>
   </div>
 </div>
 
@@ -772,8 +686,7 @@ body{font-family:'Crimson Text',Georgia,serif;background:var(--perg);color:var(-
 ══════════════════════════════════════ -->
 <div id="screen-agente">
   <div class="agente-presentacion">
-    <div class="ap-grid">
-      <div class="ap-avatar-wrap" id="ap-avatar-big"></div>
+    <div class="ap-grid" style="grid-template-columns:1fr auto;">
       <div class="ap-info">
         <div class="ap-eyebrow">Tu misión comienza ahora</div>
         <div class="ap-nombre" id="ap-nombre"></div>
@@ -781,10 +694,9 @@ body{font-family:'Crimson Text',Georgia,serif;background:var(--perg);color:var(-
         <div class="ap-dir" id="ap-dir-txt"></div>
         <div class="ap-equipo-badge" id="ap-equipo-txt"></div>
       </div>
-      <div class="ap-equipo-panel">
+      <div class="ap-equipo-panel" style="text-align:center;">
         <div class="ap-eq-lbl">Tu equipo</div>
-        <div class="ap-eq-avatars" id="ap-eq-avatars"></div>
-        <div style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:1px;color:var(--navy-md);margin-top:8px;text-align:center;" id="ap-equipo-nm2"></div>
+        <div style="font-family:'Cinzel',serif;font-size:22px;font-weight:900;color:var(--teal);margin:10px 0;" id="ap-equipo-nm2"></div>
       </div>
     </div>
     <div class="ap-mision" id="ap-mision-txt"></div>
@@ -804,7 +716,6 @@ body{font-family:'Crimson Text',Georgia,serif;background:var(--perg);color:var(-
       <div class="app-dir" id="app-dir"></div>
     </div>
     <div class="app-hdr-avatar">
-      <div class="hdr-av-circle" id="hdr-av"></div>
       <div class="hdr-player-info" id="hdr-info"></div>
     </div>
   </div>
@@ -815,7 +726,6 @@ body{font-family:'Crimson Text',Georgia,serif;background:var(--perg);color:var(-
     <div class="phdr">👤 MI PERFIL</div>
     <div class="pbody">
       <div class="mini-agente">
-        <div class="mini-av-c" id="mini-av"></div>
         <div>
           <div class="mini-nm" id="mini-nm"></div>
           <div class="mini-dir" id="mini-dir"></div>
@@ -900,7 +810,6 @@ body{font-family:'Crimson Text',Georgia,serif;background:var(--perg);color:var(-
 <div id="final-screen">
   <div class="final-box">
     <div class="final-tag">✦ Misión Completada ✦</div>
-    <div class="final-av" id="final-av"></div>
     <h1 id="final-equipo"></h1>
     <div class="final-score" id="final-score"></div>
     <div class="final-nivel" id="final-nivel"></div>
@@ -911,174 +820,6 @@ body{font-family:'Crimson Text',Georgia,serif;background:var(--perg);color:var(-
 </div>
 
 <script>
-/* ══════════════════════════════════════
-   AVATARES SVG — Animales patagónicos
-   Dibujados como siluetas ilustradas
-══════════════════════════════════════ */
-const AVATARES = {
-  huemul: {
-    nombre: 'Huemul', rol: 'Liderazgo colaborativo',
-    color1: '#4a6a3a', color2: '#6a8a4a',
-    svg: `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="50" cy="50" r="48" fill="#3a5a2a" fill-opacity="0.85"/>
-      <!-- cuerpo huemul -->
-      <ellipse cx="50" cy="65" rx="22" ry="18" fill="#8a6a3a"/>
-      <!-- cabeza -->
-      <ellipse cx="50" cy="40" rx="16" ry="14" fill="#9a7a4a"/>
-      <!-- astas -->
-      <path d="M38 30 L34 15 M34 15 L30 8 M34 15 L38 10" stroke="#6a4a1a" stroke-width="2" fill="none" stroke-linecap="round"/>
-      <path d="M62 30 L66 15 M66 15 L70 8 M66 15 L62 10" stroke="#6a4a1a" stroke-width="2" fill="none" stroke-linecap="round"/>
-      <!-- ojos -->
-      <circle cx="44" cy="38" r="3" fill="#1a1a1a"/>
-      <circle cx="56" cy="38" r="3" fill="#1a1a1a"/>
-      <circle cx="45" cy="37" r="1" fill="white"/>
-      <circle cx="57" cy="37" r="1" fill="white"/>
-      <!-- nariz -->
-      <ellipse cx="50" cy="46" rx="4" ry="3" fill="#7a4a2a"/>
-      <!-- orejas -->
-      <ellipse cx="37" cy="33" rx="5" ry="7" fill="#8a6a3a" transform="rotate(-20,37,33)"/>
-      <ellipse cx="63" cy="33" rx="5" ry="7" fill="#8a6a3a" transform="rotate(20,63,33)"/>
-    </svg>`
-  },
-  condor: {
-    nombre: 'Cóndor', rol: 'Visión estratégica',
-    color1: '#2a2a4a', color2: '#4a4a6a',
-    svg: `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="50" cy="50" r="48" fill="#2a2a4a" fill-opacity="0.85"/>
-      <!-- cuerpo -->
-      <ellipse cx="50" cy="65" rx="20" ry="16" fill="#1a1a2a"/>
-      <!-- collar blanco -->
-      <ellipse cx="50" cy="52" rx="14" ry="7" fill="white" fill-opacity="0.9"/>
-      <!-- cabeza -->
-      <ellipse cx="50" cy="38" rx="14" ry="13" fill="#1a1a1a"/>
-      <!-- cresta roja -->
-      <ellipse cx="50" cy="28" rx="6" ry="8" fill="#9a2a2a"/>
-      <!-- pico -->
-      <path d="M44 44 L50 52 L56 44 Z" fill="#c8922a"/>
-      <!-- ojos -->
-      <circle cx="43" cy="37" r="4" fill="#c8922a"/>
-      <circle cx="57" cy="37" r="4" fill="#c8922a"/>
-      <circle cx="43" cy="37" r="2.5" fill="#1a1a1a"/>
-      <circle cx="57" cy="37" r="2.5" fill="#1a1a1a"/>
-      <circle cx="44" cy="36" r="1" fill="white"/>
-      <circle cx="58" cy="36" r="1" fill="white"/>
-      <!-- alas abiertas sugeridas -->
-      <path d="M30 58 Q20 50 15 55 Q22 62 30 62 Z" fill="#1a1a2a"/>
-      <path d="M70 58 Q80 50 85 55 Q78 62 70 62 Z" fill="#1a1a2a"/>
-    </svg>`
-  },
-  puma: {
-    nombre: 'Puma', rol: 'Resolución de problemas',
-    color1: '#6a4a1a', color2: '#8a6a3a',
-    svg: `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="50" cy="50" r="48" fill="#5a4018" fill-opacity="0.85"/>
-      <!-- cuerpo -->
-      <ellipse cx="50" cy="67" rx="22" ry="17" fill="#b8843a"/>
-      <!-- cabeza -->
-      <ellipse cx="50" cy="42" rx="18" ry="16" fill="#c8944a"/>
-      <!-- orejas -->
-      <path d="M35 30 L32 20 L42 28 Z" fill="#b8843a"/>
-      <path d="M65 30 L68 20 L58 28 Z" fill="#b8843a"/>
-      <path d="M36 29 L34 22 L41 28 Z" fill="#e8b8a0"/>
-      <path d="M64 29 L66 22 L59 28 Z" fill="#e8b8a0"/>
-      <!-- hocico -->
-      <ellipse cx="50" cy="50" rx="12" ry="9" fill="#d8a870"/>
-      <!-- ojos -->
-      <ellipse cx="43" cy="40" rx="4" ry="3" fill="#2a1a0a"/>
-      <ellipse cx="57" cy="40" rx="4" ry="3" fill="#2a1a0a"/>
-      <circle cx="44" cy="39" r="1.2" fill="white"/>
-      <circle cx="58" cy="39" r="1.2" fill="white"/>
-      <!-- nariz -->
-      <path d="M46 48 Q50 45 54 48 Q50 52 46 48 Z" fill="#6a2a1a"/>
-      <!-- bigotes -->
-      <line x1="35" y1="50" x2="48" y2="49" stroke="rgba(255,255,255,0.6)" stroke-width="0.8"/>
-      <line x1="35" y1="53" x2="48" y2="52" stroke="rgba(255,255,255,0.6)" stroke-width="0.8"/>
-      <line x1="52" y1="49" x2="65" y2="50" stroke="rgba(255,255,255,0.6)" stroke-width="0.8"/>
-      <line x1="52" y1="52" x2="65" y2="53" stroke="rgba(255,255,255,0.6)" stroke-width="0.8"/>
-    </svg>`
-  },
-  zorro: {
-    nombre: 'Zorro', rol: 'Innovación',
-    color1: '#8a4a1a', color2: '#c86a2a',
-    svg: `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="50" cy="50" r="48" fill="#6a3a10" fill-opacity="0.85"/>
-      <!-- cuerpo -->
-      <ellipse cx="50" cy="67" rx="20" ry="16" fill="#c87030"/>
-      <!-- cabeza -->
-      <path d="M32 45 Q50 25 68 45 Q65 62 50 65 Q35 62 32 45 Z" fill="#d08040"/>
-      <!-- orejas puntiagudas -->
-      <path d="M36 44 L30 22 L46 38 Z" fill="#c87030"/>
-      <path d="M64 44 L70 22 L54 38 Z" fill="#c87030"/>
-      <path d="M37 43 L32 25 L45 38 Z" fill="#e8a080"/>
-      <path d="M63 43 L68 25 L55 38 Z" fill="#e8a080"/>
-      <!-- cara blanca -->
-      <ellipse cx="50" cy="52" rx="12" ry="10" fill="#f0e0c0"/>
-      <!-- ojos -->
-      <ellipse cx="43" cy="44" rx="3.5" ry="3" fill="#2a1a0a"/>
-      <ellipse cx="57" cy="44" rx="3.5" ry="3" fill="#2a1a0a"/>
-      <circle cx="44" cy="43" r="1" fill="white"/>
-      <circle cx="58" cy="43" r="1" fill="white"/>
-      <!-- nariz -->
-      <ellipse cx="50" cy="51" rx="3.5" ry="2.5" fill="#2a1a0a"/>
-    </svg>`
-  },
-  pinguino: {
-    nombre: 'Pingüino', rol: 'Capacitación',
-    color1: '#1a1a3a', color2: '#3a3a5a',
-    svg: `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="50" cy="50" r="48" fill="#1a2a3a" fill-opacity="0.85"/>
-      <!-- cuerpo negro -->
-      <ellipse cx="50" cy="65" rx="20" ry="20" fill="#1a1a2a"/>
-      <!-- panza blanca -->
-      <ellipse cx="50" cy="68" rx="13" ry="16" fill="#f0f0e8"/>
-      <!-- cabeza -->
-      <circle cx="50" cy="38" r="16" fill="#1a1a2a"/>
-      <!-- cara blanca -->
-      <ellipse cx="50" cy="42" rx="10" ry="11" fill="#f0f0e8"/>
-      <!-- ojos -->
-      <circle cx="44" cy="37" r="4" fill="white"/>
-      <circle cx="56" cy="37" r="4" fill="white"/>
-      <circle cx="44" cy="37" r="2.5" fill="#1a1a1a"/>
-      <circle cx="56" cy="37" r="2.5" fill="#1a1a1a"/>
-      <circle cx="45" cy="36" r="1" fill="white"/>
-      <circle cx="57" cy="36" r="1" fill="white"/>
-      <!-- pico anaranjado -->
-      <path d="M45 47 L50 53 L55 47 Q50 44 45 47 Z" fill="#c87810"/>
-      <!-- aletas -->
-      <path d="M30 55 Q22 48 24 65 Q32 70 35 65 Z" fill="#1a1a2a"/>
-      <path d="M70 55 Q78 48 76 65 Q68 70 65 65 Z" fill="#1a1a2a"/>
-    </svg>`
-  },
-  guanaco: {
-    nombre: 'Guanaco', rol: 'Trabajo en equipo',
-    color1: '#9a6a1a', color2: '#b88a3a',
-    svg: `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="50" cy="50" r="48" fill="#7a5012" fill-opacity="0.85"/>
-      <!-- cuello largo -->
-      <rect x="44" y="38" width="12" height="24" rx="6" fill="#c8904a"/>
-      <!-- cuerpo -->
-      <ellipse cx="50" cy="70" rx="20" ry="15" fill="#b87a38"/>
-      <!-- cabeza pequeña -->
-      <ellipse cx="50" cy="30" rx="13" ry="12" fill="#d8a060"/>
-      <!-- orejas largas -->
-      <ellipse cx="38" cy="24" rx="4" ry="9" fill="#c8904a" transform="rotate(-15,38,24)"/>
-      <ellipse cx="62" cy="24" rx="4" ry="9" fill="#c8904a" transform="rotate(15,62,24)"/>
-      <ellipse cx="38" cy="24" rx="2.5" ry="6" fill="#e8c0a0" transform="rotate(-15,38,24)"/>
-      <ellipse cx="62" cy="24" rx="2.5" ry="6" fill="#e8c0a0" transform="rotate(15,62,24)"/>
-      <!-- hocico -->
-      <ellipse cx="50" cy="36" rx="7" ry="5" fill="#e0b880"/>
-      <!-- ojos -->
-      <circle cx="44" cy="28" r="3" fill="#2a1a0a"/>
-      <circle cx="56" cy="28" r="3" fill="#2a1a0a"/>
-      <circle cx="45" cy="27" r="1" fill="white"/>
-      <circle cx="57" cy="27" r="1" fill="white"/>
-      <!-- nariz -->
-      <ellipse cx="50" cy="36" rx="2.5" ry="2" fill="#6a3a1a"/>
-    </svg>`
-  }
-};
-
-const AVATAR_NAMES = Object.keys(AVATARES);
 const IND = {
   clima:{lbl:'CLIMA',icon:'❤️',bar:'bc1'},
   desempenio:{lbl:'DESEMPEÑO',icon:'🎯',bar:'bc2'},
@@ -1091,13 +832,7 @@ const ENC = {
 };
 
 let g = null, modalData = null, bibOpen = false;
-let agenteData = null; // {nombre, legajo, direccion, equipo, avatar}
-
-/* Asigna avatar basado en el legajo (determinista) */
-function getAvatar(legajo) {
-  const idx = Number(legajo) % AVATAR_NAMES.length;
-  return AVATARES[AVATAR_NAMES[idx]];
-}
+let agenteData = null;
 
 /* Asigna nombre de equipo ficticio basado en dirección */
 function getEquipo(direccion) {
@@ -1112,23 +847,6 @@ function getEquipo(direccion) {
   return equipos[direccion] || 'EQUIPO ' + (direccion||'').toUpperCase().slice(0,8);
 }
 
-/* Genera avatares pequeños del equipo (distintos al del jugador) */
-function getTeamAvatars(miAvatar) {
-  const otros = AVATAR_NAMES.filter(n => n !== miAvatar);
-  // tomar 4 aleatorios deterministas
-  const result = [];
-  for(let i=0;i<4;i++) result.push(AVATARES[otros[i % otros.length]]);
-  return result;
-}
-
-/* ── TABS ── */
-function showTab(id, btn) {
-  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
-  document.querySelectorAll('.ptab').forEach(b=>b.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  btn.classList.add('active');
-}
-
 /* ── VALIDAR LEGAJO ── */
 function validarLegajo() {
   const legajo = document.getElementById('inp-legajo').value.trim();
@@ -1139,21 +857,16 @@ function validarLegajo() {
     .withSuccessHandler(res => {
       hideLoader();
       if(res && res.encontrado) {
-        const av = getAvatar(legajo);
         agenteData = {
           legajo: legajo,
           nombre: res.nombre,
           direccion: res.direccion,
-          equipo: getEquipo(res.direccion),
-          avatar: av,
-          avatarKey: AVATAR_NAMES[Number(legajo) % AVATAR_NAMES.length]
+          equipo: getEquipo(res.direccion)
         };
         showStatus('✓ Legajo encontrado','ok');
         document.getElementById('ac-nombre').innerText = res.nombre;
         document.getElementById('ac-info').innerText = 'Legajo ' + legajo + ' · ' + res.direccion;
         document.getElementById('ac-equipo').innerText = getEquipo(res.direccion);
-        document.getElementById('ac-avatar-animal').innerText = av.nombre + ' · ' + av.rol;
-        document.getElementById('ac-avatar-display').innerHTML = `<svg viewBox="0 0 100 100" style="width:64px;height:64px;border-radius:50%;border:3px solid var(--navy);overflow:hidden">${av.svg}</svg>`;
         document.getElementById('agente-card').classList.add('visible');
       } else {
         showStatus('Legajo no encontrado. Verificá el número o consultá con RRHH.','err');
@@ -1178,25 +891,15 @@ function mostrarPresentacion() {
   document.getElementById('screen-welcome').style.display = 'none';
   document.getElementById('screen-agente').style.display = 'flex';
 
-  const av = agenteData.avatar;
-  document.getElementById('ap-avatar-big').innerHTML = av.svg;
   document.getElementById('ap-nombre').innerText = agenteData.nombre.toUpperCase();
   document.getElementById('ap-legajo-txt').innerText = 'Legajo ' + agenteData.legajo;
   document.getElementById('ap-dir-txt').innerText = 'Dirección de ' + agenteData.direccion;
   document.getElementById('ap-equipo-txt').innerText = agenteData.equipo;
   document.getElementById('ap-equipo-nm2').innerText = agenteData.equipo;
 
-  // Avatares del equipo
-  const teamAvs = getTeamAvatars(agenteData.avatarKey);
-  document.getElementById('ap-eq-avatars').innerHTML =
-    [av, ...teamAvs.slice(0,4)].map(a =>
-      `<div class="ap-eq-av" title="${a.nombre}">${a.svg}</div>`
-    ).join('');
-
   document.getElementById('ap-mision-txt').innerHTML =
     `Como <strong>jefe/a de equipo</strong> en la Dirección de ${agenteData.direccion}, tu misión es tomar decisiones estratégicas, resolver situaciones reales y completar módulos de capacitación para desbloquear acciones avanzadas. Los <strong>recursos de RRHH</strong> que acumulás los llevás al encuentro presencial con tu equipo <strong>${agenteData.equipo}</strong>.`;
 
-  // Llamar al backend para iniciar partida (sin elección de dirección)
   showLoader();
   google.script.run
     .withSuccessHandler(res => {hideLoader(); g = res; renderInds(res.estado.indicadores);})
@@ -1221,9 +924,7 @@ function iniciarJuego() {
 
 function actualizarHdrAvatar() {
   if(!agenteData) return;
-  document.getElementById('hdr-av').innerHTML = agenteData.avatar.svg;
   document.getElementById('hdr-info').innerHTML = `<strong>${agenteData.nombre.split(' ')[0].toUpperCase()}</strong><br>${agenteData.equipo}`;
-  document.getElementById('mini-av').innerHTML = agenteData.avatar.svg;
   document.getElementById('mini-nm').innerText = agenteData.nombre;
   document.getElementById('mini-dir').innerText = agenteData.direccion;
   document.getElementById('mini-equipo').innerText = agenteData.equipo;
@@ -1286,7 +987,8 @@ function renderBib() {
   if(!g.biblioteca) return;
   document.getElementById('bib-panel').innerHTML = g.biblioteca.map(h => {
     const done = g.estado.herramientas.includes(h.id);
-    return `<div class="hi ${done?'done':''}" onclick="${done?'':'`abrirHerr(''+h.id+'')`'}">
+    const onclk = done ? '' : `abrirHerr('${h.id}')`;
+    return `<div class="hi ${done?'done':''}" onclick="${onclk}">
       <div class="hi-tit">${done?'✅':'📖'} ${h.nombre}</div>
       <div class="hi-sub">${done?'Completado · Insignia obtenida':'Clic para estudiar el módulo'}</div>
     </div>`;
@@ -1432,11 +1134,14 @@ function mostrarEncuentro(nro) {
 }
 function cerrarEncuentro(){document.getElementById('enc-modal').style.display='none';render();}
 
+/* ── MODAL REGLAS ── */
+function abrirReglas() { document.getElementById('modal-reglas').classList.add('open'); }
+function cerrarReglas() { document.getElementById('modal-reglas').classList.remove('open'); }
+
 /* ── FINAL ── */
 function mostrarFinal() {
   google.script.run.withSuccessHandler(p=>{
-    if(agenteData) document.getElementById('final-av').innerHTML = agenteData.avatar.svg;
-    document.getElementById('final-equipo').innerText = (agenteData?.equipo||'').toUpperCase();
+document.getElementById('final-equipo').innerText = (agenteData?.equipo||'').toUpperCase();
     document.getElementById('final-score').innerText = p.promedioIndicadores+' / 5';
     document.getElementById('final-nivel').innerText = p.nivel.toUpperCase();
     document.getElementById('final-detail').innerHTML =
