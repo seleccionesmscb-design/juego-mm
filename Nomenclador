@@ -1,0 +1,4850 @@
+<!DOCTYPE html>
+
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Nomenclador de Puestos Municipales \&#x2014; MSCB</title>
+
+<style>
+
+:root {
+
+&#x20; --navy: #0b1d3a;
+
+&#x20; --navy-mid: #163260;
+
+&#x20; --navy-light: #1e4080;
+
+&#x20; --accent: #2d6be4;
+
+&#x20; --accent2: #0ea5e9;
+
+&#x20; --teal: #0891b2;
+
+&#x20; --green: #059669;
+
+&#x20; --green-pale: #ecfdf5;
+
+&#x20; --amber: #d97706;
+
+&#x20; --amber-pale: #fffbeb;
+
+&#x20; --red: #dc2626;
+
+&#x20; --red-pale: #fef2f2;
+
+&#x20; --bg: #f0f4f9;
+
+&#x20; --surface: #ffffff;
+
+&#x20; --surface2: #f7fafd;
+
+&#x20; --border: #dde4ef;
+
+&#x20; --border2: #c4cfe0;
+
+&#x20; --text: #0b1d3a;
+
+&#x20; --text2: #4b5e7a;
+
+&#x20; --text3: #8fa3bc;
+
+&#x20; --sidebar-w: 248px;
+
+&#x20; --header-h: 56px;
+
+&#x20; --r-sm: 6px;
+
+&#x20; --r: 10px;
+
+&#x20; --r-lg: 16px;
+
+&#x20; --sh: 0 2px 12px rgba(11,29,58,.07), 0 1px 3px rgba(11,29,58,.04);
+
+&#x20; --sh-lg: 0 8px 32px rgba(11,29,58,.12), 0 2px 8px rgba(11,29,58,.06);
+
+}
+
+\*, \*::before, \*::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body { overflow-x: hidden; }
+
+body {
+
+&#x20; font-family: Segoe UI, system-ui, Arial, sans-serif;
+
+&#x20; background: var(--bg);
+
+&#x20; color: var(--text);
+
+&#x20; font-size: 13px;
+
+&#x20; line-height: 1.6;
+
+&#x20; min-height: 100vh;
+
+&#x20; -webkit-font-smoothing: antialiased;
+
+}
+
+.app-shell { display: flex; min-height: 100vh; min-width: 0; }
+
+.sidebar {
+
+&#x20; width: var(--sidebar-w);
+
+&#x20; background: var(--navy);
+
+&#x20; display: flex;
+
+&#x20; flex-direction: column;
+
+&#x20; position: fixed;
+
+&#x20; top: 0; left: 0; bottom: 0;
+
+&#x20; z-index: 200;
+
+&#x20; overflow: hidden;
+
+}
+
+.sidebar-brand {
+
+&#x20; padding: 20px 16px 18px;
+
+&#x20; display: flex;
+
+&#x20; flex-direction: column;
+
+&#x20; align-items: center;
+
+&#x20; gap: 12px;
+
+&#x20; border-bottom: 1px solid rgba(255,255,255,.07);
+
+&#x20; flex-shrink: 0;
+
+}
+
+.brand-logo {
+
+&#x20; width: 72px; height: 72px;
+
+&#x20; border-radius: 14px;
+
+&#x20; overflow: hidden;
+
+&#x20; flex-shrink: 0;
+
+&#x20; display: flex; align-items: center; justify-content: center;
+
+&#x20; background: rgba(255,255,255,.08);
+
+&#x20; border: 1px solid rgba(255,255,255,.12);
+
+}
+
+.brand-logo img { width: 100%; height: 100%; object-fit: cover; border-radius: 13px; }
+
+.brand-text { flex: 1; min-width: 0; text-align: center; }
+
+.brand-text .brand-name { font-size: 13px; font-weight: 700; color: #fff; letter-spacing: -.01em; line-height: 1.3; }
+
+.brand-text .brand-sub { font-size: 11px; color: rgba(255,255,255,.45); margin-top: 4px; letter-spacing: .02em; }
+
+.sidebar-nav { flex: 1; padding: 12px 10px; overflow-y: auto; scrollbar-width: none; }
+
+.sidebar-nav::-webkit-scrollbar { display: none; }
+
+.nav-section-label {
+
+&#x20; font-size: 9.5px; font-weight: 700; letter-spacing: .1em;
+
+&#x20; text-transform: uppercase; color: rgba(255,255,255,.3);
+
+&#x20; padding: 12px 8px 6px;
+
+}
+
+.nav-item {
+
+&#x20; display: flex; align-items: center; gap: 10px;
+
+&#x20; padding: 9px 10px;
+
+&#x20; border-radius: var(--r-sm);
+
+&#x20; cursor: pointer;
+
+&#x20; font-size: 12.5px; font-weight: 500;
+
+&#x20; color: rgba(255,255,255,.6);
+
+&#x20; transition: all .18s;
+
+&#x20; user-select: none;
+
+&#x20; margin-bottom: 2px;
+
+&#x20; text-decoration: none;
+
+}
+
+.nav-item:hover { background: rgba(255,255,255,.07); color: rgba(255,255,255,.9); }
+
+.nav-item.active { background: rgba(45,107,228,.35); color: #fff; box-shadow: inset 2px 0 0 var(--accent); }
+
+.nav-item .nav-icon { width: 18px; height: 18px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 15px; opacity: .8; }
+
+.nav-item.active .nav-icon { opacity: 1; }
+
+.nav-item .nav-badge { margin-left: auto; background: rgba(45,107,228,.5); color: rgba(255,255,255,.9); font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 20px; letter-spacing: .04em; }
+
+.sidebar-cta { padding: 12px 10px; border-top: 1px solid rgba(255,255,255,.07); flex-shrink: 0; }
+
+.btn-cta-sidebar {
+
+&#x20; display: flex; align-items: center; gap: 10px;
+
+&#x20; width: 100%; padding: 11px 14px;
+
+&#x20; background: linear-gradient(135deg, #2d6be4, #1e4080);
+
+&#x20; border: none; border-radius: var(--r);
+
+&#x20; color: #fff; font-size: 12px; font-weight: 700;
+
+&#x20; cursor: pointer; font-family: Segoe UI, Arial, sans-serif;
+
+&#x20; letter-spacing: .01em; transition: all .2s;
+
+&#x20; box-shadow: 0 3px 10px rgba(45,107,228,.4);
+
+}
+
+.btn-cta-sidebar:hover { background: linear-gradient(135deg, #3b7af3, #2d6be4); box-shadow: 0 5px 16px rgba(45,107,228,.5); transform: translateY(-1px); }
+
+.btn-cta-sidebar .cta-icon { font-size: 16px; flex-shrink: 0; }
+
+.btn-cta-sidebar .cta-text { display: flex; flex-direction: column; text-align: left; }
+
+.btn-cta-sidebar .cta-label { font-size: 11px; font-weight: 700; line-height: 1.2; }
+
+.btn-cta-sidebar .cta-sub { font-size: 9px; font-weight: 400; opacity: .7; margin-top: 1px; }
+
+.sidebar-footer { padding: 12px 14px; border-top: 1px solid rgba(255,255,255,.06); flex-shrink: 0; }
+
+.sidebar-footer p { font-size: 9.5px; color: rgba(255,255,255,.25); line-height: 1.5; letter-spacing: .02em; }
+
+.main-area { margin-left: var(--sidebar-w); flex: 1; display: flex; flex-direction: column; min-height: 100vh; min-width: 0; max-width: 100%; overflow-x: hidden; }
+
+.top-header {
+
+&#x20; height: var(--header-h);
+
+&#x20; background: var(--surface);
+
+&#x20; border-bottom: 1px solid var(--border);
+
+&#x20; display: flex; align-items: center;
+
+&#x20; padding: 0 28px;
+
+&#x20; gap: 16px;
+
+&#x20; position: sticky; top: 0; z-index: 100;
+
+&#x20; box-shadow: var(--sh);
+
+}
+
+.header-breadcrumb { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text3); }
+
+.header-breadcrumb .crumb-sep { opacity: .4; }
+
+.header-breadcrumb .crumb-current { font-weight: 600; color: var(--text); }
+
+.header-search { flex: 1; max-width: 480px; margin: 0 auto; position: relative; }
+
+.header-search input {
+
+&#x20; width: 100%;
+
+&#x20; background: var(--surface2);
+
+&#x20; border: 1.5px solid var(--border);
+
+&#x20; border-radius: 24px;
+
+&#x20; padding: 8px 16px 8px 38px;
+
+&#x20; font-size: 12.5px; font-family: Segoe UI, Arial, sans-serif;
+
+&#x20; color: var(--text); outline: none;
+
+&#x20; transition: all .18s;
+
+}
+
+.header-search input:focus { border-color: var(--accent); background: #fff; box-shadow: 0 0 0 3px rgba(45,107,228,.12); }
+
+.header-search input::placeholder { color: var(--text3); }
+
+.header-search .search-icon { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); font-size: 14px; color: var(--text3); }
+
+.header-actions { display: flex; align-items: center; gap: 10px; margin-left: auto; }
+
+.header-btn {
+
+&#x20; display: flex; align-items: center; gap: 6px;
+
+&#x20; padding: 7px 14px; border-radius: 20px;
+
+&#x20; border: 1.5px solid var(--border);
+
+&#x20; background: var(--surface); color: var(--text2);
+
+&#x20; font-size: 11.5px; font-weight: 600;
+
+&#x20; cursor: pointer; font-family: Segoe UI, Arial, sans-serif;
+
+&#x20; transition: all .18s; text-decoration: none;
+
+}
+
+.header-btn:hover { border-color: var(--accent); color: var(--accent); background: #eff6ff; }
+
+.header-btn.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+.header-btn.primary:hover { background: #1e5bcc; box-shadow: 0 3px 10px rgba(45,107,228,.35); }
+
+.page-content { flex: 1; padding: 24px 28px 48px; min-width: 0; max-width: 100%; }
+
+.vista { display: none; }
+
+.vista.activa { display: block; animation: fadeSlide .25s ease; }
+
+@keyframes fadeSlide { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+.inicio-hero {
+
+&#x20; background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+
+&#x20; border-radius: var(--r-lg);
+
+&#x20; padding: 36px 40px;
+
+&#x20; color: #fff;
+
+&#x20; margin-bottom: 24px;
+
+&#x20; position: relative; overflow: hidden;
+
+}
+
+.inicio-hero::before { content: ''; position: absolute; right: -40px; top: -40px; width: 260px; height: 260px; border-radius: 50%; background: rgba(255,255,255,.04); }
+
+.inicio-hero::after { content: ''; position: absolute; right: 60px; bottom: -60px; width: 180px; height: 180px; border-radius: 50%; background: rgba(45,107,228,.15); }
+
+.hero-label { font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: rgba(255,255,255,.5); margin-bottom: 10px; }
+
+.hero-title { font-size: 26px; font-weight: 700; line-height: 1.2; letter-spacing: -.02em; margin-bottom: 10px; }
+
+.hero-title span { color: rgba(45,107,228,.9); }
+
+.hero-sub { font-size: 13px; color: rgba(255,255,255,.6); max-width: 440px; line-height: 1.6; margin-bottom: 24px; }
+
+.hero-stats { display: flex; gap: 28px; flex-wrap: wrap; }
+
+.hero-stat { display: flex; flex-direction: column; }
+
+.hero-stat .hs-num { font-size: 22px; font-weight: 700; color: #fff; letter-spacing: -.02em; }
+
+.hero-stat .hs-label { font-size: 10px; color: rgba(255,255,255,.45); letter-spacing: .04em; }
+
+.cards-inicio { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-bottom: 24px; }
+
+.card-inicio {
+
+&#x20; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-lg);
+
+&#x20; padding: 20px; cursor: pointer; transition: all .2s;
+
+&#x20; display: flex; flex-direction: column; gap: 12px;
+
+&#x20; box-shadow: var(--sh);
+
+}
+
+.card-inicio:hover { border-color: var(--accent); box-shadow: var(--sh-lg); transform: translateY(-2px); }
+
+.card-inicio .ci-icon { width: 40px; height: 40px; border-radius: var(--r); display: flex; align-items: center; justify-content: center; font-size: 20px; }
+
+.card-inicio .ci-title { font-size: 13px; font-weight: 700; color: var(--text); }
+
+.card-inicio .ci-desc { font-size: 11px; color: var(--text3); line-height: 1.5; }
+
+.card-inicio .ci-count { margin-top: auto; font-size: 20px; font-weight: 700; color: var(--navy); letter-spacing: -.02em; }
+
+.nom-layout { display: grid; grid-template-columns: 280px 1fr; gap: 18px; align-items: start; }
+
+.filtros-panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 18px; box-shadow: var(--sh); position: sticky; top: 76px; }
+
+.filtros-title { font-size: 11px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: var(--text3); margin-bottom: 14px; display: flex; align-items: center; gap: 6px; }
+
+.filtro-grupo { margin-bottom: 16px; }
+
+.filtro-label { font-size: 10.5px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--text2); margin-bottom: 8px; display: block; }
+
+.filtro-opts { display: flex; flex-direction: column; gap: 4px; }
+
+.filtro-opt { display: flex; align-items: center; gap: 8px; padding: 6px 10px; border-radius: var(--r-sm); cursor: pointer; font-size: 12px; color: var(--text2); transition: all .15s; user-select: none; }
+
+.filtro-opt:hover { background: var(--surface2); color: var(--text); }
+
+.filtro-opt.sel { background: #eff6ff; color: var(--accent); font-weight: 600; }
+
+.filtro-opt .fo-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; background: var(--border2); transition: background .15s; }
+
+.filtro-opt.sel .fo-dot { background: var(--accent); }
+
+.filtro-opt .fo-count { margin-left: auto; font-size: 10px; color: var(--text3); }
+
+.nom-resultados { display: flex; flex-direction: column; gap: 0; }
+
+.nom-toolbar { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+
+.nom-toolbar .total-label { font-size: 11.5px; color: var(--text3); font-weight: 500; }
+
+.nom-toolbar .total-label strong { color: var(--text); }
+
+.nom-orden { margin-left: auto; display: flex; align-items: center; gap: 6px; }
+
+.nom-orden label { font-size: 11px; color: var(--text3); }
+
+.nom-orden select { border: 1.5px solid var(--border); border-radius: var(--r-sm); padding: 5px 8px; font-size: 11.5px; font-family: Segoe UI, Arial, sans-serif; color: var(--text); background: var(--surface); cursor: pointer; outline: none; }
+
+.nom-lista { display: flex; flex-direction: column; gap: 10px; }
+
+.nom-card {
+
+&#x20; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-lg);
+
+&#x20; padding: 16px 20px; cursor: pointer; transition: all .2s;
+
+&#x20; box-shadow: var(--sh);
+
+&#x20; display: grid; grid-template-columns: auto 1fr auto;
+
+&#x20; align-items: start; gap: 0 16px;
+
+}
+
+.nom-card:hover { border-color: var(--accent); box-shadow: 0 6px 24px rgba(45,107,228,.12); transform: translateX(2px); }
+
+.nom-card.activo { border-color: var(--accent); background: linear-gradient(135deg, #f0f6ff 0%, #fff 100%); box-shadow: 0 4px 20px rgba(45,107,228,.15); }
+
+.nc-nivel { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; margin-top: 2px; }
+
+.nc-nivel.dir { background: #dbeafe; color: #1e40af; }
+
+.nc-nivel.dep { background: #ede9fe; color: #5b21b6; }
+
+.nc-nivel.div { background: #d1fae5; color: #065f46; }
+
+.nc-nivel.sec { background: #fff7ed; color: #9a3412; }
+
+.nc-nivel.jef { background: #fce7f3; color: #831843; }
+
+.nc-body { min-width: 0; }
+
+.nc-nombre { font-size: 13.5px; font-weight: 700; color: var(--navy); letter-spacing: -.01em; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.nc-meta { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+
+.nc-codigo { font-family: Courier New, monospace; font-size: 10px; font-weight: 500; background: var(--surface2); border: 1px solid var(--border); color: var(--text2); padding: 2px 7px; border-radius: 4px; }
+
+.nc-sec { font-size: 10.5px; color: var(--text3); display: flex; align-items: center; gap: 4px; }
+
+.nc-tags { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 6px; }
+
+.nc-tag { font-size: 9.5px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; padding: 2px 8px; border-radius: 20px; }
+
+.nc-tag.adm { background: #dbeafe; color: #1e40af; }
+
+.nc-tag.ope { background: #d1fae5; color: #065f46; }
+
+.nc-tag.tec { background: #ede9fe; color: #5b21b6; }
+
+.nc-tag.ins { background: #fff7ed; color: #9a3412; }
+
+.nc-tag.svt { background: #fce7f3; color: #831843; }
+
+.nc-right { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+
+.nc-arrow { color: var(--text3); font-size: 16px; margin-top: 2px; }
+
+.detalle-overlay { position: fixed; inset: 0; z-index: 300; background: rgba(11,29,58,.45); display: none; align-items: stretch; justify-content: flex-end; }
+
+.detalle-overlay.abierto { display: flex; animation: fadeIn .2s ease; }
+
+@keyframes fadeIn { from{opacity:0} to{opacity:1} }
+
+.detalle-panel { width: min(640px, 95vw); background: var(--surface); overflow-y: auto; display: flex; flex-direction: column; animation: slideRight .25s cubic-bezier(.34,1.2,.64,1); box-shadow: -8px 0 40px rgba(11,29,58,.18); }
+
+@keyframes slideRight { from { transform: translateX(100%); } to { transform: translateX(0); } }
+
+.detalle-header { padding: 20px 24px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: flex-start; gap: 14px; position: sticky; top: 0; background: var(--surface); z-index: 10; }
+
+.detalle-close { margin-left: auto; flex-shrink: 0; background: none; border: none; cursor: pointer; color: var(--text3); font-size: 18px; padding: 4px; border-radius: 6px; transition: all .15s; line-height: 1; }
+
+.detalle-close:hover { color: var(--red); background: var(--red-pale); }
+
+.dh-icono { width: 44px; height: 44px; border-radius: 10px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 22px; }
+
+.dh-icono.dir { background: #dbeafe; }
+
+.dh-icono.dep { background: #ede9fe; }
+
+.dh-icono.div { background: #d1fae5; }
+
+.dh-icono.sec { background: #fff7ed; }
+
+.dh-info .dh-nivel { font-size: 9.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--text3); margin-bottom: 3px; }
+
+.dh-info .dh-nombre { font-size: 16px; font-weight: 700; color: var(--navy); letter-spacing: -.02em; line-height: 1.25; }
+
+.dh-info .dh-codigo { font-family: Courier New, monospace; font-size: 11px; color: var(--text2); margin-top: 4px; display: flex; align-items: center; gap: 6px; }
+
+.dh-codigo .copy-btn { background: none; border: none; cursor: pointer; font-size: 12px; color: var(--text3); padding: 1px 4px; border-radius: 4px; transition: all .15s; }
+
+.dh-codigo .copy-btn:hover { color: var(--accent); background: #eff6ff; }
+
+.detalle-tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border); padding: 0 24px; flex-shrink: 0; }
+
+.det-tab { padding: 12px 16px; font-size: 12px; font-weight: 600; color: var(--text3); cursor: pointer; border-bottom: 2px solid transparent; transition: all .15s; user-select: none; letter-spacing: .01em; }
+
+.det-tab:hover { color: var(--text2); }
+
+.det-tab.activo { color: var(--accent); border-bottom-color: var(--accent); }
+
+.detalle-body { flex: 1; padding: 22px 24px; }
+
+.det-section { margin-bottom: 24px; }
+
+.det-section-title { font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--text3); margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+
+.det-section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+.det-mision { font-size: 13px; line-height: 1.7; color: var(--text2); background: var(--surface2); border-radius: var(--r); padding: 14px 16px; border: 1px solid var(--border); }
+
+.det-info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+.det-info-item { background: var(--surface2); border-radius: var(--r); padding: 12px 14px; border: 1px solid var(--border); }
+
+.det-info-item .dii-label { font-size: 9.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--text3); margin-bottom: 5px; }
+
+.det-info-item .dii-val { font-size: 12.5px; font-weight: 600; color: var(--navy); }
+
+.det-info-item .dii-val.mono { font-family: Courier New, monospace; font-size: 12px; }
+
+.det-req-list { display: flex; flex-direction: column; gap: 8px; }
+
+.det-req-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px 14px; background: var(--surface2); border-radius: var(--r); border: 1px solid var(--border); font-size: 12px; color: var(--text2); }
+
+.det-req-item .dr-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+
+.det-req-item .dr-check { margin-left: auto; font-size: 12px; flex-shrink: 0; }
+
+.det-req-item.cumple .dr-check { color: var(--green); }
+
+.det-req-item.no-cumple .dr-check { color: var(--text3); }
+
+.org-container { background: var(--surface); border-radius: var(--r-lg); border: 1px solid var(--border); box-shadow: var(--sh); overflow: hidden; max-width: 100%; }
+
+.org-toolbar { padding: 14px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; }
+
+.org-toolbar select { border: 1.5px solid var(--border); border-radius: var(--r-sm); padding: 6px 10px; font-size: 12px; font-family: Segoe UI, Arial, sans-serif; color: var(--text); outline: none; cursor: pointer; }
+
+.org-layout { display: flex; gap: 0; }
+
+.org-area { min-height: 500px; padding: 32px; overflow-x: auto; display: flex; justify-content: flex-start; align-items: flex-start; flex: 1; min-width: 0; }
+
+.org-dropdown { position: absolute; top: 12px; right: 12px; width: 280px; max-height: calc(100% - 24px); background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-lg); box-shadow: var(--sh-lg); overflow-y: auto; display: none; z-index: 20; }
+
+.org-dropdown.visible { display: block; }
+
+.org-sidebar-header { padding: 12px 14px; font-size: 11px; font-weight: 700; color: var(--navy); text-transform: uppercase; letter-spacing: .05em; border-bottom: 1px solid var(--border); background: var(--surface2); position: sticky; top: 0; }
+
+.org-sidebar-item { padding: 7px 14px; font-size: 11.5px; color: var(--text); cursor: pointer; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 6px; transition: background .12s; }
+
+.org-sidebar-item:hover { background: var(--surface2); }
+
+.org-sidebar-item .osi-codigo { font-family: Courier New, monospace; font-size: 9px; color: var(--text3); min-width: 50px; flex-shrink: 0; }
+
+.org-area > div { margin: 0 auto; }
+
+.org-area::-webkit-scrollbar { height: 8px; }
+
+.org-area::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 4px; }
+
+.org-tree { display: flex; flex-direction: column; align-items: center; gap: 0; }
+
+.org-level { display: flex; gap: 16px; justify-content: center; }
+
+.org-node-wrap { display: flex; flex-direction: column; align-items: center; }
+
+.org-connector-v { width: 2px; height: 24px; background: var(--border2); flex-shrink: 0; }
+
+
+
+/\* ── Conectores de organigrama tipo árbol (línea horizontal entre hermanos + tallos verticales) ── \*/
+
+.org-stem-down { width: 2px; height: 22px; background: var(--border2); flex-shrink: 0; }
+
+.org-children {
+
+&#x20; display: flex;
+
+&#x20; flex-wrap: nowrap;
+
+&#x20; justify-content: flex-start;
+
+&#x20; gap: 18px;
+
+&#x20; margin: 0 auto;
+
+}
+
+.org-child {
+
+&#x20; position: relative;
+
+&#x20; display: flex;
+
+&#x20; flex-direction: column;
+
+&#x20; align-items: center;
+
+}
+
+.org-child::before,
+
+.org-child::after {
+
+&#x20; content: '';
+
+&#x20; position: absolute;
+
+&#x20; top: 0;
+
+&#x20; height: 0;
+
+&#x20; border-top: 2px solid var(--border2);
+
+}
+
+.org-child::before { left: -9px; width: calc(50% + 9px); }
+
+.org-child::after  { right: -9px; width: calc(50% + 9px); }
+
+.org-child:first-child::before,
+
+.org-child:last-child::after,
+
+.org-child:only-child::before,
+
+.org-child:only-child::after { display: none; }
+
+.org-stem-v { width: 2px; height: 20px; background: var(--border2); }
+
+.org-node { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--r); padding: 8px 10px; min-width: 104px; max-width: 140px; text-align: center; cursor: pointer; transition: all .2s; box-shadow: var(--sh); }
+
+.org-node:hover { border-color: var(--accent); box-shadow: var(--sh-lg); }
+
+.org-node.root { background: var(--navy); border-color: var(--navy); color: #fff; }
+
+.org-node.secretaria { background: #dbeafe; border-color: #93c5fd; }
+
+.org-node.direccion { background: var(--surface); border-color: var(--border2); }
+
+.org-node.jefatura { background: var(--surface2); border-color: var(--border); font-size: 11px; }
+
+.org-node.destacado { border-color: var(--accent) !important; background: #eff6ff !important; box-shadow: 0 0 0 4px rgba(59,130,246,.4), var(--sh-lg) !important; animation: destacado-pulse 1s ease-in-out infinite; }
+
+@keyframes destacado-pulse { 0%,100% { box-shadow: 0 0 0 4px rgba(59,130,246,.4), var(--sh-lg); } 50% { box-shadow: 0 0 0 10px rgba(59,130,246,.08), var(--sh-lg); } }
+
+.on-icono { font-size: 16px; margin-bottom: 3px; display: block; }
+
+.on-nombre { font-size: 10.5px; font-weight: 700; line-height: 1.25; }
+
+.org-node.root .on-nombre { color: #fff; }
+
+.org-node.secretaria .on-nombre { color: #1e40af; }
+
+.on-codigo { font-family: Courier New, monospace; font-size: 9px; color: var(--text3); margin-top: 3px; }
+
+.org-node.root .on-codigo { color: rgba(255,255,255,.5); }
+
+.areas-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+
+.area-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-lg); overflow: hidden; cursor: pointer; transition: all .2s; box-shadow: var(--sh); }
+
+.area-card:hover { box-shadow: var(--sh-lg); transform: translateY(-2px); }
+
+.area-card-header { padding: 16px 18px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--border); }
+
+.area-icon { width: 38px; height: 38px; border-radius: 9px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+
+.area-card-header .ar-titulo { font-size: 12.5px; font-weight: 700; color: var(--navy); }
+
+.area-card-header .ar-codigo { font-family: Courier New, monospace; font-size: 9.5px; color: var(--text3); margin-top: 2px; }
+
+.area-card-body { padding: 12px 18px; }
+
+.area-stat-row { display: flex; gap: 16px; }
+
+.area-stat { display: flex; flex-direction: column; }
+
+.area-stat .as-num { font-size: 18px; font-weight: 700; color: var(--navy); }
+
+.area-stat .as-label { font-size: 10px; color: var(--text3); }
+
+.registro-vista { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-lg); overflow: hidden; box-shadow: var(--sh); }
+
+.registro-topbar { padding: 14px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; background: linear-gradient(90deg, #f0f6ff 0%, var(--surface) 100%); }
+
+.registro-topbar .rt-icon { font-size: 20px; }
+
+.registro-topbar .rt-title { font-size: 13.5px; font-weight: 700; color: var(--navy); }
+
+.registro-topbar .rt-sub { font-size: 11px; color: var(--text3); margin-top: 1px; }
+
+.registro-iframe { width: 100%; height: calc(100vh - 180px); border: none; background: var(--bg); }
+
+.page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+
+.page-header-left .ph-title { font-size: 20px; font-weight: 700; color: var(--navy); letter-spacing: -.02em; }
+
+.page-header-left .ph-sub { font-size: 12px; color: var(--text3); margin-top: 3px; }
+
+.empty-state { text-align: center; padding: 56px 32px; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+
+.empty-state .es-icon { font-size: 40px; opacity: .35; }
+
+.empty-state .es-title { font-size: 15px; font-weight: 700; color: var(--text); }
+
+.empty-state .es-sub { font-size: 12px; color: var(--text3); max-width: 320px; line-height: 1.6; }
+
+\#toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%); background: var(--navy); color: #fff; padding: 11px 22px; border-radius: 30px; font-size: 12.5px; font-weight: 500; font-family: Segoe UI, Arial, sans-serif; box-shadow: var(--sh-lg); z-index: 999; display: none; }
+
+\#toast.visible { display: block; animation: fadeUp .3s ease; }
+
+\#toast.ok { background: var(--green); }
+
+@keyframes fadeUp { from { opacity:0; transform: translateX(-50%) translateY(10px); } to { opacity:1; transform: translateX(-50%) translateY(0); } }
+
+@media (max-width: 1024px) { .nom-layout { grid-template-columns: 1fr; } .filtros-panel { position: static; } }
+
+@media (max-width: 768px) { :root { --sidebar-w: 0px; } .sidebar { display: none; } .main-area { margin-left: 0; } }
+
+.loader-full { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 300px; gap: 14px; }
+
+.spinner { width: 32px; height: 32px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin .65s linear infinite; }
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.loader-full p { font-size: 12px; color: var(--text3); }
+
+.chip { display: inline-flex; align-items: center; gap: 4px; font-size: 9.5px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; padding: 3px 9px; border-radius: 20px; }
+
+.chip-blue { background: #dbeafe; color: #1e40af; }
+
+.chip-purple { background: #ede9fe; color: #5b21b6; }
+
+.chip-green { background: #d1fae5; color: #065f46; }
+
+.chip-amber { background: #fef3c7; color: #92400e; }
+
+.chip-red { background: #fee2e2; color: #991b1b; }
+
+.chip-gray { background: var(--surface2); color: var(--text2); border: 1px solid var(--border); }
+
+.tab-content { display: none; }
+
+.tab-content.activo { display: block; }
+
+/\* Badge de tipo puesto en tarjeta \*/
+
+.nc-tag.puesto { background: #eff6ff; color: #1e40af; border: 1px solid #bfdbfe; }
+
+/\* Iconos SVG: heredan tamaño y color del texto contenedor \*/
+
+.icon-svg { width: 1em; height: 1em; display: inline-block; vertical-align: -0.15em; flex-shrink: 0; }
+
+.nc-tag .icon-svg, .chip .icon-svg, .det-section-title .icon-svg, .header-btn .icon-svg { margin-right: 3px; }
+
+.nom-card .icon-svg, .area-card .icon-svg, .org-node .icon-svg, .card-inicio .icon-svg { stroke-width: 1.6; }
+
+
+
+/\* ── Impresión / Exportar PDF de la ficha de un cargo ── \*/
+
+.solo-impresion { display: none; }
+
+.print-header { margin-bottom: 18px; padding-bottom: 12px; border-bottom: 2px solid var(--navy); }
+
+.print-nombre { font-size: 18px; font-weight: 700; color: var(--navy); }
+
+.print-meta { font-size: 11px; color: var(--text3); margin-top: 4px; }
+
+@media print {
+
+&#x20; .app-shell, .detalle-overlay, #toast { display: none !important; }
+
+&#x20; .solo-impresion {
+
+&#x20;   display: block;
+
+&#x20;   position: static;
+
+&#x20;   width: 100%;
+
+&#x20;   padding: 20px;
+
+&#x20; }
+
+&#x20; .det-section { margin-bottom: 16px; }
+
+&#x20; /\* organigrama: landscape y escalar para que entre \*/
+
+&#x20; body.imprimiendo-org { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+&#x20; body.imprimiendo-org .solo-impresion { padding: 10px; }
+
+&#x20; body.imprimiendo-org .org-area {
+
+&#x20;   overflow: visible !important;
+
+&#x20;   transform-origin: top left;
+
+&#x20; }
+
+&#x20; @page { size: A3 landscape; margin: 10mm; }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="app-shell">
+
+
+
+<!-- SIDEBAR -->
+
+<aside class="sidebar">
+
+&#x20; <div class="sidebar-brand">
+
+&#x20;   <div class="brand-logo">
+
+&#x20;     <img id="sidebar-logo" src="https://drive.google.com/thumbnail?id=1v1oPBz6JgA9NCd9ms9FeLfHGbE826Ygx\&sz=w200" alt="Logo MSCB" style="width:100%;height:100%;object-fit:cover;border-radius:8px">
+
+&#x20;   </div>
+
+&#x20;   <div class="brand-text">
+
+&#x20;     <div class="brand-name">Municipalidad<br>San Carlos de Bariloche</div>
+
+&#x20;     <div class="brand-sub">Sistema de RRHH</div>
+
+&#x20;   </div>
+
+&#x20; </div>
+
+&#x20; <nav class="sidebar-nav">
+
+&#x20;   <div class="nav-section-label">Principal</div>
+
+&#x20;   <div class="nav-item active" onclick="navegar('inicio')" id="nav-inicio">
+
+&#x20;     <span class="nav-icon"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12l9-9 9 9"/><path d="M5 10v10h14V10"/><path d="M9 21V13h6v8"/></svg></span><span>Inicio</span>
+
+&#x20;   </div>
+
+&#x20;   <div class="nav-item" onclick="navegar('organigrama')" id="nav-organigrama">
+
+&#x20;     <span class="nav-icon"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span><span>Organigrama</span>
+
+&#x20;   </div>
+
+&#x20;   <div class="nav-item" onclick="navegar('nomenclador')" id="nav-nomenclador">
+
+&#x20;     <span class="nav-icon"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2h6a1 1 0 0 1 1 1v1H8V3a1 1 0 0 1 1-1z"/><rect x="5" y="4" width="14" height="18" rx="2"/><line x1="9" y1="11" x2="15" y2="11"/><line x1="9" y1="15" x2="15" y2="15"/></svg></span><span>Puestos</span>
+
+&#x20;     <span class="nav-badge" id="badge-total">\&ndash;</span>
+
+&#x20;   </div>
+
+&#x20;   <div class="nav-section-label">Explorar</div>
+
+&#x20;   <div class="nav-item" onclick="navegar('areas')" id="nav-areas">
+
+&#x20;     <span class="nav-icon"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="1"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="15" y2="16"/></svg></span><span>Puestos por \&#xE1;rea</span>
+
+&#x20;   </div>
+
+&#x20;   <div class="nav-item" onclick="navegar('categorias')" id="nav-categorias">
+
+&#x20;     <span class="nav-icon"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41 13.42 20.59a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg></span><span>Agrupamientos</span>
+
+&#x20;   </div>
+
+&#x20;   <div class="nav-item" onclick="navegar('adicionales')" id="nav-adicionales">
+
+&#x20;     <span class="nav-icon"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span><span>Adicionales por puesto</span>
+
+&#x20;   </div>
+
+&#x20;   <div class="nav-item" onclick="navegar('catescalafon')" id="nav-catescalafon">
+
+&#x20;     <span class="nav-icon"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg></span><span>Categor\&#xED;as</span>
+
+&#x20;   </div>
+
+&#x20;   <div class="nav-item" onclick="navegar('documentacion')" id="nav-documentacion">
+
+&#x20;     <span class="nav-icon"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></svg></span><span>Documentaci\&#xF3;n</span>
+
+&#x20;   </div>
+
+&#x20;   <div class="nav-section-label">Informaci\&#xF3;n</div>
+
+&#x20;   <div class="nav-item" onclick="navegar('info')" id="nav-info">
+
+&#x20;     <span class="nav-icon"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></span><span>Gu\&#xED;a de uso</span>
+
+&#x20;   </div>
+
+&#x20; </nav>
+
+&#x20; <div class="sidebar-cta">
+
+&#x20;   <button class="btn-cta-sidebar" onclick="navegar('registro')">
+
+&#x20;     <span class="cta-icon"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5z"/></svg></span>
+
+&#x20;     <span class="cta-text">
+
+&#x20;       <span class="cta-label">Solicitar modificaci\&#xF3;n</span>
+
+&#x20;       <span class="cta-sub">o crear nueva estructura</span>
+
+&#x20;     </span>
+
+&#x20;   </button>
+
+&#x20; </div>
+
+&#x20; <div class="sidebar-footer">
+
+&#x20;   <p>Desarrollado por el Departamento de Ingresos, Formaci\&#xF3;n y Movilidad \&middot; Direcci\&#xF3;n de RRHH \&middot; MSCB</p>
+
+&#x20; </div>
+
+</aside>
+
+
+
+<!-- MAIN -->
+
+<div class="main-area">
+
+&#x20; <header class="top-header">
+
+&#x20;   <div class="header-breadcrumb">
+
+&#x20;     <span>MSCB</span>
+
+&#x20;     <span class="crumb-sep">\&#x203A;</span>
+
+&#x20;     <span class="crumb-current" id="breadcrumb-actual">Inicio</span>
+
+&#x20;   </div>
+
+&#x20;   <div class="header-search">
+
+&#x20;     <span class="search-icon"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+
+&#x20;     <input type="text" id="buscador-global" placeholder="Buscar cargo, \&#xE1;rea o c\&#xF3;digo..." oninput="buscarGlobal(this.value)">
+
+&#x20;   </div>
+
+&#x20;   <div class="header-actions">
+
+&#x20;     <button class="header-btn" onclick="toggleAyuda()"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 1 1 5.83 1c0 2-3 2-3 4"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Ayuda</button>
+
+&#x20;     <button class="header-btn primary" onclick="navegar('registro')"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Nueva solicitud</button>
+
+&#x20;   </div>
+
+&#x20; </header>
+
+
+
+&#x20; <div class="page-content">
+
+
+
+&#x20;   <!-- INICIO -->
+
+&#x20;   <section class="vista activa" id="vista-inicio">
+
+&#x20;     <div class="inicio-hero">
+
+&#x20;       <div class="hero-label">Municipalidad de San Carlos de Bariloche</div>
+
+&#x20;       <h1 class="hero-title">Nomenclador de<br><span>Puestos Municipales</span></h1>
+
+&#x20;       <p class="hero-sub">Visualizador de descripciones de puesto, seg\&#xFA;n organigrama o tipo de puesto, y gesti\&#xF3;n de solicitudes.</p>
+
+&#x20;       <div class="hero-stats">
+
+&#x20;         <div class="hero-stat"><span class="hs-num" id="stat-puestos">\&ndash;</span><span class="hs-label">Cargos registrados</span></div>
+
+&#x20;         <div class="hero-stat"><span class="hs-num" id="stat-areas">\&ndash;</span><span class="hs-label">\&#xC1;reas / Secretar\&#xED;as</span></div>
+
+&#x20;         <div class="hero-stat"><span class="hs-num" id="stat-dirs">\&ndash;</span><span class="hs-label">Direcciones</span></div>
+
+&#x20;       </div>
+
+&#x20;     </div>
+
+&#x20;     <div class="cards-inicio">
+
+&#x20;       <div class="card-inicio" onclick="navegar('organigrama')">
+
+&#x20;         <div class="ci-icon" style="background:#dbeafe"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div>
+
+&#x20;         <div><div class="ci-title">Organigrama</div><div class="ci-desc">Visualiz\&#xE1; la estructura jer\&#xE1;rquica completa del municipio.</div></div>
+
+&#x20;         <div class="ci-count" id="ci-dirs">\&ndash;</div>
+
+&#x20;       </div>
+
+&#x20;       <div class="card-inicio" onclick="navegar('nomenclador')">
+
+&#x20;         <div class="ci-icon" style="background:#ede9fe"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2h6a1 1 0 0 1 1 1v1H8V3a1 1 0 0 1 1-1z"/><rect x="5" y="4" width="14" height="18" rx="2"/><line x1="9" y1="11" x2="15" y2="11"/><line x1="9" y1="15" x2="15" y2="15"/></svg></div>
+
+&#x20;         <div><div class="ci-title">Puestos</div><div class="ci-desc">Explor\&#xE1; todos los cargos con sus funciones y requisitos.</div></div>
+
+&#x20;         <div class="ci-count" id="ci-puestos">\&ndash;</div>
+
+&#x20;       </div>
+
+&#x20;       <div class="card-inicio" onclick="navegar('areas')">
+
+&#x20;         <div class="ci-icon" style="background:#d1fae5"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="1"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="15" y2="16"/></svg></div>
+
+&#x20;         <div><div class="ci-title">Puestos por \&#xE1;rea</div><div class="ci-desc">Explor\&#xE1; las secretar\&#xED;as y sus estructuras dependientes.</div></div>
+
+&#x20;         <div class="ci-count" id="ci-areas">\&ndash;</div>
+
+&#x20;       </div>
+
+&#x20;       <div class="card-inicio" onclick="navegar('registro')">
+
+&#x20;         <div class="ci-icon" style="background:#fce7f3"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5z"/></svg></div>
+
+&#x20;         <div><div class="ci-title">Solicitudes</div><div class="ci-desc">Registr\&#xE1; la creaci\&#xF3;n o modificaci\&#xF3;n de estructuras y descripciones de puestos.</div></div>
+
+&#x20;       </div>
+
+&#x20;     </div>
+
+&#x20;   </section>
+
+
+
+&#x20;   <!-- ORGANIGRAMA -->
+
+&#x20;   <section class="vista" id="vista-organigrama">
+
+&#x20;     <div class="page-header">
+
+&#x20;       <div class="page-header-left">
+
+&#x20;         <div class="ph-title">Organigrama</div>
+
+&#x20;         <div class="ph-sub">Estructura jer\&#xE1;rquica de la Municipalidad de San Carlos de Bariloche</div>
+
+&#x20;       </div>
+
+&#x20;     </div>
+
+&#x20;     <div class="org-container">
+
+&#x20;       <div class="org-toolbar">
+
+&#x20;         <select id="org-filtro-sec" onchange="renderizarOrganigrama()" style="display:none">
+
+&#x20;           <option value="">Todas las Secretar\&#xED;as</option>
+
+&#x20;         </select>
+
+&#x20;         <div style="margin-left:auto;display:flex;align-items:center;gap:10px">
+
+&#x20;           <button id="org-puestos-toggle" class="header-btn" onclick="toggleOrgPuestos()" style="display:none"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg> <span id="org-puestos-toggle-label">Puestos del \&#xE1;rea</span></button>
+
+&#x20;           <button class="header-btn" onclick="exportarOrg()"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Exportar</button>
+
+&#x20;         </div>
+
+&#x20;       </div>
+
+&#x20;       <div class="org-layout" style="position:relative">
+
+&#x20;         <div class="org-area" id="org-area">
+
+&#x20;           <div class="loader-full"><div class="spinner"></div><p>Cargando organigrama\&#x2026;</p></div>
+
+&#x20;         </div>
+
+&#x20;         <div class="org-dropdown" id="org-sidebar">
+
+&#x20;           <div class="org-sidebar-header" id="org-sidebar-titulo">Puestos del \&#xE1;rea</div>
+
+&#x20;           <div id="org-sidebar-lista"></div>
+
+&#x20;         </div>
+
+&#x20;       </div>
+
+&#x20;     </div>
+
+&#x20;   </section>
+
+
+
+&#x20;   <!-- NOMENCLADOR -->
+
+&#x20;   <section class="vista" id="vista-nomenclador">
+
+&#x20;     <div class="page-header">
+
+&#x20;       <div class="page-header-left">
+
+&#x20;         <div class="ph-title">Nomenclador de Puestos</div>
+
+&#x20;         <div class="ph-sub">Cat\&#xE1;logo completo de cargos municipales con descriptivos</div>
+
+&#x20;       </div>
+
+&#x20;       <div style="display:flex;gap:10px">
+
+&#x20;         <button class="header-btn" onclick="exportarNomenclador()"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Exportar CSV</button>
+
+&#x20;       </div>
+
+&#x20;     </div>
+
+&#x20;     <div class="nom-layout">
+
+&#x20;       <div class="filtros-panel">
+
+&#x20;         <div class="filtros-title"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="2" y1="14" x2="6" y2="14"/><line x1="10" y1="8" x2="14" y2="8"/><line x1="18" y1="16" x2="22" y2="16"/></svg> Filtros</div>
+
+&#x20;         <div class="filtro-grupo">
+
+&#x20;           <span class="filtro-label">Nivel</span>
+
+&#x20;           <div class="filtro-opts" id="filtro-nivel">
+
+&#x20;             <div class="filtro-opt sel" data-val="" onclick="aplicarFiltroNivel(this)"><span class="fo-dot"></span> Todos <span class="fo-count" id="cnt-nivel-todos">\&ndash;</span></div>
+
+&#x20;             <div class="filtro-opt" data-val="Direcci\&#xF3;n" onclick="aplicarFiltroNivel(this)"><span class="fo-dot"></span> Direcci\&#xF3;n <span class="fo-count" id="cnt-nivel-dir">\&ndash;</span></div>
+
+&#x20;             <div class="filtro-opt" data-val="Departamento" onclick="aplicarFiltroNivel(this)"><span class="fo-dot"></span> Departamento <span class="fo-count" id="cnt-nivel-dep">\&ndash;</span></div>
+
+&#x20;             <div class="filtro-opt" data-val="Divisi\&#xF3;n" onclick="aplicarFiltroNivel(this)"><span class="fo-dot"></span> Divisi\&#xF3;n <span class="fo-count" id="cnt-nivel-div">\&ndash;</span></div>
+
+&#x20;             <div class="filtro-opt" data-val="Secci\&#xF3;n" onclick="aplicarFiltroNivel(this)"><span class="fo-dot"></span> Secci\&#xF3;n <span class="fo-count" id="cnt-nivel-sec">\&ndash;</span></div>
+
+&#x20;             <div class="filtro-opt" data-val="No jer\&#xE1;rquico" onclick="aplicarFiltroNivel(this)"><span class="fo-dot"></span> No jer\&#xE1;rquico <span class="fo-count" id="cnt-nivel-nojer">\&ndash;</span></div>
+
+&#x20;           </div>
+
+&#x20;         </div>
+
+&#x20;         <div class="filtro-grupo">
+
+&#x20;           <span class="filtro-label">Orientaci\&#xF3;n</span>
+
+&#x20;           <div class="filtro-opts" id="filtro-orient">
+
+&#x20;             <div class="filtro-opt sel" data-val="" onclick="aplicarFiltroOrient(this)"><span class="fo-dot"></span> Todas <span class="fo-count">\&ndash;</span></div>
+
+&#x20;             <div class="filtro-opt" data-val="Administrativa" onclick="aplicarFiltroOrient(this)"><span class="fo-dot" style="background:#93c5fd"></span> Administrativa</div>
+
+&#x20;             <div class="filtro-opt" data-val="Operativa" onclick="aplicarFiltroOrient(this)"><span class="fo-dot" style="background:#6ee7b7"></span> Operativa</div>
+
+&#x20;             <div class="filtro-opt" data-val="T\&#xE9;cnica" onclick="aplicarFiltroOrient(this)"><span class="fo-dot" style="background:#c4b5fd"></span> T\&#xE9;cnica</div>
+
+&#x20;             <div class="filtro-opt" data-val="Inspecci\&#xF3;n" onclick="aplicarFiltroOrient(this)"><span class="fo-dot" style="background:#fdba74"></span> Inspecci\&#xF3;n</div>
+
+&#x20;           </div>
+
+&#x20;         </div>
+
+&#x20;         <div class="filtro-grupo">
+
+&#x20;           <span class="filtro-label">Secretar\&#xED;a</span>
+
+&#x20;           <div class="filtro-opts" id="filtro-sec" style="max-height:200px;overflow-y:auto"></div>
+
+&#x20;         </div>
+
+&#x20;       </div>
+
+&#x20;       <div class="nom-resultados">
+
+&#x20;         <div class="nom-toolbar">
+
+&#x20;           <span class="total-label">Mostrando <strong id="count-mostrados">\&ndash;</strong> de <strong id="count-total">\&ndash;</strong> cargos</span>
+
+&#x20;           <div class="nom-orden">
+
+&#x20;             <label>Ordenar por</label>
+
+&#x20;             <select onchange="aplicarOrden(this.value)">
+
+&#x20;               <option value="nombre">Nombre A\&ndash;Z</option>
+
+&#x20;               <option value="codigo">C\&#xF3;digo</option>
+
+&#x20;               <option value="nivel">Nivel jer\&#xE1;rquico</option>
+
+&#x20;               <option value="secretaria">Secretar\&#xED;a</option>
+
+&#x20;             </select>
+
+&#x20;           </div>
+
+&#x20;         </div>
+
+&#x20;         <div class="nom-lista" id="nom-lista">
+
+&#x20;           <div class="loader-full"><div class="spinner"></div><p>Cargando cargos\&#x2026;</p></div>
+
+&#x20;         </div>
+
+&#x20;       </div>
+
+&#x20;     </div>
+
+&#x20;   </section>
+
+
+
+&#x20;   <!-- ÁREAS -->
+
+&#x20;   <section class="vista" id="vista-areas">
+
+&#x20;     <div class="page-header">
+
+&#x20;       <div class="page-header-left">
+
+&#x20;         <div class="ph-title">Puestos por \&#xE1;rea</div>
+
+&#x20;         <div class="ph-sub">Cargos agrupados por secretar\&#xED;a y dependencia</div>
+
+&#x20;       </div>
+
+&#x20;     </div>
+
+&#x20;     <div class="areas-grid" id="areas-grid">
+
+&#x20;       <div class="loader-full"><div class="spinner"></div><p>Cargando \&#xE1;reas\&#x2026;</p></div>
+
+&#x20;     </div>
+
+&#x20;     <div id="areas-detalle" style="display:none">
+
+&#x20;       <div style="margin-bottom:16px;display:flex;align-items:center;gap:12px">
+
+&#x20;         <button onclick="volverAreas()" style="display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border:1px solid var(--border);border-radius:var(--r-sm);background:var(--surface);cursor:pointer;font-size:12px;color:var(--text2)">
+
+&#x20;           <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+
+&#x20;           Todas las \&#xE1;reas
+
+&#x20;         </button>
+
+&#x20;         <span id="areas-detalle-titulo" style="font-size:15px;font-weight:700;color:var(--navy)"></span>
+
+&#x20;       </div>
+
+&#x20;       <div id="areas-detalle-lista"></div>
+
+&#x20;     </div>
+
+&#x20;   </section>
+
+
+
+&#x20;   <!-- AGRUPAMIENTOS -->
+
+&#x20;   <section class="vista" id="vista-categorias">
+
+&#x20;     <div class="page-header">
+
+&#x20;       <div class="page-header-left">
+
+&#x20;         <div class="ph-title">Agrupamientos de Puestos</div>
+
+&#x20;         <div class="ph-sub">Clasificaci\&#xF3;n seg\&#xFA;n tipo de puesto y orientaci\&#xF3;n</div>
+
+&#x20;       </div>
+
+&#x20;     </div>
+
+&#x20;     <div id="categorias-content"></div>
+
+&#x20;   </section>
+
+
+
+&#x20;   <!-- ADICIONALES POR PUESTO -->
+
+&#x20;   <section class="vista" id="vista-adicionales">
+
+&#x20;     <div class="page-header">
+
+&#x20;       <div class="page-header-left">
+
+&#x20;         <div class="ph-title">Adicionales por puesto</div>
+
+&#x20;         <div class="ph-sub">Adicionales vigentes y los puestos que los perciben</div>
+
+&#x20;       </div>
+
+&#x20;     </div>
+
+&#x20;     <div id="adicionales-content"></div>
+
+&#x20;   </section>
+
+
+
+&#x20;   <!-- CATEGORÍAS ESCALAFÓN -->
+
+&#x20;   <section class="vista" id="vista-catescalafon">
+
+&#x20;     <div class="page-header">
+
+&#x20;       <div class="page-header-left">
+
+&#x20;         <div class="ph-title">Categor\&#xED;as</div>
+
+&#x20;         <div class="ph-sub">Categor\&#xED;as de la escala salarial (8 a 24) y los puestos que las componen</div>
+
+&#x20;       </div>
+
+&#x20;     </div>
+
+&#x20;     <div id="catescalafon-content"></div>
+
+&#x20;   </section>
+
+
+
+&#x20;   <!-- DOCUMENTACIÓN -->
+
+&#x20;   <section class="vista" id="vista-documentacion">
+
+&#x20;     <div class="page-header">
+
+&#x20;       <div class="page-header-left">
+
+&#x20;         <div class="ph-title">Documentaci\&#xF3;n</div>
+
+&#x20;         <div class="ph-sub">Marco normativo y documentos de referencia</div>
+
+&#x20;       </div>
+
+&#x20;     </div>
+
+&#x20;     <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:32px;box-shadow:var(--sh)">
+
+&#x20;       <div class="empty-state">
+
+&#x20;         <div class="es-icon"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></svg></div>
+
+&#x20;         <div class="es-title">Documentaci\&#xF3;n normativa</div>
+
+&#x20;         <div class="es-sub">Ac\&#xE1; se vincular\&#xE1;n las resoluciones, ordenanzas y reglamentos que dan marco a la estructura organizativa. Pr\&#xF3;ximamente disponible.</div>
+
+&#x20;       </div>
+
+&#x20;     </div>
+
+&#x20;   </section>
+
+
+
+&#x20;   <!-- GUÍA DE USO -->
+
+&#x20;   <section class="vista" id="vista-info">
+
+&#x20;     <div class="page-header">
+
+&#x20;       <div class="page-header-left">
+
+&#x20;         <div class="ph-title">Gu\&#xED;a de uso</div>
+
+&#x20;         <div class="ph-sub">C\&#xF3;mo navegar y aprovechar el Nomenclador de Puestos</div>
+
+&#x20;       </div>
+
+&#x20;     </div>
+
+&#x20;     <div style="display:flex;flex-direction:column;gap:16px">
+
+
+
+&#x20;       <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:24px 28px;box-shadow:var(--sh)">
+
+&#x20;         <div style="font-size:15px;font-weight:700;color:var(--navy);margin-bottom:8px">\&#x1F3E0; Inicio</div>
+
+&#x20;         <p style="font-size:13px;line-height:1.7;color:var(--text2)">La pantalla de inicio muestra un resumen del sistema: total de cargos registrados, \&#xE1;reas y direcciones. Desde ac\&#xE1; pod\&#xE9;s acceder r\&#xE1;pidamente a cada secci\&#xF3;n haciendo clic en las tarjetas.</p>
+
+&#x20;       </div>
+
+
+
+&#x20;       <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:24px 28px;box-shadow:var(--sh)">
+
+&#x20;         <div style="font-size:15px;font-weight:700;color:var(--navy);margin-bottom:8px">\&#x1F4CB; Puestos</div>
+
+&#x20;         <p style="font-size:13px;line-height:1.7;color:var(--text2)">Ac\&#xE1; encontr\&#xE1;s el cat\&#xE1;logo completo de cargos municipales. Pod\&#xE9;s:</p>
+
+&#x20;         <ul style="font-size:13px;line-height:2;color:var(--text2);padding-left:20px;margin-top:6px">
+
+&#x20;           <li>Usar los <strong>filtros</strong> del panel izquierdo para acotar por nivel, orientaci\&#xF3;n o secretar\&#xED;a.</li>
+
+&#x20;           <li>Usar la <strong>barra de b\&#xFA;squeda</strong> (parte superior) para buscar por nombre, c\&#xF3;digo o texto de la misi\&#xF3;n.</li>
+
+&#x20;           <li>Hacer clic en cualquier cargo para abrir su <strong>ficha completa</strong> con misi\&#xF3;n, funciones, requisitos, competencias y m\&#xE1;s.</li>
+
+&#x20;           <li>Desde la ficha pod\&#xE9;s <strong>copiar el c\&#xF3;digo</strong>, <strong>compartir el enlace directo</strong> o <strong>imprimir / exportar a PDF</strong>.</li>
+
+&#x20;         </ul>
+
+&#x20;       </div>
+
+
+
+&#x20;       <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:24px 28px;box-shadow:var(--sh)">
+
+&#x20;         <div style="font-size:15px;font-weight:700;color:var(--navy);margin-bottom:8px">\&#x1F5FA;\&#xFE0F; Organigrama</div>
+
+&#x20;         <p style="font-size:13px;line-height:1.7;color:var(--text2)">Muestra la estructura jer\&#xE1;rquica visual del municipio: secretar\&#xED;as, direcciones y departamentos. Pod\&#xE9;s filtrar por secretar\&#xED;a usando el men\&#xFA; desplegable y hacer clic en cualquier nodo para ver la ficha del cargo.</p>
+
+&#x20;       </div>
+
+
+
+&#x20;       <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:24px 28px;box-shadow:var(--sh)">
+
+&#x20;         <div style="font-size:15px;font-weight:700;color:var(--navy);margin-bottom:8px">\&#x1F4C2; Puestos por \&#xE1;rea</div>
+
+&#x20;         <p style="font-size:13px;line-height:1.7;color:var(--text2)">Muestra las secretar\&#xED;as como tarjetas con el total de cargos y direcciones que las componen. Haciendo clic en una tarjeta se navega autom\&#xE1;ticamente al listado de Puestos filtrado por esa secretar\&#xED;a.</p>
+
+&#x20;       </div>
+
+
+
+&#x20;       <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:24px 28px;box-shadow:var(--sh)">
+
+&#x20;         <div style="font-size:15px;font-weight:700;color:var(--navy);margin-bottom:8px">\&#x1F3F7;\&#xFE0F; Agrupamientos</div>
+
+&#x20;         <p style="font-size:13px;line-height:1.7;color:var(--text2)">Agrupa los cargos seg\&#xFA;n su <strong>tipo de puesto</strong> (por ejemplo: Administrativo/a, T\&#xE9;cnico/a, Profesional, etc.). Permite ver cu\&#xE1;ntos y cu\&#xE1;les cargos pertenecen a cada agrupamiento.</p>
+
+&#x20;       </div>
+
+
+
+&#x20;       <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:24px 28px;box-shadow:var(--sh)">
+
+&#x20;         <div style="font-size:15px;font-weight:700;color:var(--navy);margin-bottom:8px">\&#x1F4B0; Adicionales por puesto</div>
+
+&#x20;         <p style="font-size:13px;line-height:1.7;color:var(--text2)">Lista todos los adicionales salariales vigentes y qu\&#xE9; puestos los perciben. Util para consultar r\&#xE1;pidamente qu\&#xE9; cargos tienen asignado un adicional espec\&#xED;fico.</p>
+
+&#x20;       </div>
+
+
+
+&#x20;       <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:24px 28px;box-shadow:var(--sh)">
+
+&#x20;         <div style="font-size:15px;font-weight:700;color:var(--navy);margin-bottom:8px">\&#x1F522; Categor\&#xED;as</div>
+
+&#x20;         <p style="font-size:13px;line-height:1.7;color:var(--text2)">Muestra todas las categor\&#xED;as de la escala salarial (de la 8 a la 24) y qu\&#xE9; puestos las componen. Permite identificar la distribuci\&#xF3;n de cargos por categor\&#xED;a.</p>
+
+&#x20;       </div>
+
+
+
+&#x20;       <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:24px 28px;box-shadow:var(--sh)">
+
+&#x20;         <div style="font-size:15px;font-weight:700;color:var(--navy);margin-bottom:8px">\&#x270F;\&#xFE0F; Solicitar modificaci\&#xF3;n</div>
+
+&#x20;         <p style="font-size:13px;line-height:1.7;color:var(--text2)">El bot\&#xF3;n <strong>\&#x201C;Solicitar modificaci\&#xF3;n\&#x201D;</strong> (barra lateral izquierda) abre el formulario para registrar la creaci\&#xF3;n de una nueva estructura o la modificaci\&#xF3;n de una existente. La Direcci\&#xF3;n de RRHH recibir\&#xE1; notificaci\&#xF3;n autom\&#xE1;tica.</p>
+
+&#x20;       </div>
+
+
+
+&#x20;       <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:var(--r-lg);padding:20px 24px">
+
+&#x20;         <div style="font-size:12.5px;color:var(--text2);line-height:1.7">
+
+&#x20;           <strong>Desarrollado por:</strong> Departamento de Ingresos, Formaci\&#xF3;n y Movilidad \&middot; Direcci\&#xF3;n de Recursos Humanos \&middot; MSCB.<br>
+
+&#x20;           Para consultas t\&#xE9;cnicas o de contenido, comunicate con la Direcci\&#xF3;n de RRHH.
+
+&#x20;         </div>
+
+&#x20;       </div>
+
+
+
+&#x20;     </div>
+
+&#x20;   </section>
+
+
+
+&#x20;   <!-- REGISTRO -->
+
+&#x20;   <section class="vista" id="vista-registro">
+
+&#x20;     <div class="page-header">
+
+&#x20;       <div class="page-header-left">
+
+&#x20;         <div class="ph-title">Solicitudes de Estructura</div>
+
+&#x20;         <div class="ph-sub">Creaci\&#xF3;n de nuevas unidades o modificaci\&#xF3;n de estructuras vigentes</div>
+
+&#x20;       </div>
+
+&#x20;     </div>
+
+&#x20;     <div class="registro-vista">
+
+&#x20;       <div class="registro-topbar">
+
+&#x20;         <span class="rt-icon"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5z"/></svg></span>
+
+&#x20;         <div>
+
+&#x20;           <div class="rt-title">M\&#xF3;dulo de Registro de Estructuras Municipales</div>
+
+&#x20;           <div class="rt-sub">Complet\&#xE1; el formulario para registrar la solicitud. La Direcci\&#xF3;n de RRHH recibir\&#xE1; notificaci\&#xF3;n para su revisi\&#xF3;n.</div>
+
+&#x20;         </div>
+
+&#x20;       </div>
+
+&#x20;       <iframe class="registro-iframe" id="iframe-registro" src="about:blank" title="M\&#xF3;dulo de Registro de Estructuras" loading="lazy"></iframe>
+
+&#x20;       <div id="registro-placeholder" style="padding:48px;text-align:center">
+
+&#x20;         <div class="empty-state">
+
+&#x20;           <div class="es-icon"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></div>
+
+&#x20;           <div class="es-title">M\&#xF3;dulo de Registro</div>
+
+&#x20;           <div class="es-sub">Para activar este m\&#xF3;dulo, peg\&#xE1; la URL publicada de tu Google Apps Script de registro en la variable <code style="background:var(--surface2);padding:2px 6px;border-radius:4px;font-size:11px">REGISTRO\_URL</code> al comienzo del script de esta p\&#xE1;gina.</div>
+
+&#x20;         </div>
+
+&#x20;       </div>
+
+&#x20;     </div>
+
+&#x20;   </section>
+
+
+
+&#x20; </div><!-- /page-content -->
+
+</div><!-- /main-area -->
+
+</div><!-- /app-shell -->
+
+
+
+<!-- PANEL DETALLE (slide-over) -->
+
+<div class="detalle-overlay" id="detalle-overlay" onclick="cerrarDetalle(event)">
+
+&#x20; <div class="detalle-panel" id="detalle-panel">
+
+&#x20;   <div class="detalle-header" id="detalle-header"></div>
+
+&#x20;   <div class="detalle-tabs" id="detalle-tabs">
+
+&#x20;     <div class="det-tab activo" onclick="cambiarTab('descripcion')" id="tab-descripcion">Descripci\&#xF3;n</div>
+
+&#x20;     <div class="det-tab" onclick="cambiarTab('competencias')" id="tab-competencias">Competencias</div>
+
+&#x20;     <div class="det-tab" onclick="cambiarTab('info')" id="tab-info">Info adicional</div>
+
+&#x20;     <div class="det-tab" onclick="cambiarTab('requisitos')" id="tab-requisitos">Requisitos</div>
+
+&#x20;     <div class="det-tab" onclick="cambiarTab('contexto')" id="tab-contexto">Contexto</div>
+
+&#x20;   </div>
+
+&#x20;   <div class="detalle-body" id="detalle-body"></div>
+
+&#x20; </div>
+
+</div>
+
+
+
+<!-- Modal organigrama ubicación -->
+
+<div id="org-loc-overlay" onclick="cerrarOrgLoc(event)" style="position:fixed;inset:0;z-index:400;background:rgba(11,29,58,.6);display:none;align-items:center;justify-content:center;animation:fadeIn .2s ease">
+
+&#x20; <div id="org-loc-modal" style="background:var(--surface);border-radius:var(--r-lg);width:94vw;max-width:1140px;height:88vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 24px 72px rgba(11,29,58,.4)" onclick="event.stopPropagation()">
+
+&#x20;   <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;background:var(--surface);position:sticky;top:0;z-index:10">
+
+&#x20;     <div style="width:34px;height:34px;border-radius:8px;background:#dbeafe;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+
+&#x20;       <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="#1e40af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+
+&#x20;     </div>
+
+&#x20;     <div>
+
+&#x20;       <div style="font-size:13px;font-weight:700;color:var(--navy)" id="org-loc-titulo">Ubicación en el organigrama</div>
+
+&#x20;       <div style="font-size:11px;color:var(--text2)" id="org-loc-subtitulo"></div>
+
+&#x20;     </div>
+
+&#x20;     <button onclick="cerrarOrgLoc()" style="margin-left:auto;background:none;border:none;cursor:pointer;color:var(--text3);padding:6px;border-radius:6px;line-height:1;transition:all .15s" onmouseover="this.style.color='var(--red)';this.style.background='var(--red-pale)'" onmouseout="this.style.color='var(--text3)';this.style.background='none'">
+
+&#x20;       <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+
+&#x20;     </button>
+
+&#x20;   </div>
+
+&#x20;   <div id="org-loc-body" style="overflow:auto;flex:1;padding:28px 32px;display:flex;flex-direction:column;justify-content:center;align-items:center"></div>
+
+&#x20; </div>
+
+</div>
+
+
+
+<!-- Contenido solo para impresión / PDF -->
+
+<div id="detalle-print" class="solo-impresion"></div>
+
+
+
+<!-- Toast -->
+
+<div id="toast"></div>
+
+
+
+<script>
+
+// Datos inyectados por GAS en build-time
+
+var DATOS\_SERVIDOR = (function(){
+
+&#x20; try { return JSON.parse('<?= datosInyectados ?>'); }
+
+&#x20; catch(e){ return \[]; }
+
+})();
+
+
+
+// URL pública real de la app (la ventana sandbox de GAS no expone esta URL vía window.location)
+
+var APP\_URL = '<?= appUrl ?>';
+
+var CARGO\_INICIAL = (function(){
+
+&#x20; try { return JSON.parse('<?= cargoInicial ?>'); } catch(e){ return ''; }
+
+})();
+
+var TIPO\_INICIAL = (function(){
+
+&#x20; try { return JSON.parse('<?= tipoInicial ?>'); } catch(e){ return ''; }
+
+})();
+
+
+
+// ============================================================
+
+// CONFIGURACIÓN
+
+// ============================================================
+
+var REGISTRO\_URL = 'https://script.google.com/macros/s/AKfycbxWnjdPzTp2DReiIySsqe6YCOkNRA1FC2baZSC5fyOShV6JDuKyvLnmALbZi0kgj7jw/exec?page=registro';
+
+var DATOS\_URL = '';
+
+
+
+// ============================================================
+
+// ESTADO GLOBAL
+
+// ============================================================
+
+var DATOS = \[];
+
+var filtroNivel = '';
+
+var filtroOrient = '';
+
+var filtroSec = '';
+
+var terminoBusqueda = '';
+
+var ordenActual = 'nombre';
+
+var vistaActual = 'inicio';
+
+var puestoDetalle = null;
+
+var tabDetalle = 'descripcion';
+
+var orgExpandido = {};
+
+var orgSecSeleccionada = '';
+
+var orgCodigoDestacado = null;
+
+
+
+// ============================================================
+
+// INIT
+
+// ============================================================
+
+document.addEventListener('DOMContentLoaded', function() {
+
+&#x20; if (REGISTRO\_URL) {
+
+&#x20;   document.getElementById('iframe-registro').src = REGISTRO\_URL;
+
+&#x20;   document.getElementById('registro-placeholder').style.display = 'none';
+
+&#x20; }
+
+&#x20; cargarDatos();
+
+});
+
+
+
+function cargarDatos() {
+
+&#x20; if (DATOS\_SERVIDOR \&\& DATOS\_SERVIDOR.length > 0) {
+
+&#x20;   DATOS = DATOS\_SERVIDOR;
+
+&#x20;   inicializarUI();
+
+&#x20; } else {
+
+&#x20;   google.script.run
+
+&#x20;     .withSuccessHandler(function(resp){
+
+&#x20;       DATOS = resp.ok ? resp.datos : \[];
+
+&#x20;       inicializarUI();
+
+&#x20;     })
+
+&#x20;     .withFailureHandler(function(){
+
+&#x20;       DATOS = \[];
+
+&#x20;       inicializarUI();
+
+&#x20;     })
+
+&#x20;     .getDatosNomenclador();
+
+&#x20; }
+
+}
+
+
+
+function inicializarUI() {
+
+&#x20; actualizarEstadisticas();
+
+&#x20; poblarFiltroSecretarias();
+
+&#x20; renderizarNomenclador();
+
+&#x20; renderizarAreas();
+
+&#x20; renderizarCategorias();
+
+&#x20; renderizarAdicionales();
+
+&#x20; renderizarCatEscalafon();
+
+&#x20; renderizarOrganigrama();
+
+&#x20; abrirDesdeUrl();
+
+}
+
+
+
+function abrirDesdeUrl() {
+
+&#x20; // CARGO\_INICIAL viene del servidor (doGet lee ?cargo=\&tipo= de la URL real),
+
+&#x20; // porque la app corre en un iframe sandbox cuya window.location no es la URL pública.
+
+&#x20; if (CARGO\_INICIAL) abrirDetalle(CARGO\_INICIAL, TIPO\_INICIAL || undefined, true);
+
+}
+
+
+
+// ============================================================
+
+// ESTADÍSTICAS
+
+// ============================================================
+
+function actualizarEstadisticas() {
+
+&#x20; var total = DATOS.length;
+
+&#x20; var dirs  = DATOS.filter(function(d){ return d.nivel === 'Direcci\\xF3n'; }).length;
+
+&#x20; var secs  = new Set(DATOS.map(function(d){ return (d.secretaria || '').split('\\u2014')\[0].trim(); })).size;
+
+&#x20; setText('stat-puestos', total);
+
+&#x20; setText('stat-areas', secs);
+
+&#x20; setText('stat-dirs', dirs);
+
+&#x20; setText('badge-total', total);
+
+&#x20; setText('ci-puestos', total);
+
+&#x20; setText('ci-dirs', dirs);
+
+&#x20; setText('ci-areas', secs);
+
+&#x20; var niveles = {'Direcci\\xF3n':'dir','Departamento':'dep','Divisi\\xF3n':'div','Secci\\xF3n':'sec'};
+
+&#x20; Object.keys(niveles).forEach(function(n){
+
+&#x20;   var el = document.getElementById('cnt-nivel-' + niveles\[n]);
+
+&#x20;   if (el) el.textContent = DATOS.filter(function(d){ return d.nivel === n; }).length;
+
+&#x20; });
+
+&#x20; var elNoJer = document.getElementById('cnt-nivel-nojer');
+
+&#x20; if (elNoJer) elNoJer.textContent = DATOS.filter(function(d){ return d.nivel === 'No jer\\xE1rquico'; }).length;
+
+&#x20; var elT = document.getElementById('cnt-nivel-todos');
+
+&#x20; if (elT) elT.textContent = total;
+
+}
+
+
+
+function setText(id, val) {
+
+&#x20; var el = document.getElementById(id);
+
+&#x20; if (el) el.textContent = val;
+
+}
+
+
+
+// ============================================================
+
+// NAVEGACIÓN
+
+// ============================================================
+
+var BREADCRUMBS = {
+
+&#x20; inicio:'Inicio', organigrama:'Organigrama', nomenclador:'Puestos',
+
+&#x20; areas:'Puestos por \\xE1rea', categorias:'Agrupamientos', documentacion:'Documentaci\\xF3n',
+
+&#x20; info:'Gu\\xEDa de uso', registro:'Solicitudes',
+
+&#x20; adicionales:'Adicionales por puesto', catescalafon:'Categor\\xEDas'
+
+};
+
+
+
+function navegar(vista) {
+
+&#x20; if (vista === 'registro') {
+
+&#x20;   window.open('https://script.google.com/macros/s/AKfycbxz8LGTVnhcqLKNNGhH598OLnNtEJAe4oSyOBSTv4yoM\_UQkXVNqWzK9RZt\_tBVdv8c/exec', '\_blank');
+
+&#x20;   return;
+
+&#x20; }
+
+&#x20; // Al salir de áreas, restaurar el grid
+
+&#x20; if (vistaActual === 'areas' \&\& vista !== 'areas') {
+
+&#x20;   document.getElementById('areas-detalle').style.display = 'none';
+
+&#x20;   document.getElementById('areas-grid').style.display = '';
+
+&#x20; }
+
+&#x20; if (vistaActual === vista) return;
+
+&#x20; document.getElementById('vista-' + vistaActual).classList.remove('activa');
+
+&#x20; var navAnterior = document.getElementById('nav-' + vistaActual);
+
+&#x20; if (navAnterior) navAnterior.classList.remove('active');
+
+&#x20; vistaActual = vista;
+
+&#x20; document.getElementById('vista-' + vista).classList.add('activa');
+
+&#x20; var navNuevo = document.getElementById('nav-' + vista);
+
+&#x20; if (navNuevo) navNuevo.classList.add('active');
+
+&#x20; setText('breadcrumb-actual', BREADCRUMBS\[vista] || vista);
+
+&#x20; window.scrollTo({ top: 0, behavior: 'smooth' });
+
+}
+
+
+
+// ============================================================
+
+// NOMENCLADOR — FILTROS Y RENDER
+
+// ============================================================
+
+function poblarFiltroSecretarias() {
+
+&#x20; var secs = \[];
+
+&#x20; DATOS.forEach(function(d){
+
+&#x20;   if (d.secretaria \&\& secs.indexOf(d.secretaria) === -1) secs.push(d.secretaria);
+
+&#x20; });
+
+&#x20; secs.sort();
+
+&#x20; var cont = document.getElementById('filtro-sec');
+
+&#x20; cont.innerHTML = '<div class="filtro-opt sel" data-val="" onclick="aplicarFiltroSec(this)"><span class="fo-dot"></span> Todas</div>';
+
+&#x20; secs.forEach(function(s){
+
+&#x20;   var partes = s.split('\\u2014');
+
+&#x20;   var abrev = (partes\[1] ? partes\[1].trim() : s).replace('Sec. ', '').substring(0, 24);
+
+&#x20;   cont.innerHTML += '<div class="filtro-opt" data-val="' + esc(s) + '" onclick="aplicarFiltroSec(this)"><span class="fo-dot"></span> ' + abrev + '</div>';
+
+&#x20; });
+
+&#x20; // Agregar Entes Aut\\u00e1rquicos al final si hay puestos sin secretar\\u00eda
+
+&#x20; var hayEntesAut = DATOS.some(function(d){ return !d.secretaria; });
+
+&#x20; if (hayEntesAut) {
+
+&#x20;   cont.innerHTML += '<div class="filtro-opt" data-val="Entes Aut\\xE1rquicos" onclick="aplicarFiltroSec(this)"><span class="fo-dot"></span> Entes Aut\\xE1rquicos</div>';
+
+&#x20; }
+
+&#x20; var orgSel = document.getElementById('org-filtro-sec');
+
+&#x20; secs.forEach(function(s){
+
+&#x20;   var opt = document.createElement('option');
+
+&#x20;   var partes = s.split('\\u2014');
+
+&#x20;   opt.value = s;
+
+&#x20;   opt.textContent = partes\[1] ? partes\[1].trim() : s;
+
+&#x20;   orgSel.appendChild(opt);
+
+&#x20; });
+
+}
+
+
+
+function datosFiltrados() {
+
+&#x20; return DATOS.filter(function(d){
+
+&#x20;   if (filtroNivel  \&\& d.nivel       !== filtroNivel)  return false;
+
+&#x20;   if (filtroOrient \&\& d.orientacion !== filtroOrient) return false;
+
+&#x20;   if (filtroSec) {
+
+&#x20;     var esEntesAut = filtroSec === 'Entes Aut\\xE1rquicos';
+
+&#x20;     if (esEntesAut ? !!d.secretaria : d.secretaria !== filtroSec) return false;
+
+&#x20;   }
+
+&#x20;   if (terminoBusqueda) {
+
+&#x20;     var t = terminoBusqueda.toLowerCase();
+
+&#x20;     return (d.nombreCargo || '').toLowerCase().includes(t)
+
+&#x20;         || (d.codigo      || '').toLowerCase().includes(t)
+
+&#x20;         || (d.tipoPuesto  || '').toLowerCase().includes(t)
+
+&#x20;         || (d.secretaria  || '').toLowerCase().includes(t)
+
+&#x20;         || (d.misionEspecifica || '').toLowerCase().includes(t)
+
+&#x20;         || (d.misionGenerica   || '').toLowerCase().includes(t);
+
+&#x20;   }
+
+&#x20;   return true;
+
+&#x20; }).sort(function(a, b){
+
+&#x20;   if (ordenActual === 'nombre')    return (a.nombreCargo || '').localeCompare(b.nombreCargo || '');
+
+&#x20;   if (ordenActual === 'codigo')    return (a.codigo      || '').localeCompare(b.codigo      || '');
+
+&#x20;   if (ordenActual === 'nivel') {
+
+&#x20;     var ord = \['Direcci\\xF3n','Departamento','Divisi\\xF3n','Secci\\xF3n'];
+
+&#x20;     return ord.indexOf(a.nivel) - ord.indexOf(b.nivel);
+
+&#x20;   }
+
+&#x20;   if (ordenActual === 'secretaria') return (a.secretaria || '').localeCompare(b.secretaria || '');
+
+&#x20;   return 0;
+
+&#x20; });
+
+}
+
+
+
+function aplicarFiltroNivel(el) {
+
+&#x20; document.querySelectorAll('#filtro-nivel .filtro-opt').forEach(function(o){ o.classList.remove('sel'); });
+
+&#x20; el.classList.add('sel'); filtroNivel = el.dataset.val; renderizarNomenclador();
+
+}
+
+function aplicarFiltroOrient(el) {
+
+&#x20; document.querySelectorAll('#filtro-orient .filtro-opt').forEach(function(o){ o.classList.remove('sel'); });
+
+&#x20; el.classList.add('sel'); filtroOrient = el.dataset.val; renderizarNomenclador();
+
+}
+
+function aplicarFiltroSec(el) {
+
+&#x20; document.querySelectorAll('#filtro-sec .filtro-opt').forEach(function(o){ o.classList.remove('sel'); });
+
+&#x20; el.classList.add('sel'); filtroSec = el.dataset.val; renderizarNomenclador();
+
+}
+
+function aplicarOrden(val) { ordenActual = val; renderizarNomenclador(); }
+
+function buscarGlobal(val) {
+
+&#x20; terminoBusqueda = val;
+
+&#x20; if (val \&\& vistaActual !== 'nomenclador') navegar('nomenclador');
+
+&#x20; renderizarNomenclador();
+
+}
+
+
+
+var NIVEL\_ICONS  = { 'Direcci\\xF3n':'<svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="1"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="15" y2="16"/></svg>','Departamento':'<svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>','Divisi\\xF3n':'<svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>','Secci\\xF3n':'<svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>' };
+
+var NIVEL\_CLASS  = { 'Direcci\\xF3n':'dir','Departamento':'dep','Divisi\\xF3n':'div','Secci\\xF3n':'sec' };
+
+var ORIENT\_CLASS = { 'Administrativa':'adm','Operativa':'ope','T\\xE9cnica':'tec','Inspecci\\xF3n':'ins' };
+
+
+
+function renderizarNomenclador() {
+
+&#x20; var lista = document.getElementById('nom-lista');
+
+&#x20; var filtrados = datosFiltrados();
+
+&#x20; setText('count-mostrados', filtrados.length);
+
+&#x20; setText('count-total', DATOS.length);
+
+
+
+&#x20; if (filtrados.length === 0) {
+
+&#x20;   lista.innerHTML = '<div class="empty-state"><div class="es-icon"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div><div class="es-title">Sin resultados</div><div class="es-sub">Prob\\xE1 con otros filtros o t\\xE9rminos de b\\xFAsqueda.</div></div>';
+
+&#x20;   return;
+
+&#x20; }
+
+
+
+&#x20; // Agrupar no-jerárquicos por nombre para evitar duplicados en la lista
+
+&#x20; var nojerGrupos = {};
+
+&#x20; var nojerOrden  = \[];
+
+&#x20; var renderItems = \[];
+
+&#x20; filtrados.forEach(function(d) {
+
+&#x20;   if (d.tipoRegistro === 'nojerarquico') {
+
+&#x20;     var key = (d.nombreCargo || d.codigo).trim();
+
+&#x20;     if (!nojerGrupos\[key]) { nojerGrupos\[key] = \[]; nojerOrden.push(key); }
+
+&#x20;     nojerGrupos\[key].push(d);
+
+&#x20;   } else {
+
+&#x20;     renderItems.push({ d: d, grupo: null });
+
+&#x20;   }
+
+&#x20; });
+
+&#x20; nojerOrden.forEach(function(key) { renderItems.push({ d: nojerGrupos\[key]\[0], grupo: nojerGrupos\[key] }); });
+
+&#x20; renderItems.sort(function(a, b) {
+
+&#x20;   if (ordenActual === 'nombre') return (a.d.nombreCargo || '').localeCompare(b.d.nombreCargo || '');
+
+&#x20;   if (ordenActual === 'codigo') return (a.d.codigo || '').localeCompare(b.d.codigo || '');
+
+&#x20;   return 0;
+
+&#x20; });
+
+
+
+&#x20; lista.innerHTML = renderItems.map(function(item){
+
+&#x20;   var d = item.d, grupo = item.grupo;
+
+&#x20;   var nc = NIVEL\_CLASS\[d.nivel]  || 'dep';
+
+&#x20;   var oc = ORIENT\_CLASS\[d.orientacion] || 'adm';
+
+&#x20;   var secNombre = '';
+
+&#x20;   if (d.secretaria) {
+
+&#x20;     var partes = d.secretaria.split('\\u2014');
+
+&#x20;     secNombre = partes\[1] ? partes\[1].trim() : d.secretaria;
+
+&#x20;   }
+
+&#x20;   var areasMeta = secNombre ? '<span class="nc-sec">\&middot; ' + secNombre + '</span>' : '';
+
+&#x20;   var esNoJer = d.tipoRegistro === 'nojerarquico';
+
+&#x20;   return '<div class="nom-card" onclick="abrirDetalle(\\'' + esc(d.codigo) + '\\', \\'' + (d.tipoRegistro || 'jerarquico') + '\\')" id="nc\_' + esc(d.codigo) + '">' +
+
+&#x20;     '<div class="nc-nivel ' + nc + '">' + (esNoJer ? '<svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>' : (NIVEL\_ICONS\[d.nivel] || '<svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2h6a1 1 0 0 1 1 1v1H8V3a1 1 0 0 1 1-1z"/><rect x="5" y="4" width="14" height="18" rx="2"/><line x1="9" y1="11" x2="15" y2="11"/><line x1="9" y1="15" x2="15" y2="15"/></svg>')) + '</div>' +
+
+&#x20;     '<div class="nc-body">' +
+
+&#x20;       '<div class="nc-nombre">' + (d.nombreCargo || '') + '</div>' +
+
+&#x20;       '<div class="nc-meta">' +
+
+&#x20;         '<span class="nc-codigo">' + (esNoJer ? (d.tipoPuesto || 'No jer\\xE1rquico') : (d.codigo || '')) + '</span>' +
+
+&#x20;         areasMeta +
+
+&#x20;       '</div>' +
+
+&#x20;       '<div class="nc-tags">' +
+
+&#x20;         (esNoJer
+
+&#x20;           ? '<span class="nc-tag" style="background:#fce7f3;color:#831843"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> No jer\\xE1rquico</span>'
+
+&#x20;           : '<span class="nc-tag" style="background:var(--surface2);color:var(--text2);border:1px solid var(--border)">' + (d.nivel || '') + '</span>'
+
+&#x20;         ) +
+
+&#x20;         (d.tipoPuesto ? '<span class="nc-tag puesto"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2h6a1 1 0 0 1 1 1v1H8V3a1 1 0 0 1 1-1z"/><rect x="5" y="4" width="14" height="18" rx="2"/><line x1="9" y1="11" x2="15" y2="11"/><line x1="9" y1="15" x2="15" y2="15"/></svg> ' + d.tipoPuesto + '</span>' : '') +
+
+&#x20;         '<span class="nc-tag ' + oc + '">' + (d.orientacion || '') + '</span>' +
+
+&#x20;         (d.requiereTitulo === 'S\\xED' ? '<span class="nc-tag" style="background:#fef3c7;color:#92400e"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1.5 2.7 3 6 3s6-1.5 6-3v-5"/></svg> T\\xEDtulo</span>' : '') +
+
+
+
+&#x20;       '</div>' +
+
+&#x20;     '</div>' +
+
+&#x20;     '<div class="nc-right"><span class="nc-arrow">\&#x203A;</span></div>' +
+
+&#x20;     '</div>';
+
+&#x20; }).join('');
+
+}
+
+
+
+// ============================================================
+
+// PANEL DE DETALLE — lógica nueva cargo + puesto genérico
+
+// ============================================================
+
+function abrirDetalle(codigo, tipoRegistro, sinUrl) {
+
+&#x20; document.getElementById('detalle-header').innerHTML =
+
+&#x20;   '<div style="display:flex;align-items:center;gap:12px;padding:4px 0">' +
+
+&#x20;   '<div class="spinner" style="width:24px;height:24px;border-width:2px"></div>' +
+
+&#x20;   '<span style="font-size:13px;color:var(--text2)">Cargando ficha...</span>' +
+
+&#x20;   '</div>' +
+
+&#x20;   '<button class="detalle-close" onclick="cerrarDetalle()"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>';
+
+&#x20; document.getElementById('detalle-body').innerHTML = '';
+
+&#x20; document.getElementById('detalle-tabs').style.display = 'none';
+
+&#x20; document.getElementById('detalle-overlay').classList.add('abierto');
+
+&#x20; document.body.style.overflow = 'hidden';
+
+
+
+&#x20; google.script.run
+
+&#x20;   .withSuccessHandler(onDetalleLoaded)
+
+&#x20;   .withFailureHandler(onDetalleFail)
+
+&#x20;   .getDetallePuesto(codigo, tipoRegistro);
+
+}
+
+
+
+function onDetalleLoaded(resp) {
+
+&#x20; if (!resp || !resp.ok) {
+
+&#x20;   document.getElementById('detalle-header').innerHTML =
+
+&#x20;     '<span style="color:var(--red)">Error al cargar</span>' +
+
+&#x20;     '<button class="detalle-close" onclick="cerrarDetalle()"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>';
+
+&#x20;   return;
+
+&#x20; }
+
+&#x20; var d = resp.datos;
+
+&#x20; puestoDetalle = d;
+
+&#x20; tabDetalle = 'descripcion';
+
+
+
+&#x20; var nivel = d.nivel || '';
+
+&#x20; var nc = NIVEL\_CLASS\[nivel] || 'dep';
+
+
+
+&#x20; document.getElementById('detalle-header').innerHTML =
+
+&#x20;   '<div class="dh-icono ' + nc + '">' + (NIVEL\_ICONS\[nivel] || '<svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2h6a1 1 0 0 1 1 1v1H8V3a1 1 0 0 1 1-1z"/><rect x="5" y="4" width="14" height="18" rx="2"/><line x1="9" y1="11" x2="15" y2="11"/><line x1="9" y1="15" x2="15" y2="15"/></svg>') + '</div>' +
+
+&#x20;   '<div class="dh-info">' +
+
+&#x20;     '<div class="dh-nivel">' + nivel +
+
+&#x20;       (d.tipoPuesto ? ' \&mdash; <span style="color:var(--accent);font-weight:700">' + d.tipoPuesto + '</span>' : '') +
+
+&#x20;     '</div>' +
+
+&#x20;     '<div class="dh-nombre">' + (d.nombreCargo || '') + '</div>' +
+
+&#x20;     '<div class="dh-codigo">' + (d.codigo || '') +
+
+&#x20;       '<button class="copy-btn" onclick="copiarCodigo(\\'' + esc(d.codigo) + '\\')" title="Copiar"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>' +
+
+&#x20;       '<button class="copy-btn" onclick="copiarEnlace(\\'' + esc(d.codigo) + '\\')" title="Copiar enlace para compartir"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></button>' +
+
+&#x20;       '<button class="copy-btn" onclick="imprimirFicha()" title="Imprimir / Exportar PDF"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>' +
+
+&#x20;     '</div>' +
+
+&#x20;   '</div>' +
+
+&#x20;   '<button class="detalle-close" onclick="cerrarDetalle()"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>';
+
+
+
+&#x20; document.getElementById('detalle-tabs').style.display = 'flex';
+
+&#x20; document.querySelectorAll('.det-tab').forEach(function(t){ t.classList.remove('activo'); });
+
+&#x20; document.getElementById('tab-descripcion').classList.add('activo');
+
+&#x20; renderizarTabDetalle('descripcion');
+
+}
+
+
+
+function onDetalleFail() {
+
+&#x20; document.getElementById('detalle-header').innerHTML =
+
+&#x20;   '<span style="color:var(--red)">Error de conexi\\xF3n</span>' +
+
+&#x20;   '<button class="detalle-close" onclick="cerrarDetalle()"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>';
+
+}
+
+
+
+function cerrarDetalle(e) {
+
+&#x20; if (e \&\& e.target !== document.getElementById('detalle-overlay')) return;
+
+&#x20; document.getElementById('detalle-overlay').classList.remove('abierto');
+
+&#x20; document.body.style.overflow = '';
+
+}
+
+
+
+function cambiarTab(tab) {
+
+&#x20; tabDetalle = tab;
+
+&#x20; document.querySelectorAll('.det-tab').forEach(function(t){ t.classList.remove('activo'); });
+
+&#x20; document.getElementById('tab-' + tab).classList.add('activo');
+
+&#x20; renderizarTabDetalle(tab);
+
+}
+
+
+
+function renderizarTabDetalle(tab) {
+
+&#x20; var d = puestoDetalle;
+
+&#x20; if (!d) return;
+
+&#x20; var body = document.getElementById('detalle-body');
+
+&#x20; var pg   = d.puestoGenerico; // null si no tiene tipoPuesto
+
+
+
+&#x20; if (tab === 'descripcion') {
+
+&#x20;   var html = '';
+
+
+
+&#x20;   // Bloque 1 — misión genérica del puesto (verde claro, borde acento)
+
+&#x20;   if (pg \&\& pg.mision) {
+
+&#x20;     html +=
+
+&#x20;       '<div class="det-section">' +
+
+&#x20;       '<div class="det-section-title"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> Misi\\xF3n del Puesto \&mdash; ' +
+
+&#x20;         '<span style="color:var(--accent)">' + pg.nombre + '</span>' +
+
+&#x20;       '</div>' +
+
+&#x20;       '<div class="det-mision" style="border-left:3px solid var(--accent);padding-left:16px;background:#eff6ff">' +
+
+&#x20;         pg.mision +
+
+&#x20;       '</div>' +
+
+&#x20;       '</div>';
+
+&#x20;   }
+
+
+
+&#x20;   // Bloque 2 — misión específica del cargo
+
+&#x20;   if (d.misionEspecifica) {
+
+&#x20;     html +=
+
+&#x20;       '<div class="det-section">' +
+
+&#x20;       '<div class="det-section-title"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></svg> Descripci\\xF3n espec\\xEDfica del cargo</div>' +
+
+&#x20;       '<div class="det-mision">' + d.misionEspecifica + '</div>' +
+
+&#x20;       '</div>';
+
+&#x20;   }
+
+
+
+&#x20;   if (!html) {
+
+&#x20;     html = '<div class="det-section"><div class="det-mision" style="color:var(--text3)">No hay descripci\\xF3n disponible para este cargo a\\xFAn.</div></div>';
+
+&#x20;   }
+
+
+
+&#x20;   // Ubicación — detectar si el puesto existe en múltiples áreas
+
+&#x20;   var otrasInstancias = DATOS.filter(function(r){ return r.tipoRegistro === 'nojerarquico' \&\& r.nombreCargo === d.nombreCargo \&\& r.codigo !== d.codigo; });
+
+
+
+&#x20;   var btnOrg = '';
+
+&#x20;   if (otrasInstancias.length > 0) {
+
+&#x20;     // Mostrar un botón por cada área
+
+&#x20;     var todasInstancias = \[d].concat(otrasInstancias);
+
+&#x20;     btnOrg = todasInstancias.map(function(inst) {
+
+&#x20;       var p = (inst.secretaria || '').split('\\u2014');
+
+&#x20;       var secLabel = p\[1] ? p\[1].trim() : (inst.secretaria || 'Sin área');
+
+&#x20;       return '<button onclick="irAOrganigramaInstancia(' + JSON.stringify({codigo: inst.codigo, tipoRegistro: inst.tipoRegistro, nombreCargo: inst.nombreCargo, secretaria: inst.secretaria, dependencia: inst.dependencia, nivel: inst.nivel, tipoPuesto: inst.tipoPuesto}) + ')" ' +
+
+&#x20;         'style="display:inline-flex;align-items:center;gap:5px;padding:5px 10px;border:1px solid var(--border);background:var(--surface2);border-radius:var(--r-sm);font-size:11px;font-weight:600;color:var(--text2);cursor:pointer;margin-right:6px;margin-bottom:4px">' +
+
+&#x20;         '<svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>' +
+
+&#x20;         secLabel + '</button>';
+
+&#x20;     }).join('');
+
+&#x20;   } else {
+
+&#x20;     btnOrg = '<button onclick="irAOrganigrama()" ' +
+
+&#x20;       'style="display:inline-flex;align-items:center;gap:5px;padding:5px 10px;border:1px solid var(--border);background:var(--surface2);border-radius:var(--r-sm);font-size:11px;font-weight:600;color:var(--text2);cursor:pointer">' +
+
+&#x20;       '<svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>' +
+
+&#x20;       'Ver en organigrama</button>';
+
+&#x20;   }
+
+
+
+&#x20;   html +=
+
+&#x20;     '<div class="det-section">' +
+
+&#x20;     '<div class="det-section-title" style="display:flex;align-items:center;justify-content:space-between">' +
+
+&#x20;       '<span><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 1 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> Ubicaci\\xF3n en la estructura</span>' +
+
+&#x20;     '</div>' +
+
+&#x20;     (otrasInstancias.length > 0 ? '<div style="font-size:11px;color:var(--text2);margin-bottom:8px">Este puesto existe en ' + (\[d].concat(otrasInstancias)).length + ' \\xE1reas — seleccion\\xE1 el organigrama a ver:</div>' : '') +
+
+&#x20;     '<div style="margin-bottom:10px;flex-wrap:wrap;display:flex">' + btnOrg + '</div>' +
+
+&#x20;     '<div class="det-info-grid">' +
+
+&#x20;       detInfoItem('Secretar\\xEDa', d.secretaria ? (d.secretaria.split('\\u2014')\[1] || d.secretaria).trim() : '\\u2014') +
+
+&#x20;       detInfoItem('Nivel', d.nivel || '\\u2014') +
+
+&#x20;       detInfoItem('C\\xF3digo', d.codigo, true) +
+
+&#x20;       detInfoItem('Orientaci\\xF3n', d.orientacion || '\\u2014') +
+
+&#x20;     '</div>' +
+
+&#x20;     '</div>';
+
+
+
+&#x20;   body.innerHTML = html;
+
+
+
+&#x20; } else if (tab === 'competencias') {
+
+&#x20;   var html = '';
+
+
+
+&#x20;   if (d.competenciasPrincipales || d.competenciasSecundarias) {
+
+&#x20;     html +=
+
+&#x20;       '<div class="det-section">' +
+
+&#x20;       '<div class="det-section-title"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> Competencias del puesto</div>' +
+
+&#x20;       '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px">' +
+
+&#x20;         '<div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:var(--r);padding:14px">' +
+
+&#x20;           '<div style="font-size:11px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Primarias</div>' +
+
+&#x20;           '<div style="font-size:12.5px;color:var(--text);line-height:1.7;white-space:pre-wrap">' + (d.competenciasPrincipales || '<span style="color:var(--text3)">Sin datos cargados</span>') + '</div>' +
+
+&#x20;         '</div>' +
+
+&#x20;         '<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:var(--r);padding:14px">' +
+
+&#x20;           '<div style="font-size:11px;font-weight:700;color:#16a34a;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Secundarias</div>' +
+
+&#x20;           '<div style="font-size:12.5px;color:var(--text);line-height:1.7;white-space:pre-wrap">' + (d.competenciasSecundarias || '<span style="color:var(--text3)">Sin datos cargados</span>') + '</div>' +
+
+&#x20;         '</div>' +
+
+&#x20;       '</div>' +
+
+&#x20;       '</div>';
+
+&#x20;   } else {
+
+&#x20;     html += '<div class="det-section"><div class="det-mision" style="color:var(--text3)">No hay competencias cargadas para este puesto a\\xFAn.</div></div>';
+
+&#x20;   }
+
+
+
+&#x20;   if (d.resultadosIndicadores) {
+
+&#x20;     html +=
+
+&#x20;       '<div class="det-section">' +
+
+&#x20;       '<div class="det-section-title"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg> Resultados e indicadores</div>' +
+
+&#x20;       '<div class="det-mision" style="white-space:pre-wrap">' + d.resultadosIndicadores + '</div>' +
+
+&#x20;       '</div>';
+
+&#x20;   }
+
+
+
+&#x20;   if (d.responsabilidades) {
+
+&#x20;     html +=
+
+&#x20;       '<div class="det-section">' +
+
+&#x20;       '<div class="det-section-title"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> Responsabilidades</div>' +
+
+&#x20;       '<div class="det-mision" style="white-space:pre-wrap">' + d.responsabilidades + '</div>' +
+
+&#x20;       '</div>';
+
+&#x20;   }
+
+
+
+&#x20;   body.innerHTML = html;
+
+
+
+&#x20; } else if (tab === 'info') {
+
+&#x20;   var html = '';
+
+
+
+&#x20;   if (pg \&\& pg.funciones) {
+
+&#x20;     html +=
+
+&#x20;       '<div class="det-section">' +
+
+&#x20;       '<div class="det-section-title"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg> Funciones del Puesto \&mdash; ' + pg.nombre + '</div>' +
+
+&#x20;       '<div class="det-mision" style="font-size:12.5px;border-left:3px solid var(--accent);padding-left:16px;background:#eff6ff">' +
+
+&#x20;         pg.funciones +
+
+&#x20;       '</div>' +
+
+&#x20;       '</div>';
+
+&#x20;   }
+
+
+
+&#x20;   html +=
+
+&#x20;     '<div class="det-section">' +
+
+&#x20;     '<div class="det-section-title"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2h6a1 1 0 0 1 1 1v1H8V3a1 1 0 0 1 1-1z"/><rect x="5" y="4" width="14" height="18" rx="2"/><line x1="9" y1="11" x2="15" y2="11"/><line x1="9" y1="15" x2="15" y2="15"/></svg> Datos del cargo</div>' +
+
+&#x20;     '<div class="det-info-grid">' +
+
+&#x20;       detInfoItem('Tipo de Puesto', d.tipoPuesto || '\\u2014') +
+
+&#x20;       detInfoItem('C\\xF3digo Puesto', d.codigoPuesto || '\\u2014', true) +
+
+&#x20;       detInfoItem('Normativa', d.normativa || '\\u2014') +
+
+&#x20;       detInfoItem('Categor\\xEDa', d.categoria || '\\u2014') +
+
+&#x20;     '</div>' +
+
+&#x20;     '</div>';
+
+
+
+&#x20;   if (d.adicional1 || d.adicional2) {
+
+&#x20;     html +=
+
+&#x20;       '<div class="det-section">' +
+
+&#x20;       '<div class="det-section-title"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> Adicionales</div>' +
+
+&#x20;       '<div class="det-info-grid">' +
+
+&#x20;         (d.adicional1 ? detInfoItem('Adicional 1', d.adicional1) : '') +
+
+&#x20;         (d.adicional2 ? detInfoItem('Adicional 2', d.adicional2) : '') +
+
+&#x20;       '</div>' +
+
+&#x20;       '</div>';
+
+&#x20;   }
+
+
+
+&#x20;   body.innerHTML = html;
+
+
+
+&#x20; } else if (tab === 'requisitos') {
+
+&#x20;   var html =
+
+&#x20;     '<div class="det-section">' +
+
+&#x20;     '<div class="det-section-title"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2h6a1 1 0 0 1 1 1v1H8V3a1 1 0 0 1 1-1z"/><rect x="5" y="4" width="14" height="18" rx="2"/><line x1="9" y1="11" x2="15" y2="11"/><line x1="9" y1="15" x2="15" y2="15"/></svg> Requisitos del cargo</div>' +
+
+&#x20;     '<div class="det-req-list">';
+
+
+
+&#x20;   if (pg \&\& pg.requisitos) {
+
+&#x20;     html += detReqItem('<svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>', 'Requisitos del Puesto \&mdash; ' + pg.nombre, true, pg.requisitos);
+
+&#x20;   }
+
+
+
+&#x20;   var tieneTitulo = d.requiereTitulo === 'S\\xED' || d.requiereTitulo === 'Si' || d.requiereTitulo === 'true';
+
+&#x20;   html += detReqItem('<svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1.5 2.7 3 6 3s6-1.5 6-3v-5"/></svg>', 'T\\xEDtulo / Titulaci\\xF3n excluyente', tieneTitulo,
+
+&#x20;     d.titulacion || (tieneTitulo ? 'Requerido' : 'No requerido'));
+
+
+
+&#x20;   var tieneMatricula = d.requiereMatricula === 'S\\xED' || d.requiereMatricula === 'Si' || d.requiereMatricula === 'true';
+
+&#x20;   html += detReqItem('<svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2h6a1 1 0 0 1 1 1v1H8V3a1 1 0 0 1 1-1z"/><rect x="5" y="4" width="14" height="18" rx="2"/><line x1="9" y1="11" x2="15" y2="11"/><line x1="9" y1="15" x2="15" y2="15"/></svg>', 'Matr\\xEDcula habilitante', tieneMatricula,
+
+&#x20;     tieneMatricula ? 'Requerida' : 'No requerida');
+
+
+
+&#x20;   html += '</div></div>';
+
+
+
+&#x20;   if (d.requisitosEspecificos) {
+
+&#x20;     html +=
+
+&#x20;       '<div class="det-section">' +
+
+&#x20;       '<div class="det-section-title"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></svg> Requisitos espec\\xEDficos del cargo</div>' +
+
+&#x20;       '<div class="det-mision" style="font-size:12px;white-space:pre-wrap">' + d.requisitosEspecificos + '</div>' +
+
+&#x20;       '</div>';
+
+&#x20;   }
+
+
+
+&#x20;   body.innerHTML = html;
+
+
+
+&#x20; } else if (tab === 'contexto') {
+
+&#x20;   var html =
+
+&#x20;     '<div class="det-section">' +
+
+&#x20;     '<div class="det-section-title"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg> Contexto de trabajo</div>' +
+
+&#x20;     '<div class="det-mision">' + (d.contexto || 'Sin informaci\\xF3n disponible.') + '</div>' +
+
+&#x20;     '</div>';
+
+
+
+&#x20;   if (d.secretaria) {
+
+&#x20;     html +=
+
+&#x20;       '<div class="det-section">' +
+
+&#x20;       '<div class="det-section-title"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="1"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="15" y2="16"/></svg> \\xC1rea de pertenencia</div>' +
+
+&#x20;       '<div class="det-mision" style="font-size:12.5px">' + d.secretaria + '</div>' +
+
+&#x20;       '</div>';
+
+&#x20;   }
+
+
+
+&#x20;   html +=
+
+&#x20;     '<div class="det-section" style="margin-top:20px">' +
+
+&#x20;     '<div class="det-section-title"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5z"/></svg> \\xBFNeces\\xEDt\\xE1s modificar este cargo?</div>' +
+
+&#x20;     '<button onclick="solicitarModificacion(\\'' + esc(d.codigo) + '\\')" style="' +
+
+&#x20;       'padding:11px 20px;background:var(--accent);color:#fff;border:none;border-radius:var(--r);' +
+
+&#x20;       'font-family:Segoe UI,sans-serif;font-size:12.5px;font-weight:600;cursor:pointer;' +
+
+&#x20;       'box-shadow:0 3px 10px rgba(45,107,228,.3);display:inline-flex;align-items:center;gap:8px">' +
+
+&#x20;       '<svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5z"/></svg> Solicitar modificaci\\xF3n de este cargo' +
+
+&#x20;     '</button>' +
+
+&#x20;     '</div>';
+
+
+
+&#x20;   body.innerHTML = html;
+
+&#x20; }
+
+}
+
+
+
+function detInfoItem(label, val, mono) {
+
+&#x20; return '<div class="det-info-item">' +
+
+&#x20;   '<div class="dii-label">' + label + '</div>' +
+
+&#x20;   '<div class="dii-val' + (mono ? ' mono' : '') + '">' + (val || '\\u2014') + '</div>' +
+
+&#x20;   '</div>';
+
+}
+
+
+
+function detReqItem(icon, label, cumple, detalle) {
+
+&#x20; return '<div class="det-req-item ' + (cumple ? 'cumple' : 'no-cumple') + '">' +
+
+&#x20;   '<span class="dr-icon">' + icon + '</span>' +
+
+&#x20;   '<div>' +
+
+&#x20;     '<div style="font-weight:600;color:var(--text)">' + label + '</div>' +
+
+&#x20;     '<div style="font-size:11px;color:var(--text3);margin-top:2px">' + (detalle || '') + '</div>' +
+
+&#x20;   '</div>' +
+
+&#x20;   '<span class="dr-check">' + (cumple ? '<svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>' : '<svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/></svg>') + '</span>' +
+
+&#x20;   '</div>';
+
+}
+
+
+
+function copiarCodigo(codigo) {
+
+&#x20; navigator.clipboard.writeText(codigo).then(function(){
+
+&#x20;   mostrarToast('C\\xF3digo ' + codigo + ' copiado', false);
+
+&#x20; });
+
+}
+
+
+
+function copiarEnlace(codigo) {
+
+&#x20; // Se usa APP\_URL (la URL pública real /exec, inyectada por el servidor) en vez de
+
+&#x20; // window.location, porque la app corre en un iframe sandbox de GAS cuya URL interna
+
+&#x20; // (googleusercontent.com) no es navegable ni compartible.
+
+&#x20; var url = new URL(APP\_URL);
+
+&#x20; url.searchParams.set('cargo', codigo);
+
+&#x20; if (puestoDetalle \&\& puestoDetalle.tipoRegistro) url.searchParams.set('tipo', puestoDetalle.tipoRegistro);
+
+&#x20; navigator.clipboard.writeText(url.toString()).then(function(){
+
+&#x20;   mostrarToast('Enlace copiado al portapapeles', false);
+
+&#x20; });
+
+}
+
+
+
+function imprimirFicha() {
+
+&#x20; if (!puestoDetalle) return;
+
+&#x20; var savedTab = tabDetalle;
+
+&#x20; var body = document.getElementById('detalle-body');
+
+&#x20; var full = '';
+
+&#x20; \['descripcion', 'competencias', 'info', 'requisitos', 'contexto'].forEach(function(t){
+
+&#x20;   renderizarTabDetalle(t);
+
+&#x20;   full += body.innerHTML;
+
+&#x20; });
+
+&#x20; renderizarTabDetalle(savedTab);
+
+&#x20; document.querySelectorAll('.det-tab').forEach(function(t){ t.classList.remove('activo'); });
+
+&#x20; document.getElementById('tab-' + savedTab).classList.add('activo');
+
+
+
+&#x20; document.getElementById('detalle-print').innerHTML =
+
+&#x20;   '<div class="print-header">' +
+
+&#x20;     '<div class="print-nombre">' + (puestoDetalle.nombreCargo || '') + '</div>' +
+
+&#x20;     '<div class="print-meta">' + (puestoDetalle.codigo || '') + ' \&middot; ' + (puestoDetalle.nivel || '') +
+
+&#x20;       (puestoDetalle.tipoPuesto ? ' \&middot; ' + puestoDetalle.tipoPuesto : '') +
+
+&#x20;     '</div>' +
+
+&#x20;   '</div>' + full;
+
+&#x20; window.print();
+
+}
+
+
+
+function solicitarModificacion(codigo) {
+
+&#x20; cerrarDetalle();
+
+&#x20; navegar('registro');
+
+}
+
+
+
+// ============================================================
+
+// ÁREAS
+
+// ============================================================
+
+function renderizarAreas() {
+
+&#x20; var secs = {};
+
+&#x20; DATOS.forEach(function(d){
+
+&#x20;   var s = d.secretaria || 'Entes Aut\\xE1rquicos';
+
+&#x20;   if (!secs\[s]) secs\[s] = { nombre: s, dirs: 0, puestos: 0 };
+
+&#x20;   if (d.nivel === 'Direcci\\xF3n') secs\[s].dirs++;
+
+&#x20;   secs\[s].puestos++;
+
+&#x20; });
+
+&#x20; var colores = \['#dbeafe','#ede9fe','#d1fae5','#fff7ed','#fce7f3','#fef3c7','#f0fdf4','#eff6ff'];
+
+&#x20; var keys = Object.keys(secs);
+
+&#x20; var grid = document.getElementById('areas-grid');
+
+&#x20; grid.innerHTML = keys.map(function(k, i){
+
+&#x20;   var s = secs\[k];
+
+&#x20;   var bg = colores\[i % colores.length];
+
+&#x20;   var partes = k.split('\\u2014');
+
+&#x20;   var nombre = partes\[1] ? partes\[1].trim() : k;
+
+&#x20;   var cod    = partes\[0].trim();
+
+&#x20;   return '<div class="area-card" onclick="filtrarPorSecretaria(\\'' + esc(k) + '\\')">' +
+
+&#x20;     '<div class="area-card-header">' +
+
+&#x20;       '<div class="area-icon" style="background:' + bg + '"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="1"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="15" y2="16"/></svg></div>' +
+
+&#x20;       '<div><div class="ar-titulo">' + nombre + '</div><div class="ar-codigo">' + cod + '</div></div>' +
+
+&#x20;     '</div>' +
+
+&#x20;     '<div class="area-card-body"><div class="area-stat-row">' +
+
+&#x20;       '<div class="area-stat"><div class="as-num">' + s.puestos + '</div><div class="as-label">Cargos</div></div>' +
+
+&#x20;       '<div class="area-stat"><div class="as-num">' + s.dirs + '</div><div class="as-label">Direcciones</div></div>' +
+
+&#x20;     '</div></div>' +
+
+&#x20;     '</div>';
+
+&#x20; }).join('');
+
+}
+
+
+
+function filtrarPorSecretaria(sec) {
+
+&#x20; var partes = sec.split('—');
+
+&#x20; var nombre = partes\[1] ? partes\[1].trim() : sec;
+
+&#x20; document.getElementById('areas-detalle-titulo').textContent = nombre;
+
+
+
+&#x20; var puestos = DATOS.filter(function(d){ return d.secretaria === sec; });
+
+&#x20; var lista = document.getElementById('areas-detalle-lista');
+
+
+
+&#x20; if (puestos.length === 0) {
+
+&#x20;   lista.innerHTML = '<div class="empty-state"><div class="es-title">Sin cargos en esta \\xE1rea</div></div>';
+
+&#x20; } else {
+
+&#x20;   lista.innerHTML = puestos.map(function(d){
+
+&#x20;     var nc = NIVEL\_CLASS\[d.nivel] || 'dep';
+
+&#x20;     var esNoJer = d.tipoRegistro === 'nojerarquico';
+
+&#x20;     return '<div class="nom-card" onclick="abrirDetalle(\\'' + esc(d.codigo) + '\\',\\'' + esc(d.tipoRegistro || 'jerarquico') + '\\')">' +
+
+&#x20;       '<div class="nc-nivel ' + nc + '">' + (esNoJer
+
+&#x20;         ? '<svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>'
+
+&#x20;         : (NIVEL\_ICONS\[d.nivel] || '')) + '</div>' +
+
+&#x20;       '<div class="nc-body">' +
+
+&#x20;         '<div class="nc-nombre">' + (d.nombreCargo || '') + '</div>' +
+
+&#x20;         '<div class="nc-meta"><span class="nc-codigo">' + (d.codigo || '') + '</span>' +
+
+&#x20;           (d.dependencia ? '<span class="nc-sec">\&middot; ' + d.dependencia + '</span>' : '') +
+
+&#x20;         '</div>' +
+
+&#x20;         '<div class="nc-tags">' +
+
+&#x20;           (esNoJer ? '<span class="nc-tag" style="background:#fce7f3;color:#831843">No Jer\\xE1rquico</span>' : '<span class="nc-tag" style="background:var(--surface2);color:var(--text2);border:1px solid var(--border)">' + (d.nivel || '') + '</span>') +
+
+&#x20;           (d.tipoPuesto ? '<span class="nc-tag puesto"> ' + d.tipoPuesto + '</span>' : '') +
+
+&#x20;         '</div>' +
+
+&#x20;       '</div>' +
+
+&#x20;       '<div class="nc-right"><span class="nc-arrow">\&#x203A;</span></div>' +
+
+&#x20;       '</div>';
+
+&#x20;   }).join('');
+
+&#x20; }
+
+
+
+&#x20; document.getElementById('areas-grid').style.display = 'none';
+
+&#x20; document.getElementById('areas-detalle').style.display = 'block';
+
+&#x20; navegar('areas');
+
+}
+
+
+
+function volverAreas() {
+
+&#x20; document.getElementById('areas-detalle').style.display = 'none';
+
+&#x20; document.getElementById('areas-grid').style.display = '';
+
+}
+
+
+
+// ============================================================
+
+// CATEGORÍAS
+
+// ============================================================
+
+function toggleBloque(id) {
+
+&#x20; var el  = document.getElementById(id);
+
+&#x20; var btn = document.getElementById(id + '-btn');
+
+&#x20; if (!el) return;
+
+&#x20; var oculto = el.style.display === 'none';
+
+&#x20; el.style.display = oculto ? '' : 'none';
+
+&#x20; if (btn) btn.textContent = oculto ? '▲' : '▼';
+
+}
+
+
+
+function toggleSubOrient(id) {
+
+&#x20; var el = document.getElementById(id);
+
+&#x20; if (!el) return;
+
+&#x20; var isHidden = el.style.display === 'none' || el.style.display === '';
+
+&#x20; el.style.display = isHidden ? 'flex' : 'none';
+
+&#x20; el.style.flexDirection = 'column';
+
+&#x20; el.style.gap = '4px';
+
+&#x20; var chevron = document.getElementById(id + '-chevron');
+
+&#x20; if (chevron) chevron.style.transform = isHidden ? 'rotate(180deg)' : '';
+
+}
+
+
+
+function renderizarCategorias() {
+
+&#x20; var cont = document.getElementById('categorias-content');
+
+&#x20; if (!cont) return;
+
+&#x20; var html = '';
+
+
+
+&#x20; // ── BLOQUE 1: EJES ──
+
+&#x20; var secsMap = {};
+
+&#x20; DATOS.filter(function(d){ return d.nivel === 'Direcci\\xF3n'; }).forEach(function(d){
+
+&#x20;   var s = d.secretaria || 'Entes Aut\\xE1rquicos';
+
+&#x20;   if (!secsMap\[s]) secsMap\[s] = \[];
+
+&#x20;   secsMap\[s].push(d);
+
+&#x20; });
+
+&#x20; var secKeys = Object.keys(secsMap).sort();
+
+
+
+&#x20; html += '<div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);margin-bottom:20px;overflow:hidden;box-shadow:var(--sh)">';
+
+&#x20; html += '<div onclick="toggleBloque(\\'cat-ejes\\')" style="padding:14px 20px;cursor:pointer;background:#f0f7ff;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">';
+
+&#x20; html += '<div style="display:flex;align-items:center;gap:10px"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="3" width="16" height="18" rx="1"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="15" y2="16"/></svg>';
+
+&#x20; html += '<span style="font-size:13px;font-weight:700;color:var(--navy)">Ejes (Secretar\\xEDas y Direcciones)</span></div>';
+
+&#x20; html += '<span id="cat-ejes-btn" style="font-size:12px;color:var(--text2)">▲</span></div>';
+
+&#x20; html += '<div id="cat-ejes" style="padding:12px 16px;display:flex;flex-direction:column;gap:6px">';
+
+&#x20; secKeys.forEach(function(s, si){
+
+&#x20;   var partes = s.split('—');
+
+&#x20;   var nombre = partes\[1] ? partes\[1].trim() : s;
+
+&#x20;   var dirs   = secsMap\[s];
+
+&#x20;   var subId  = 'cat-sec-' + si;
+
+&#x20;   html += '<div style="border-bottom:1px solid var(--border)">';
+
+&#x20;   html += '<div onclick="toggleSubOrient(\\'' + subId + '\\')" style="padding:8px 12px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:background .12s" onmouseover="this.style.background=\\'var(--surface2)\\'" onmouseout="this.style.background=\\'\\'">';
+
+&#x20;   html += '<span style="font-size:12.5px;font-weight:600;color:var(--navy)">' + nombre + '</span>';
+
+&#x20;   html += '<div style="display:flex;align-items:center;gap:6px">';
+
+&#x20;   html += '<span style="font-size:10px;color:var(--text3)">' + dirs.length + ' direcci\\xF3n' + (dirs.length !== 1 ? 'es' : '') + '</span>';
+
+&#x20;   html += '<svg id="' + subId + '-chevron" style="width:12px;height:12px;transition:transform .2s;color:var(--text3)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>';
+
+&#x20;   html += '</div></div>';
+
+&#x20;   html += '<div id="' + subId + '" style="display:none;padding:0 12px 8px 24px">';
+
+&#x20;   dirs.sort(function(a,b){ return (a.nombreCargo||'').localeCompare(b.nombreCargo||''); });
+
+&#x20;   dirs.forEach(function(dir){
+
+&#x20;     html += '<div onclick="abrirDetalle(\\'' + esc(dir.codigo) + '\\',\\'jerarquico\\')" style="padding:5px 8px;border-radius:6px;cursor:pointer;display:flex;align-items:center;gap:8px;transition:background .12s" onmouseover="this.style.background=\\'var(--surface2)\\'" onmouseout="this.style.background=\\'\\'">';
+
+&#x20;     html += '<span style="font-family:Courier New,monospace;font-size:9px;color:var(--text3);min-width:50px">' + (dir.codigo||'') + '</span>';
+
+&#x20;     html += '<span style="font-size:11.5px;color:var(--text)">' + (dir.nombreCargo||'') + '</span>';
+
+&#x20;     html += '</div>';
+
+&#x20;   });
+
+&#x20;   html += '</div></div>';
+
+&#x20; });
+
+&#x20; html += '</div></div>';
+
+
+
+&#x20; // ── BLOQUE 2: TIPO DE PUESTOS ──
+
+&#x20; var jerarq  = DATOS.filter(function(d){ return d.tipoRegistro !== 'nojerarquico'; });
+
+&#x20; var nojerarq = DATOS.filter(function(d){ return d.tipoRegistro === 'nojerarquico'; });
+
+
+
+&#x20; function orientMap(lista) {
+
+&#x20;   var m = {};
+
+&#x20;   lista.forEach(function(d){
+
+&#x20;     var o = d.orientacion || 'Sin clasificar';
+
+&#x20;     if (!m\[o]) m\[o] = \[];
+
+&#x20;     m\[o].push(d);
+
+&#x20;   });
+
+&#x20;   return m;
+
+&#x20; }
+
+
+
+&#x20; function renderTipoBloque(lista, label, colorBg, idPrefix) {
+
+&#x20;   if (lista.length === 0) return '';
+
+&#x20;   var oMap = orientMap(lista);
+
+&#x20;   var oKeys = Object.keys(oMap).sort();
+
+&#x20;   var out = '<div style="margin-bottom:14px">';
+
+&#x20;   out += '<div style="font-size:11px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;padding:4px 8px;background:' + colorBg + ';border-radius:6px">' + label + ' (' + lista.length + ')</div>';
+
+&#x20;   oKeys.forEach(function(ok){
+
+&#x20;     var items = oMap\[ok];
+
+&#x20;     var subId = idPrefix + '\_' + ok.replace(/\[^a-zA-Z0-9]/g,'\_');
+
+&#x20;     out += '<div style="margin-bottom:6px">';
+
+&#x20;     out += '<button onclick="toggleSubOrient(\\'' + subId + '\\')" style="width:100%;display:inline-flex;align-items:center;justify-content:space-between;padding:5px 10px;border:1px solid var(--border);border-radius:8px;background:var(--surface2);font-size:11px;font-weight:600;color:var(--text2);cursor:pointer">';
+
+&#x20;     out += '<span>' + ok + ' (' + items.length + ')</span>';
+
+&#x20;     out += '<svg style="width:10px;height:10px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></button>';
+
+&#x20;     out += '<div id="' + subId + '" style="display:none;padding-left:10px;border-left:2px solid var(--border);margin-top:4px">';
+
+&#x20;     items.forEach(function(p){
+
+&#x20;       out += '<div onclick="abrirDetalle(\\'' + esc(p.codigo) + '\\',\\'' + esc(p.tipoRegistro || 'jerarquico') + '\\')" style="padding:4px 8px;border-radius:6px;cursor:pointer;font-size:11px;color:var(--text);display:flex;align-items:center;gap:6px;transition:background .15s" onmouseover="this.style.background=\\'var(--surface2)\\'" onmouseout="this.style.background=\\'\\'">';
+
+&#x20;       out += '<span style="font-family:Courier New,monospace;font-size:9px;color:var(--text3);min-width:60px">' + (p.codigo || '') + '</span>';
+
+&#x20;       out += '<span style="font-weight:600;flex:1">' + (p.nombreCargo || '') + '</span></div>';
+
+&#x20;     });
+
+&#x20;     out += '</div></div>';
+
+&#x20;   });
+
+&#x20;   out += '</div>';
+
+&#x20;   return out;
+
+&#x20; }
+
+
+
+&#x20; html += '<div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);margin-bottom:20px;overflow:hidden;box-shadow:var(--sh)">';
+
+&#x20; html += '<div onclick="toggleBloque(\\'cat-tipos\\')" style="padding:14px 20px;cursor:pointer;background:#f0fdf4;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">';
+
+&#x20; html += '<div style="display:flex;align-items:center;gap:10px"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 2h6a1 1 0 0 1 1 1v1H8V3a1 1 0 0 1 1-1z"/><rect x="5" y="4" width="14" height="18" rx="2"/><line x1="9" y1="11" x2="15" y2="11"/><line x1="9" y1="15" x2="15" y2="15"/></svg>';
+
+&#x20; html += '<span style="font-size:13px;font-weight:700;color:var(--navy)">Tipo de Puestos</span></div>';
+
+&#x20; html += '<span id="cat-tipos-btn" style="font-size:12px;color:var(--text2)">▲</span></div>';
+
+&#x20; html += '<div id="cat-tipos" style="padding:16px">';
+
+&#x20; html += renderTipoBloque(jerarq,   'Jer\\xE1rquico',    '#eff6ff', 'jq');
+
+&#x20; html += renderTipoBloque(nojerarq, 'No Jer\\xE1rquico', '#fdf4ff', 'nj');
+
+&#x20; html += '</div></div>';
+
+
+
+&#x20; cont.innerHTML = html;
+
+}
+
+
+
+function renderizarAdicionales() {
+
+&#x20; var cont = document.getElementById('adicionales-content');
+
+&#x20; if (!cont) return;
+
+&#x20; var mapa = {};
+
+&#x20; DATOS.forEach(function(d) {
+
+&#x20;   \[d.adicional1, d.adicional2].forEach(function(ad) {
+
+&#x20;     if (ad) {
+
+&#x20;       if (!mapa\[ad]) mapa\[ad] = \[];
+
+&#x20;       mapa\[ad].push(d);
+
+&#x20;     }
+
+&#x20;   });
+
+&#x20; });
+
+&#x20; var keys = Object.keys(mapa).sort();
+
+&#x20; if (keys.length === 0) {
+
+&#x20;   cont.innerHTML = '<div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:32px;box-shadow:var(--sh)"><div class="empty-state"><div class="es-title">Sin adicionales registrados</div><div class="es-sub">No se encontraron adicionales en los datos actuales.</div></div></div>';
+
+&#x20;   return;
+
+&#x20; }
+
+&#x20; var COLORS = \['#dbeafe','#ede9fe','#d1fae5','#fff7ed','#fce7f3','#fef3c7'];
+
+&#x20; cont.innerHTML = keys.map(function(k, idx) {
+
+&#x20;   var puestos = mapa\[k];
+
+&#x20;   var bg = COLORS\[idx % COLORS.length];
+
+&#x20;   return '<div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);margin-bottom:16px;overflow:hidden;box-shadow:var(--sh)">' +
+
+&#x20;     '<div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;background:' + bg + '">' +
+
+&#x20;       '<svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>' +
+
+&#x20;       '<div>' +
+
+&#x20;         '<div style="font-size:14px;font-weight:700;color:var(--navy)">' + k + '</div>' +
+
+&#x20;         '<div style="font-size:11px;color:var(--text2)">' + puestos.length + ' puesto' + (puestos.length !== 1 ? 's' : '') + ' con este adicional</div>' +
+
+&#x20;       '</div>' +
+
+&#x20;     '</div>' +
+
+&#x20;     '<div style="padding:12px 16px;display:flex;flex-direction:column;gap:6px">' +
+
+&#x20;       puestos.map(function(d) {
+
+&#x20;         return '<div onclick="abrirDetalle(\\'' + esc(d.codigo) + '\\',\\'' + esc(d.tipoRegistro) + '\\')" ' +
+
+&#x20;           'style="padding:8px 12px;border-radius:var(--r-sm);cursor:pointer;display:flex;align-items:center;gap:10px;transition:background .15s" ' +
+
+&#x20;           'onmouseover="this.style.background=\\'var(--surface2)\\'" onmouseout="this.style.background=\\'\\'">' +
+
+&#x20;           '<span style="font-family:Courier New,monospace;font-size:10px;color:var(--text3);min-width:80px">' + (d.codigo || '') + '</span>' +
+
+&#x20;           '<span style="font-size:12.5px;font-weight:600;color:var(--navy)">' + (d.nombreCargo || '') + '</span>' +
+
+&#x20;           '<span style="margin-left:auto;font-size:10px;color:var(--text3)">' + (d.nivel || '') + '</span>' +
+
+&#x20;           '</div>';
+
+&#x20;       }).join('') +
+
+&#x20;     '</div>' +
+
+&#x20;     '</div>';
+
+&#x20; }).join('');
+
+}
+
+
+
+// ============================================================
+
+// CATEGORÍAS ESCALAFÓN
+
+// ============================================================
+
+function toggleTablaReq() {
+
+&#x20; var el  = document.getElementById('catesc-tabla-req');
+
+&#x20; var btn = document.getElementById('catesc-tabla-btn');
+
+&#x20; if (!el) return;
+
+&#x20; var abierto = el.style.display !== 'none';
+
+&#x20; el.style.display = abierto ? 'none' : '';
+
+&#x20; btn.textContent  = abierto ? '▼' : '▲';
+
+}
+
+
+
+function renderizarCatEscalafon() {
+
+&#x20; var cont = document.getElementById('catescalafon-content');
+
+&#x20; if (!cont) return;
+
+
+
+&#x20; var REQUISITOS\_CAT = \[
+
+&#x20;   { cat: '8', desc: 'No requieren secundario de forma excluyente' },
+
+&#x20;   { cat: '10', desc: 'No requieren secundario. Requieren conocimientos específicos básicos para la ejecución de tareas. O implican abordaje de situaciones sociales complejas' },
+
+&#x20;   { cat: '12', desc: 'Secundario completo (como requisito excluyente)' },
+
+&#x20;   { cat: '14', desc: 'Secundario completo excluyente, sumado a Oficiales de oficios técnicos con la suficiente experticia/idoneidad o abordaje de situaciones sociales complejas' },
+
+&#x20;   { cat: '16', desc: 'Jefaturas de sección, o coordinaciones/supervisiones/lideran personal aún sin puesto jerárquico' },
+
+&#x20;   { cat: '17', desc: 'Formación de pregrado, educación superior no universitaria excluyente' },
+
+&#x20;   { cat: '19', desc: 'Formación de grado (Universitario) excluyente — Divisiones' },
+
+&#x20;   { cat: '21', desc: 'Jefaturas de Departamento' },
+
+&#x20;   { cat: '23', desc: 'Direcciones' }
+
+&#x20; ]
+
+
+
+&#x20; var tablaHtml =
+
+&#x20;   '<div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);margin-bottom:20px;overflow:hidden;box-shadow:var(--sh)">' +
+
+&#x20;     '<div onclick="toggleTablaReq()" style="padding:14px 20px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;background:#f0f7ff;border-bottom:1px solid var(--border)">' +
+
+&#x20;       '<div style="display:flex;align-items:center;gap:10px">' +
+
+&#x20;         '<svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2h6a1 1 0 0 1 1 1v1H8V3a1 1 0 0 1 1-1z"/><rect x="5" y="4" width="14" height="18" rx="2"/><line x1="9" y1="11" x2="15" y2="11"/><line x1="9" y1="15" x2="15" y2="15"/></svg>' +
+
+&#x20;         '<span style="font-size:13px;font-weight:700;color:var(--navy)">Tabla de requisitos del perfil por categor\\xEDa</span>' +
+
+&#x20;       '</div>' +
+
+&#x20;       '<span id="catesc-tabla-btn" style="font-size:12px;color:var(--text2)">▼</span>' +
+
+&#x20;     '</div>' +
+
+&#x20;     '<div id="catesc-tabla-req">' +
+
+&#x20;       '<table style="width:100%;border-collapse:collapse">' +
+
+&#x20;         '<thead><tr style="background:#e8f0fe">' +
+
+&#x20;           '<th style="padding:8px 16px;text-align:left;font-size:11px;font-weight:700;color:var(--navy);border-bottom:1px solid var(--border)">Requisitos objetivos del perfil</th>' +
+
+&#x20;           '<th style="padding:8px 16px;text-align:center;font-size:11px;font-weight:700;color:var(--navy);border-bottom:1px solid var(--border);width:120px">Categor\\xEDa</th>' +
+
+&#x20;         '</tr></thead>' +
+
+&#x20;         '<tbody>' +
+
+&#x20;           REQUISITOS\_CAT.map(function(r, i) {
+
+&#x20;             return '<tr style="background:' + (i % 2 === 0 ? 'var(--surface)' : 'var(--surface2)') + '">' +
+
+&#x20;               '<td style="padding:9px 16px;font-size:12px;color:var(--text);border-bottom:1px solid var(--border);line-height:1.5">' + r.desc + '</td>' +
+
+&#x20;               '<td style="padding:9px 16px;text-align:center;font-size:13px;font-weight:800;color:var(--accent);border-bottom:1px solid var(--border)">' + r.cat + '</td>' +
+
+&#x20;             '</tr>';
+
+&#x20;           }).join('') +
+
+&#x20;         '</tbody>' +
+
+&#x20;       '</table>' +
+
+&#x20;     '</div>' +
+
+&#x20;   '</div>';
+
+
+
+&#x20; cont.innerHTML = tablaHtml;
+
+
+
+&#x20; var mapa = {};
+
+&#x20; DATOS.forEach(function(d) {
+
+&#x20;   var cat = d.categoria;
+
+&#x20;   if (cat) {
+
+&#x20;     if (!mapa\[cat]) mapa\[cat] = \[];
+
+&#x20;     mapa\[cat].push(d);
+
+&#x20;   }
+
+&#x20; });
+
+&#x20; var keys = Object.keys(mapa).sort(function(a, b) {
+
+&#x20;   return (parseInt(a) || 0) - (parseInt(b) || 0);
+
+&#x20; });
+
+&#x20; if (keys.length === 0) return;
+
+&#x20; var COLORS = \['#dbeafe','#ede9fe','#d1fae5','#fff7ed','#fce7f3','#fef3c7','#f0fdf4','#eff6ff'];
+
+&#x20; cont.innerHTML += keys.map(function(k, idx) {
+
+&#x20;   var puestos = mapa\[k];
+
+&#x20;   var bg = COLORS\[idx % COLORS.length];
+
+&#x20;   return '<div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);margin-bottom:16px;overflow:hidden;box-shadow:var(--sh)">' +
+
+&#x20;     '<div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;background:' + bg + '">' +
+
+&#x20;       '<div style="width:40px;height:40px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;color:var(--navy);box-shadow:0 1px 4px rgba(0,0,0,.1)">' + k + '</div>' +
+
+&#x20;       '<div>' +
+
+&#x20;         '<div style="font-size:14px;font-weight:700;color:var(--navy)">Categor\\xEDa ' + k + '</div>' +
+
+&#x20;         '<div style="font-size:11px;color:var(--text2)">' + puestos.length + ' puesto' + (puestos.length !== 1 ? 's' : '') + ' en esta categor\\xEDa</div>' +
+
+&#x20;       '</div>' +
+
+&#x20;     '</div>' +
+
+&#x20;     '<div style="padding:12px 16px;display:flex;flex-direction:column;gap:6px">' +
+
+&#x20;       puestos.map(function(d) {
+
+&#x20;         return '<div onclick="abrirDetalle(\\'' + esc(d.codigo) + '\\',\\'' + esc(d.tipoRegistro) + '\\')" ' +
+
+&#x20;           'style="padding:8px 12px;border-radius:var(--r-sm);cursor:pointer;display:flex;align-items:center;gap:10px;transition:background .15s" ' +
+
+&#x20;           'onmouseover="this.style.background=\\'var(--surface2)\\'" onmouseout="this.style.background=\\'\\'">' +
+
+&#x20;           '<span style="font-family:Courier New,monospace;font-size:10px;color:var(--text3);min-width:80px">' + (d.codigo || '') + '</span>' +
+
+&#x20;           '<span style="font-size:12.5px;font-weight:600;color:var(--navy)">' + (d.nombreCargo || '') + '</span>' +
+
+&#x20;           '</div>';
+
+&#x20;       }).join('') +
+
+&#x20;     '</div>' +
+
+&#x20;     '</div>';
+
+&#x20; }).join('');
+
+}
+
+
+
+// ============================================================
+
+// ORGANIGRAMA
+
+// ============================================================
+
+function toggleOrgLocSub(id) {
+
+&#x20; var el = document.getElementById(id);
+
+&#x20; if (!el) return;
+
+&#x20; var abierto = el.style.display !== 'none';
+
+&#x20; el.style.display = abierto ? 'none' : '';
+
+&#x20; var btn = document.getElementById('btn-' + id);
+
+&#x20; if (btn) btn.innerHTML = abierto
+
+&#x20;   ? '<svg style="width:12px;height:12px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>'
+
+&#x20;   : '<svg style="width:12px;height:12px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>';
+
+}
+
+
+
+function irAOrganigramaInstancia(instancia) {
+
+&#x20; var prev = puestoDetalle;
+
+&#x20; puestoDetalle = instancia;
+
+&#x20; irAOrganigrama();
+
+&#x20; puestoDetalle = prev;
+
+}
+
+
+
+function irAOrganigrama() {
+
+&#x20; var d = puestoDetalle;
+
+&#x20; if (!d) return;
+
+
+
+&#x20; var sec = d.secretaria || '';
+
+&#x20; var codigoTarget = d.codigo || '';
+
+&#x20; var esNoJer = d.tipoRegistro === 'nojerarquico' || d.nivel === 'No jer\\xE1rquico';
+
+
+
+&#x20; var secNombre = sec ? (sec.split('—')\[1] || sec).trim() : 'Organigrama';
+
+&#x20; document.getElementById('org-loc-titulo').textContent = 'Ubicaci\\xF3n en el organigrama';
+
+&#x20; document.getElementById('org-loc-subtitulo').textContent = secNombre + (d.nombreCargo ? ' — ' + d.nombreCargo : '');
+
+
+
+&#x20; var area = document.getElementById('org-loc-body');
+
+&#x20; area.innerHTML = '';
+
+
+
+&#x20; var partesSec = sec.split('—');
+
+&#x20; var secCod = partesSec\[0].trim();
+
+&#x20; var secNom = partesSec\[1] ? partesSec\[1].trim() : sec;
+
+
+
+&#x20; // Función que renderiza los sub-puestos de una unidad como lista desplegable
+
+&#x20; function renderSubPuestos(unidad, esPadreDelTarget) {
+
+&#x20;   var hijos = DATOS.filter(function(r){
+
+&#x20;     return r.secretaria === sec
+
+&#x20;       \&\& r.tipoRegistro !== 'nojerarquico'
+
+&#x20;       \&\& r.codigo !== unidad.codigo
+
+&#x20;       \&\& String(r.codigo).startsWith(String(unidad.codigo));
+
+&#x20;   });
+
+&#x20;   if (hijos.length === 0) return '';
+
+&#x20;   var idSub = 'orgloc-sub-' + esc(unidad.codigo);
+
+&#x20;   var abierto = esPadreDelTarget || String(codigoTarget).startsWith(String(unidad.codigo));
+
+&#x20;   return '<div style="margin-top:6px">' +
+
+&#x20;     '<button id="btn-' + idSub + '" onclick="event.stopPropagation();toggleOrgLocSub(\\'' + idSub + '\\')" ' +
+
+&#x20;       'style="display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border:1px solid var(--border);border-radius:20px;background:var(--surface2);font-size:10px;font-weight:600;color:var(--text2);cursor:pointer;width:100%;justify-content:center">' +
+
+&#x20;       (abierto
+
+&#x20;         ? '<svg style="width:12px;height:12px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>'
+
+&#x20;         : '<svg style="width:12px;height:12px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>') +
+
+&#x20;       hijos.length + ' puesto' + (hijos.length !== 1 ? 's' : '') +
+
+&#x20;     '</button>' +
+
+&#x20;     '<div id="' + idSub + '" style="' + (abierto ? '' : 'display:none') + ';margin-top:6px;display:' + (abierto ? 'flex' : 'none') + ';flex-direction:column;gap:4px">' +
+
+&#x20;       hijos.map(function(h){
+
+&#x20;         var esTarget = h.codigo === codigoTarget;
+
+&#x20;         return '<div id="orgloc-node-' + esc(h.codigo) + '" class="org-node jefatura' + (esTarget ? ' destacado' : '') + '" ' +
+
+&#x20;           'onclick="abrirDetalle(\\'' + esc(h.codigo) + '\\',\\'jerarquico\\')" ' +
+
+&#x20;           'title="' + (h.nombreCargo || '') + '" style="min-width:unset;max-width:unset;text-align:left;padding:6px 10px;display:flex;align-items:center;gap:8px">' +
+
+&#x20;             '<div style="flex:1">' +
+
+&#x20;               '<div style="font-size:10.5px;font-weight:700;color:var(--navy);line-height:1.3">' + (h.nombreCargo || '') + '</div>' +
+
+&#x20;               '<div style="font-size:9.5px;color:var(--text3);margin-top:2px">' + (h.nivel || '') + ' \&nbsp;·\&nbsp; ' + (h.codigo || '') + '</div>' +
+
+&#x20;             '</div>' +
+
+&#x20;             '<svg style="width:12px;height:12px;color:var(--text3);flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>' +
+
+&#x20;         '</div>';
+
+&#x20;       }).join('') +
+
+&#x20;     '</div>' +
+
+&#x20;   '</div>';
+
+&#x20; }
+
+
+
+&#x20; if (esNoJer) {
+
+&#x20;   // ── No Jerárquico: trazar ruta hasta la unidad de dependencia ──
+
+&#x20;   var depRaw    = (d.dependencia || '').trim();
+
+&#x20;   // Buscar primero por código numérico, luego por nombre normalizado
+
+&#x20;   var codigoDep = depRaw.split('—')\[0].trim().split(' ')\[0].trim();
+
+&#x20;   var unidadDep = DATOS.filter(function(r){ return r.tipoRegistro !== 'nojerarquico' \&\& r.codigo === codigoDep; })\[0];
+
+&#x20;   if (!unidadDep \&\& depRaw) {
+
+&#x20;     function normStr(s) {
+
+&#x20;       return String(s||'').toLowerCase().trim()
+
+&#x20;         .replace(/\[áàä]/g,'a').replace(/\[éèë]/g,'e').replace(/\[íìï]/g,'i')
+
+&#x20;         .replace(/\[óòö]/g,'o').replace(/\[úùü]/g,'u').replace(/ñ/g,'n');
+
+&#x20;     }
+
+&#x20;     var depNorm = normStr(depRaw);
+
+&#x20;     unidadDep = DATOS.filter(function(r){
+
+&#x20;       return r.tipoRegistro !== 'nojerarquico' \&\& normStr(r.nombreCargo) === depNorm;
+
+&#x20;     })\[0];
+
+&#x20;     // Si no hay coincidencia exacta, buscar por inclusión
+
+&#x20;     if (!unidadDep) {
+
+&#x20;       unidadDep = DATOS.filter(function(r){
+
+&#x20;         return r.tipoRegistro !== 'nojerarquico' \&\& (normStr(r.nombreCargo).indexOf(depNorm) !== -1 || depNorm.indexOf(normStr(r.nombreCargo)) !== -1);
+
+&#x20;       })\[0];
+
+&#x20;     }
+
+&#x20;     if (unidadDep) codigoDep = unidadDep.codigo;
+
+&#x20;   }
+
+
+
+&#x20;   function svgNodo(tipo) {
+
+&#x20;     if (tipo === 'sec') return '<rect x="4" y="3" width="16" height="18" rx="1"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="15" y2="16"/>';
+
+&#x20;     return '<rect x="3" y="9" width="18" height="12" rx="1"/><path d="M9 9V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v4"/>';
+
+&#x20;   }
+
+&#x20;   function orgNodoHtml(item, clase) {
+
+&#x20;     return '<div id="orgloc-node-' + esc(item.codigo) + '" class="org-node ' + clase + '" ' +
+
+&#x20;       'onclick="abrirDetalle(\\'' + esc(item.codigo) + '\\',\\'jerarquico\\')" style="min-width:160px;max-width:240px">' +
+
+&#x20;         '<span class="on-icono"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">' + svgNodo(clase) + '</svg></span>' +
+
+&#x20;         '<div class="on-nombre">' + (item.nombreCargo || '') + '</div>' +
+
+&#x20;         '<div class="on-codigo">' + (item.codigo || '') + '</div>' +
+
+&#x20;       '</div>';
+
+&#x20;   }
+
+
+
+&#x20;   var html = '<div style="display:flex;flex-direction:column;align-items:center;min-width:220px">';
+
+
+
+&#x20;   html += '<div class="org-node secretaria" style="min-width:180px;max-width:240px">' +
+
+&#x20;     '<span class="on-icono"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">' + svgNodo('sec') + '</svg></span>' +
+
+&#x20;     '<div class="on-nombre">' + secNom + '</div>' +
+
+&#x20;     '<div class="on-codigo">C\\xF3d. \\xC1REA ' + secCod + '</div>' +
+
+&#x20;   '</div>';
+
+
+
+&#x20;   if (unidadDep) {
+
+&#x20;     var cadena = DATOS.filter(function(r){
+
+&#x20;       return r.tipoRegistro !== 'nojerarquico'
+
+&#x20;         \&\& r.codigo !== codigoDep
+
+&#x20;         \&\& codigoDep.startsWith(r.codigo)
+
+&#x20;         \&\& r.secretaria === sec;
+
+&#x20;     });
+
+&#x20;     cadena.sort(function(a, b){ return a.codigo.length - b.codigo.length; });
+
+&#x20;     cadena.push(unidadDep);
+
+
+
+&#x20;     cadena.forEach(function(nodo){
+
+&#x20;       var clase = nodo.nivel === 'Direcci\\xF3n' ? 'direccion' : 'jefatura';
+
+&#x20;       html += '<div class="org-stem-down"></div>' + orgNodoHtml(nodo, clase);
+
+&#x20;     });
+
+&#x20;   } else {
+
+&#x20;     html += '<div class="org-stem-down"></div>' +
+
+&#x20;       '<div style="font-size:11px;color:var(--text3);text-align:center;padding:12px 0">' +
+
+&#x20;         (depRaw ? 'Unidad "' + depRaw + '" no encontrada en los datos jer\\xE1rquicos' : 'Dependencia no registrada') +
+
+&#x20;       '</div>';
+
+&#x20;   }
+
+
+
+&#x20;   html += '<div class="org-stem-down"></div>' +
+
+&#x20;     '<div id="orgloc-node-' + esc(codigoTarget) + '" style="min-width:150px;max-width:220px;cursor:default;background:#1d4ed8;border-radius:10px;padding:8px 14px;text-align:center;box-shadow:0 3px 12px rgba(29,78,216,.4)">' +
+
+&#x20;       '<div style="display:inline-flex;align-items:center;gap:3px;font-size:8px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:#bfdbfe;margin-bottom:5px">' +
+
+&#x20;         '<svg style="width:9px;height:9px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>ESTE PUESTO</div>' +
+
+&#x20;       '<div style="font-size:11.5px;font-weight:700;color:#fff;line-height:1.3">' + (d.nombreCargo || '') + '</div>' +
+
+&#x20;       '<div style="font-size:8.5px;color:#93c5fd;margin-top:3px">' + (d.tipoPuesto || 'No Jer\\xE1rquico') + '</div>' +
+
+&#x20;     '</div>';
+
+
+
+&#x20;   html += '</div>';
+
+&#x20;   area.innerHTML = html;
+
+
+
+&#x20; } else {
+
+&#x20;   // ── Jerárquico: árbol vertical con desplegables de sub-puestos ──
+
+&#x20;   var dirs = DATOS.filter(function(r){
+
+&#x20;     return r.nivel === 'Direcci\\xF3n' \&\& r.secretaria === sec;
+
+&#x20;   });
+
+
+
+&#x20;   if (dirs.length === 0) {
+
+&#x20;     area.innerHTML = '<div class="empty-state"><div class="es-title">Sin datos para esta secretar\\xEDa</div></div>';
+
+&#x20;   } else {
+
+&#x20;     var html2 = '<div style="display:flex;flex-direction:column;align-items:center;width:100%">' +
+
+&#x20;       '<div class="org-node secretaria" style="min-width:200px;max-width:260px">' +
+
+&#x20;         '<span class="on-icono"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="3" width="16" height="18" rx="1"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="15" y2="16"/></svg></span>' +
+
+&#x20;         '<div class="on-nombre">' + secNom + '</div>' +
+
+&#x20;         '<div class="on-codigo">C\\xF3d. \\xC1REA ' + secCod + '</div>' +
+
+&#x20;       '</div>' +
+
+&#x20;       '<div class="org-stem-down"></div>' +
+
+&#x20;       '<div class="org-children">';
+
+
+
+&#x20;     dirs.forEach(function(dir){
+
+&#x20;       var esDirTarget = dir.codigo === codigoTarget;
+
+&#x20;       var dirEnRuta   = String(codigoTarget).startsWith(String(dir.codigo));
+
+
+
+&#x20;       // sub-puestos directos del dir (Departamentos y Divisiones)
+
+&#x20;       var subdeps = DATOS.filter(function(sub){
+
+&#x20;         return sub.secretaria === sec
+
+&#x20;           \&\& (sub.nivel === 'Departamento' || sub.nivel === 'Divisi\\xF3n')
+
+&#x20;           \&\& String(sub.codigo).startsWith(String(dir.codigo));
+
+&#x20;       });
+
+
+
+&#x20;       html2 += '<div class="org-child">' +
+
+&#x20;         '<div class="org-stem-v"></div>' +
+
+&#x20;         '<div style="display:flex;flex-direction:column;align-items:center">' +
+
+&#x20;           '<div id="orgloc-node-' + esc(dir.codigo) + '" class="org-node direccion' + (esDirTarget ? ' destacado' : '') + '" onclick="abrirDetalle(\\'' + esc(dir.codigo) + '\\')" title="' + (dir.nombreCargo || '') + '">' +
+
+&#x20;             '<span class="on-icono"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="9" width="18" height="12" rx="1"/><path d="M9 9V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v4"/></svg></span>' +
+
+&#x20;             '<div class="on-nombre">' + (dir.nombreCargo || '').replace('Direcci\\xF3n de ', 'Dir. de ').substring(0, 24) + '</div>' +
+
+&#x20;             '<div class="on-codigo">' + (dir.codigo || '') + '</div>' +
+
+&#x20;           '</div>';
+
+
+
+&#x20;       if (subdeps.length > 0) {
+
+&#x20;         var idSubDir = 'orgloc-sub-dir-' + esc(dir.codigo);
+
+&#x20;         html2 +=
+
+&#x20;           '<button id="btn-' + idSubDir + '" onclick="event.stopPropagation();toggleOrgLocSub(\\'' + idSubDir + '\\')" ' +
+
+&#x20;             'style="margin-top:4px;display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border:1px solid var(--border);border-radius:20px;background:var(--surface2);font-size:10px;font-weight:600;color:var(--text2);cursor:pointer">' +
+
+&#x20;             (dirEnRuta
+
+&#x20;               ? '<svg style="width:11px;height:11px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>'
+
+&#x20;               : '<svg style="width:11px;height:11px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>') +
+
+&#x20;             subdeps.length + ' unidad' + (subdeps.length !== 1 ? 'es' : '') +
+
+&#x20;           '</button>' +
+
+&#x20;           '<div id="' + idSubDir + '" style="' + (dirEnRuta ? '' : 'display:none') + ';width:100%;margin-top:8px">' +
+
+&#x20;             '<div class="org-children">' +
+
+&#x20;               subdeps.map(function(sub){
+
+&#x20;                 var esSubTarget = sub.codigo === codigoTarget;
+
+&#x20;                 var subEnRuta   = String(codigoTarget).startsWith(String(sub.codigo));
+
+&#x20;                 var secsDeEste  = DATOS.filter(function(s){
+
+&#x20;                   return s.secretaria === sec \&\& s.nivel === 'Secci\\xF3n'
+
+&#x20;                     \&\& String(s.codigo).startsWith(String(sub.codigo));
+
+&#x20;                 });
+
+&#x20;                 return '<div class="org-child">' +
+
+&#x20;                   '<div class="org-stem-v"></div>' +
+
+&#x20;                   '<div style="display:flex;flex-direction:column;align-items:center">' +
+
+&#x20;                     '<div id="orgloc-node-' + esc(sub.codigo) + '" class="org-node jefatura' + (esSubTarget ? ' destacado' : '') + '" onclick="abrirDetalle(\\'' + esc(sub.codigo) + '\\')" title="' + (sub.nombreCargo || '') + '" style="min-width:96px;max-width:130px">' +
+
+&#x20;                       '<div class="on-nombre" style="font-size:10px">' + (sub.nombreCargo || '').substring(0, 22) + '</div>' +
+
+&#x20;                       '<div class="on-codigo">' + (sub.codigo || '') + '</div>' +
+
+&#x20;                     '</div>' +
+
+&#x20;                     (secsDeEste.length > 0 ? (function(){
+
+&#x20;                       var idSubSub = 'orgloc-sub-dep-' + esc(sub.codigo);
+
+&#x20;                       return '<button id="btn-' + idSubSub + '" onclick="event.stopPropagation();toggleOrgLocSub(\\'' + idSubSub + '\\')" ' +
+
+&#x20;                           'style="margin-top:4px;display:inline-flex;align-items:center;gap:4px;padding:2px 7px;border:1px solid var(--border);border-radius:20px;background:var(--surface2);font-size:10px;font-weight:600;color:var(--text2);cursor:pointer">' +
+
+&#x20;                           (subEnRuta
+
+&#x20;                             ? '<svg style="width:11px;height:11px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>'
+
+&#x20;                             : '<svg style="width:11px;height:11px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>') +
+
+&#x20;                           secsDeEste.length + ' secci\\xF3n' + (secsDeEste.length !== 1 ? 'es' : '') +
+
+&#x20;                         '</button>' +
+
+&#x20;                         '<div id="' + idSubSub + '" style="' + (subEnRuta ? '' : 'display:none') + ';width:100%;margin-top:6px">' +
+
+&#x20;                           '<div class="org-children">' +
+
+&#x20;                             secsDeEste.map(function(sc){
+
+&#x20;                               var esScTarget = sc.codigo === codigoTarget;
+
+&#x20;                               return '<div class="org-child">' +
+
+&#x20;                                 '<div class="org-stem-v"></div>' +
+
+&#x20;                                 '<div id="orgloc-node-' + esc(sc.codigo) + '" class="org-node jefatura' + (esScTarget ? ' destacado' : '') + '" onclick="abrirDetalle(\\'' + esc(sc.codigo) + '\\')" title="' + (sc.nombreCargo || '') + '" style="min-width:80px;max-width:110px">' +
+
+&#x20;                                   '<div class="on-nombre" style="font-size:9.5px">' + (sc.nombreCargo || '').substring(0, 20) + '</div>' +
+
+&#x20;                                   '<div class="on-codigo" style="font-size:9px">' + (sc.codigo || '') + '</div>' +
+
+&#x20;                                 '</div>' +
+
+&#x20;                               '</div>';
+
+&#x20;                             }).join('') +
+
+&#x20;                           '</div>' +
+
+&#x20;                         '</div>';
+
+&#x20;                     })() : '') +
+
+&#x20;                   '</div>' +
+
+&#x20;                 '</div>';
+
+&#x20;               }).join('') +
+
+&#x20;             '</div>' +
+
+&#x20;           '</div>';
+
+&#x20;       }
+
+
+
+&#x20;       html2 += '</div></div>';
+
+&#x20;     });
+
+
+
+&#x20;     html2 += '</div></div>';
+
+&#x20;     area.innerHTML = html2;
+
+&#x20;   }
+
+&#x20; }
+
+
+
+&#x20; // Si el puesto está en múltiples áreas (mismo nombre de cargo en varias secretarías),
+
+&#x20; // mostrar un listado de áreas en vez de un organigrama. Los puestos transversales
+
+&#x20; // (ej: Administrativo/a general) se replican con el MISMO código en cada secretaría,
+
+&#x20; // por eso se agrupa por nombreCargo y se deduplica por secretaría.
+
+&#x20; var mismoNombre = DATOS.filter(function(r){
+
+&#x20;   return r.tipoRegistro === 'nojerarquico' \&\& r.nombreCargo === d.nombreCargo;
+
+&#x20; });
+
+&#x20; var areasMap = {};
+
+&#x20; mismoNombre.forEach(function(r){
+
+&#x20;   var sec = r.secretaria || '';
+
+&#x20;   if (sec \&\& !areasMap\[sec]) areasMap\[sec] = r;
+
+&#x20; });
+
+&#x20; var areasUnicas = Object.keys(areasMap).sort().map(function(k){ return areasMap\[k]; });
+
+
+
+&#x20; if (areasUnicas.length > 1) {
+
+&#x20;   var areaCards = areasUnicas.map(function(inst) {
+
+&#x20;     var p = (inst.secretaria || '').split('\\u2014');
+
+&#x20;     var secCod = p\[0] ? p\[0].trim() : '';
+
+&#x20;     var secLabel = p\[1] ? p\[1].trim() : (inst.secretaria || 'Sin área');
+
+&#x20;     var depParts = (inst.dependencia || '').split('\\u2014');
+
+&#x20;     var depLabel = depParts\[depParts.length - 1].trim();
+
+&#x20;     return '<div style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);transition:border-color .15s,box-shadow .15s" onmouseover="this.style.borderColor=\\'#bfdbfe\\';this.style.boxShadow=\\'var(--sh)\\'" onmouseout="this.style.borderColor=\\'var(--border)\\';this.style.boxShadow=\\'none\\'">' +
+
+&#x20;       '<div style="width:34px;height:34px;background:#eff6ff;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0">' +
+
+&#x20;         '<svg style="width:16px;height:16px" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><rect x="4" y="3" width="16" height="18" rx="1"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="15" y2="16"/></svg>' +
+
+&#x20;       '</div>' +
+
+&#x20;       '<div style="flex:1;min-width:0">' +
+
+&#x20;         '<div style="font-size:12px;font-weight:700;color:var(--navy);line-height:1.3">' + secLabel + '</div>' +
+
+&#x20;         '<div style="font-size:9.5px;color:var(--text3);margin-top:2px">' + (depLabel || ('C\\xF3d. \\xE1rea ' + secCod)) + '</div>' +
+
+&#x20;       '</div>' +
+
+&#x20;     '</div>';
+
+&#x20;   }).join('');
+
+&#x20;   area.innerHTML =
+
+&#x20;     '<div style="width:100%;max-width:680px;margin:0 auto">' +
+
+&#x20;       '<div style="text-align:center;margin-bottom:20px">' +
+
+&#x20;         '<div style="display:inline-flex;align-items:center;gap:8px;background:#1d4ed8;color:#fff;padding:8px 18px;border-radius:24px;font-size:13px;font-weight:700">' +
+
+&#x20;           '<svg style="width:16px;height:16px" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>' +
+
+&#x20;           (d.nombreCargo || '') +
+
+&#x20;         '</div>' +
+
+&#x20;         '<div style="font-size:12px;color:var(--text2);margin-top:10px">Puesto transversal \&mdash; presente en <b style="color:var(--navy)">' + areasUnicas.length + ' \\xE1reas</b> del organigrama</div>' +
+
+&#x20;       '</div>' +
+
+&#x20;       '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px">' + areaCards + '</div>' +
+
+&#x20;     '</div>';
+
+&#x20;   document.getElementById('org-loc-overlay').style.display = 'flex';
+
+&#x20;   document.body.style.overflow = 'hidden';
+
+&#x20;   return;
+
+&#x20; }
+
+
+
+&#x20; // mostrar modal
+
+&#x20; document.getElementById('org-loc-overlay').style.display = 'flex';
+
+&#x20; document.body.style.overflow = 'hidden';
+
+
+
+&#x20; // scroll al nodo destacado
+
+&#x20; setTimeout(function(){
+
+&#x20;   var el = document.getElementById('orgloc-node-' + codigoTarget);
+
+&#x20;   if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
+
+&#x20; }, 150);
+
+}
+
+
+
+function cerrarOrgLoc(e) {
+
+&#x20; if (e \&\& e.target !== document.getElementById('org-loc-overlay')) return;
+
+&#x20; document.getElementById('org-loc-overlay').style.display = 'none';
+
+&#x20; document.body.style.overflow = '';
+
+}
+
+
+
+function toggleOrgExpand(ev, codigo) {
+
+&#x20; ev.stopPropagation();
+
+&#x20; orgExpandido\[codigo] = true;
+
+&#x20; renderizarOrganigrama();
+
+}
+
+
+
+function seleccionarSecOrg(val) {
+
+&#x20; orgSecSeleccionada = val;
+
+&#x20; renderizarOrganigrama();
+
+}
+
+
+
+function toggleOrgPuestos(forzar) {
+
+&#x20; var sidebar = document.getElementById('org-sidebar');
+
+&#x20; if (!sidebar) return;
+
+&#x20; if (forzar === false) { sidebar.classList.remove('visible'); return; }
+
+&#x20; sidebar.classList.toggle('visible');
+
+}
+
+
+
+// Hijos DIRECTOS de una unidad: las unidades cuyo código tiene a esta como prefijo
+
+// y no existe ningún ancestro intermedio (prefijo más largo) entre ambas.
+
+function hijosDirectosOrg(unit, unidades) {
+
+&#x20; var cod = String(unit.codigo);
+
+&#x20; return unidades.filter(function(c){
+
+&#x20;   var cc = String(c.codigo);
+
+&#x20;   if (cc === cod || cc.indexOf(cod) !== 0) return false;
+
+&#x20;   return !unidades.some(function(z){
+
+&#x20;     var zc = String(z.codigo);
+
+&#x20;     return zc !== cod \&\& zc !== cc
+
+&#x20;       \&\& cc.indexOf(zc) === 0 \&\& zc.indexOf(cod) === 0
+
+&#x20;       \&\& zc.length > cod.length \&\& zc.length < cc.length;
+
+&#x20;   });
+
+&#x20; }).sort(function(a,b){ return String(a.codigo).localeCompare(String(b.codigo)); });
+
+}
+
+
+
+// Render recursivo de un nodo del organigrama con sus descendientes anidados
+
+function nodoOrgHtml(unit, unidades) {
+
+&#x20; var esDir  = unit.nivel === 'Direcci\\xF3n';
+
+&#x20; var clase  = esDir ? 'direccion' : 'jefatura';
+
+&#x20; var nombre = (unit.nombreCargo || '');
+
+&#x20; if (esDir) nombre = nombre.replace('Direcci\\xF3n de ', 'Dir. de ');
+
+&#x20; var nodoStyle = esDir ? '' : ' style="min-width:104px;max-width:148px"';
+
+&#x20; var nodo = '<div id="org-node-' + esc(unit.codigo) + '" class="org-node ' + clase + '" onclick="abrirDetalle(\\'' + esc(unit.codigo) + '\\')" title="' + (unit.nombreCargo || '') + '"' + nodoStyle + '>' +
+
+&#x20;     (esDir ? '<span class="on-icono"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="9" width="18" height="12" rx="1"/><path d="M9 9V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v4"/></svg></span>' : '') +
+
+&#x20;     '<div class="on-nombre"' + (esDir ? '' : ' style="font-size:10px"') + '>' + nombre.substring(0, 30) + '</div>' +
+
+&#x20;     '<div class="on-codigo">' + (unit.codigo || '') + '</div>' +
+
+&#x20;   '</div>';
+
+
+
+&#x20; var hijos = hijosDirectosOrg(unit, unidades);
+
+&#x20; if (hijos.length === 0) return nodo;
+
+
+
+&#x20; var mostrar = orgExpandido\[unit.codigo] ? hijos : hijos.slice(0, 8);
+
+&#x20; var childrenHtml = mostrar.map(function(h){
+
+&#x20;   return '<div class="org-child"><div class="org-stem-v"></div>' + nodoOrgHtml(h, unidades) + '</div>';
+
+&#x20; }).join('');
+
+&#x20; if (!orgExpandido\[unit.codigo] \&\& hijos.length > 8) {
+
+&#x20;   childrenHtml += '<div class="org-child"><div class="org-stem-v"></div>' +
+
+&#x20;     '<div class="org-node jefatura" onclick="toggleOrgExpand(event,\\'' + esc(unit.codigo) + '\\')" style="font-size:10px;color:var(--accent);font-weight:700;cursor:pointer">+' + (hijos.length - 8) + ' m\\xE1s</div></div>';
+
+&#x20; }
+
+&#x20; return nodo + '<div class="org-stem-down"></div><div class="org-children">' + childrenHtml + '</div>';
+
+}
+
+
+
+function renderizarOrganigrama() {
+
+&#x20; var area = document.getElementById('org-area');
+
+&#x20; var filtroSecOrg = orgSecSeleccionada;
+
+
+
+&#x20; // Sin secretaría seleccionada: mostrar grilla centrada de secretarías
+
+&#x20; if (!filtroSecOrg) {
+
+&#x20;   var secsOrg = {};
+
+&#x20;   DATOS.filter(function(d){ return d.nivel === 'Direcci\\xF3n'; }).forEach(function(d){
+
+&#x20;     var s = d.secretaria;
+
+&#x20;     if (!s) return;
+
+&#x20;     if (!secsOrg\[s]) secsOrg\[s] = 0;
+
+&#x20;     secsOrg\[s]++;
+
+&#x20;   });
+
+&#x20;   var colores = \['#dbeafe','#ede9fe','#d1fae5','#fff7ed','#fce7f3','#fef3c7','#f0fdf4','#eff6ff','#fde8d8','#e0f2fe','#f0fdf4','#fdf4ff'];
+
+&#x20;   var secKeys = Object.keys(secsOrg).sort();
+
+&#x20;   var gridHtml = '<div style="width:100%">' +
+
+&#x20;     '<p style="margin:0 0 20px;color:var(--text2);font-size:13px;text-align:center">Seleccion\\xE1 una secretar\\xEDa para ver su organigrama</p>' +
+
+&#x20;     '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px;width:100%">';
+
+&#x20;   secKeys.forEach(function(s, i){
+
+&#x20;     var partes = s.split('—');
+
+&#x20;     var nombre = partes\[1] ? partes\[1].trim() : s;
+
+&#x20;     var bg = colores\[i % colores.length];
+
+&#x20;     gridHtml +=
+
+&#x20;       '<div onclick="orgSecSeleccionada=\\'' + esc(s) + '\\';renderizarOrganigrama()" ' +
+
+&#x20;       'style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:16px;cursor:pointer;box-shadow:var(--sh);transition:box-shadow .15s;text-align:center" ' +
+
+&#x20;       'onmouseover="this.style.boxShadow=\\'0 4px 16px rgba(0,0,0,.12)\\'" onmouseout="this.style.boxShadow=\\'var(--sh)\\'">' +
+
+&#x20;         '<div style="width:40px;height:40px;border-radius:var(--r-sm);background:' + bg + ';display:flex;align-items:center;justify-content:center;margin:0 auto 10px">' +
+
+&#x20;           '<svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="1"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="15" y2="16"/></svg>' +
+
+&#x20;         '</div>' +
+
+&#x20;         '<div style="font-size:12px;font-weight:700;color:var(--navy);line-height:1.3">' + nombre + '</div>' +
+
+&#x20;         '<div style="font-size:11px;color:var(--text2);margin-top:4px">' + secsOrg\[s] + ' direcci\\xF3n' + (secsOrg\[s] !== 1 ? 'es' : '') + '</div>' +
+
+&#x20;       '</div>';
+
+&#x20;   });
+
+&#x20;   gridHtml += '</div></div>';
+
+&#x20;   area.innerHTML = gridHtml;
+
+&#x20;   return;
+
+&#x20; }
+
+
+
+&#x20; var unidadesTotal = DATOS.filter(function(d){
+
+&#x20;   return d.tipoRegistro !== 'nojerarquico' \&\& d.secretaria === filtroSecOrg;
+
+&#x20; });
+
+&#x20; if (unidadesTotal.length === 0) {
+
+&#x20;   area.innerHTML = '<div class="empty-state"><div class="es-icon"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div><div class="es-title">Sin datos</div></div>';
+
+&#x20;   return;
+
+&#x20; }
+
+&#x20; // Agrupar todas las unidades jerárquicas por secretaría (no solo Direcciones)
+
+&#x20; var secSet = {};
+
+&#x20; DATOS.filter(function(u){ return u.tipoRegistro !== 'nojerarquico' \&\& u.secretaria; })
+
+&#x20;   .forEach(function(u){ secSet\[u.secretaria] = true; });
+
+&#x20; var secsConUnidades = Object.keys(secSet).sort();
+
+
+
+&#x20; var html = '<div style="display:flex;flex-direction:column;gap:40px;width:100%">';
+
+&#x20; secsConUnidades.filter(function(s){ return s === filtroSecOrg; }).forEach(function(s){
+
+&#x20;   var partes = s.split('\\u2014');
+
+&#x20;   var nombre = partes\[1] ? partes\[1].trim() : s;
+
+&#x20;   var cod    = partes\[0].trim();
+
+&#x20;   var unidadesSec = DATOS.filter(function(u){
+
+&#x20;     return u.tipoRegistro !== 'nojerarquico' \&\& u.secretaria === s
+
+&#x20;       \&\& (u.nivel === 'Direcci\\xF3n' || u.nivel === 'Departamento' || u.nivel === 'Divisi\\xF3n' || u.nivel === 'Secci\\xF3n');
+
+&#x20;   });
+
+&#x20;   // Raíces: unidades que no tienen ningún ancestro en unidadesSec
+
+&#x20;   // (ninguna otra unidad tiene un código que sea prefijo propio del suyo)
+
+&#x20;   var raices = unidadesSec.filter(function(u){
+
+&#x20;     var uc = String(u.codigo);
+
+&#x20;     return !unidadesSec.some(function(z){
+
+&#x20;       var zc = String(z.codigo);
+
+&#x20;       return zc !== uc \&\& uc.indexOf(zc) === 0;
+
+&#x20;     });
+
+&#x20;   }).sort(function(a,b){ return String(a.codigo).localeCompare(String(b.codigo)); });
+
+
+
+&#x20;   html += '<div style="display:flex;flex-direction:column;align-items:center">' +
+
+&#x20;       '<div class="org-node secretaria" style="min-width:180px;max-width:220px">' +
+
+&#x20;         '<span class="on-icono"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="1"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="15" y2="16"/></svg></span>' +
+
+&#x20;         '<div class="on-nombre">' + nombre + '</div>' +
+
+&#x20;         '<div class="on-codigo">C\\xF3d. \\xC1REA ' + cod + '</div>' +
+
+&#x20;       '</div>' +
+
+&#x20;     '<div class="org-stem-down"></div>' +
+
+&#x20;     '<div class="org-children">' +
+
+&#x20;       raices.map(function(d){
+
+&#x20;         return '<div class="org-child"><div class="org-stem-v"></div>' +
+
+&#x20;           nodoOrgHtml(d, unidadesSec) +
+
+&#x20;         '</div>';
+
+&#x20;       }).join('') +
+
+&#x20;     '</div>' +
+
+&#x20;     '</div>';
+
+&#x20; });
+
+&#x20; html += '</div>';
+
+&#x20; area.innerHTML =
+
+&#x20;   '<div style="margin-bottom:16px">' +
+
+&#x20;     '<button onclick="orgSecSeleccionada=\\'\\';renderizarOrganigrama()" style="display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border:1px solid var(--border);border-radius:var(--r-sm);background:var(--surface);cursor:pointer;font-size:12px;color:var(--text2)">' +
+
+&#x20;       '<svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>' +
+
+&#x20;       ' Todas las secretar\\xEDas' +
+
+&#x20;     '</button>' +
+
+&#x20;   '</div>' + html;
+
+
+
+&#x20; // Desplegable de puestos de la secretaría seleccionada (cerrado por defecto)
+
+&#x20; var sidebar = document.getElementById('org-sidebar');
+
+&#x20; var sidebarLista = document.getElementById('org-sidebar-lista');
+
+&#x20; var sidebarTitulo = document.getElementById('org-sidebar-titulo');
+
+&#x20; var toggleBtn = document.getElementById('org-puestos-toggle');
+
+&#x20; var toggleLbl = document.getElementById('org-puestos-toggle-label');
+
+&#x20; if (filtroSecOrg \&\& sidebar) {
+
+&#x20;   var puestosSec = DATOS.filter(function(d){
+
+&#x20;     return d.secretaria === filtroSecOrg \&\& d.tipoRegistro === 'nojerarquico';
+
+&#x20;   });
+
+&#x20;   // Deduplicar por nombre
+
+&#x20;   var seen = {};
+
+&#x20;   var unique = \[];
+
+&#x20;   puestosSec.forEach(function(p) {
+
+&#x20;     if (!seen\[p.nombreCargo]) { seen\[p.nombreCargo] = true; unique.push(p); }
+
+&#x20;   });
+
+&#x20;   sidebarTitulo.innerHTML = 'Puestos del \\xE1rea (' + unique.length + ')' +
+
+&#x20;     '<button onclick="toggleOrgPuestos(false)" style="float:right;background:none;border:none;cursor:pointer;color:var(--text3);padding:0;line-height:1">' +
+
+&#x20;       '<svg style="width:14px;height:14px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>';
+
+&#x20;   if (unique.length === 0) {
+
+&#x20;     sidebarLista.innerHTML = '<div style="padding:14px;font-size:11px;color:var(--text3)">Sin puestos no jerárquicos en este área</div>';
+
+&#x20;   } else {
+
+&#x20;     sidebarLista.innerHTML = unique.map(function(p){
+
+&#x20;       var cod = esc(p.codigo);
+
+&#x20;       var onclick = 'abrirDetalle(\\'' + cod + '\\',\\'nojerarquico\\')';
+
+&#x20;       return '<div class="org-sidebar-item" onclick="' + onclick + '">' +
+
+&#x20;         '<span class="osi-codigo">' + (p.tipoPuesto || '') + '</span>' +
+
+&#x20;         '<span style="flex:1">' + (p.nombreCargo || '') + '</span>' +
+
+&#x20;       '</div>';
+
+&#x20;     }).join('');
+
+&#x20;   }
+
+&#x20;   if (toggleBtn) { toggleBtn.style.display = ''; }
+
+&#x20;   if (toggleLbl) { toggleLbl.textContent = 'Puestos del \\xE1rea (' + unique.length + ')'; }
+
+&#x20;   sidebar.classList.remove('visible'); // cerrado por defecto al re-renderizar
+
+&#x20; } else {
+
+&#x20;   if (sidebar) sidebar.classList.remove('visible');
+
+&#x20;   if (toggleBtn) toggleBtn.style.display = 'none';
+
+&#x20; }
+
+
+
+&#x20; if (orgCodigoDestacado) {
+
+&#x20;   var codigoTarget = orgCodigoDestacado;
+
+&#x20;   orgCodigoDestacado = null;
+
+&#x20;   setTimeout(function() {
+
+&#x20;     var el = document.getElementById('org-node-' + codigoTarget);
+
+&#x20;     if (el) {
+
+&#x20;       el.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
+
+&#x20;       el.classList.add('destacado');
+
+&#x20;     }
+
+&#x20;   }, 120);
+
+&#x20; }
+
+}
+
+
+
+// ============================================================
+
+// EXPORTAR
+
+// ============================================================
+
+function exportarNomenclador() {
+
+&#x20; var filtrados = datosFiltrados();
+
+&#x20; var csv = 'C\\xF3digo,Nombre del Cargo,Nivel,Tipo Puesto,Orientaci\\xF3n,Secretar\\xEDa,Requiere T\\xEDtulo,Requiere Matr\\xEDcula,Normativa\\n';
+
+&#x20; filtrados.forEach(function(d){
+
+&#x20;   csv += \[
+
+&#x20;     d.codigo,
+
+&#x20;     '"' + (d.nombreCargo || '') + '"',
+
+&#x20;     d.nivel,
+
+&#x20;     '"' + (d.tipoPuesto || '') + '"',
+
+&#x20;     d.orientacion,
+
+&#x20;     '"' + (d.secretaria || '') + '"',
+
+&#x20;     d.requiereTitulo,
+
+&#x20;     d.requiereMatricula,
+
+&#x20;     d.normativa
+
+&#x20;   ].join(',') + '\\n';
+
+&#x20; });
+
+&#x20; var blob = new Blob(\['\\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+
+&#x20; var url = URL.createObjectURL(blob);
+
+&#x20; var a = document.createElement('a');
+
+&#x20; a.href = url; a.download = 'nomenclador-mscb.csv'; a.click();
+
+&#x20; mostrarToast('CSV exportado <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>', false);
+
+}
+
+
+
+function exportarOrg() {
+
+&#x20; var orgArea = document.getElementById('org-area');
+
+&#x20; if (!orgArea || !orgArea.innerHTML.trim()) {
+
+&#x20;   mostrarToast('No hay organigrama para exportar', true);
+
+&#x20;   return;
+
+&#x20; }
+
+&#x20; var filtroLabel = orgSecSeleccionada || 'Todas las Secretarías';
+
+&#x20; var printDiv = document.getElementById('detalle-print');
+
+&#x20; printDiv.innerHTML =
+
+&#x20;   '<div class="print-header">' +
+
+&#x20;     '<div class="print-nombre">Organigrama Municipal — MSCB</div>' +
+
+&#x20;     '<div class="print-meta">' + filtroLabel + ' \&nbsp;\&middot;\&nbsp; ' + new Date().toLocaleDateString('es-AR') + '</div>' +
+
+&#x20;   '</div>' +
+
+&#x20;   '<div class="org-area" style="overflow:visible;padding:0;min-height:0">' +
+
+&#x20;     orgArea.innerHTML +
+
+&#x20;   '</div>';
+
+&#x20; document.body.classList.add('imprimiendo-org');
+
+&#x20; window.print();
+
+&#x20; document.body.classList.remove('imprimiendo-org');
+
+&#x20; printDiv.innerHTML = '';
+
+}
+
+
+
+// ============================================================
+
+// AYUDA
+
+// ============================================================
+
+function toggleAyuda() {
+
+&#x20; mostrarToast('Ayuda: us\\xE1 los filtros del panel izquierdo para explorar cargos. Hac\\xE9 clic en cualquier cargo para ver su ficha completa.', false);
+
+}
+
+
+
+// ============================================================
+
+// TOAST
+
+// ============================================================
+
+function mostrarToast(msg, esError) {
+
+&#x20; var t = document.getElementById('toast');
+
+&#x20; t.innerHTML = msg;
+
+&#x20; t.className = 'visible' + (esError ? '' : ' ok');
+
+&#x20; clearTimeout(t.\_to);
+
+&#x20; t.\_to = setTimeout(function(){ t.className = ''; }, 4000);
+
+}
+
+
+
+// ============================================================
+
+// UTILIDAD — escapa comillas simples para innerHTML onclick
+
+// ============================================================
+
+function esc(str) {
+
+&#x20; return String(str || '').replace(/'/g, "\\\\'");
+
+}
+
+</script>
+
+</body>
+
+</html>
+
+
+
