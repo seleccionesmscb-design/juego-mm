@@ -14,14 +14,14 @@
   --perg-lt:  #f8f0d8;
   --perg-dk:  #ceb87a;
   --perg-mid: #dfd0a0;
-  --navy:     #1c2e4a;
-  --navy-md:  #2a4268;
-  --navy-lt:  #3d5f8a;
-  --gold:     #7a5e1a;
+  --navy:     #4a2109;
+  --navy-md:  #7a3410;
+  --navy-lt:  #a8551f;
+  --gold:     #8a4d1e;
   --gold-lt:  #a07828;
-  --gold-br:  #c49030;
+  --gold-br:  #c0531e;
   --era1:     #2a6a4a;  /* teal bosque */
-  --era2:     #1c2e4a;  /* navy */
+  --era2:     #4a2109;  /* navy */
   --era3:     #7a2020;  /* rojo andino */
   --grn:      #2a5024;
   --red:      #8b2020;
@@ -55,7 +55,7 @@ body{font-family:'Crimson Text',Georgia,serif;background:var(--perg);color:var(-
 
 /* Header */
 .hdr-welcome{
-  background:rgba(28,46,74,.97);
+  background:rgba(74,33,9,.97);
   border-bottom:3px solid var(--gold-br);
   padding:10px 28px;
   display:flex;align-items:center;justify-content:space-between;
@@ -98,19 +98,19 @@ body{font-family:'Crimson Text',Georgia,serif;background:var(--perg);color:var(-
   z-index:10;
   width:380px;
   background:rgba(237,224,186,.97);
-  border:2px solid rgba(28,46,74,.3);
+  border:2px solid rgba(74,33,9,.3);
   border-top:4px solid var(--gold-br);
-  box-shadow:0 8px 40px rgba(28,46,74,.35);
+  box-shadow:0 8px 40px rgba(74,33,9,.35);
   padding:28px 30px 24px;
 }
 .reg-eyebrow{font-family:'Cinzel',serif;font-size:8px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:6px;display:flex;align-items:center;gap:6px;}
 .reg-eyebrow::after{content:'';flex:1;height:1px;background:var(--gold);opacity:.3;}
 .reg-h1{font-family:'Cinzel',serif;font-size:20px;font-weight:900;color:var(--navy);line-height:1.2;margin-bottom:6px;}
 .reg-p{font-size:13px;line-height:1.6;color:var(--navy-md);margin-bottom:16px;}
-.legajo-box{background:rgba(255,255,255,.6);border:2px solid rgba(28,46,74,.2);padding:14px 16px;margin-bottom:14px;}
+.legajo-box{background:rgba(255,255,255,.6);border:2px solid rgba(74,33,9,.2);padding:14px 16px;margin-bottom:14px;}
 .legajo-lbl{font-family:'Cinzel',serif;font-size:8px;letter-spacing:2.5px;text-transform:uppercase;color:var(--navy-md);margin-bottom:8px;display:block;}
 .legajo-row{display:flex;gap:8px;}
-.legajo-inp{flex:1;padding:11px 14px;background:rgba(255,255,255,.8);border:1.5px solid rgba(28,46,74,.3);font-family:'Cinzel',serif;font-size:16px;font-weight:700;color:var(--navy);outline:none;letter-spacing:2px;transition:.18s;}
+.legajo-inp{flex:1;padding:11px 14px;background:rgba(255,255,255,.8);border:1.5px solid rgba(74,33,9,.3);font-family:'Cinzel',serif;font-size:16px;font-weight:700;color:var(--navy);outline:none;letter-spacing:2px;transition:.18s;}
 .legajo-inp:focus{border-color:var(--gold-br);background:white;}
 .legajo-inp::placeholder{color:#b0a070;font-weight:400;font-size:13px;letter-spacing:.5px;}
 .btn-validar{padding:11px 18px;background:var(--navy);color:var(--perg);border:2px solid var(--gold-br);font-family:'Cinzel',serif;font-size:11px;font-weight:700;letter-spacing:2px;cursor:pointer;transition:.18s;white-space:nowrap;}
@@ -119,7 +119,7 @@ body{font-family:'Crimson Text',Georgia,serif;background:var(--perg);color:var(-
 .legajo-status.ok{color:var(--grn);font-weight:700;}
 .legajo-status.err{color:var(--red);}
 .legajo-status.loading{color:var(--navy-md);font-style:italic;}
-.agente-card{display:none;background:rgba(28,46,74,.07);border:1px solid rgba(28,46,74,.2);padding:12px 14px;margin-top:10px;}
+.agente-card{display:none;background:rgba(74,33,9,.07);border:1px solid rgba(74,33,9,.2);padding:12px 14px;margin-top:10px;}
 .agente-card.visible{display:block;}
 .ac-nombre{font-family:'Cinzel',serif;font-size:14px;font-weight:700;color:var(--navy);margin-bottom:2px;}
 .ac-info{font-size:13px;color:var(--navy-md);margin-bottom:4px;}
@@ -131,7 +131,7 @@ body{font-family:'Crimson Text',Georgia,serif;background:var(--perg);color:var(-
 .btn-reglas:hover{color:var(--navy);}
 
 /* ── MODAL REGLAS ── */
-#modal-reglas{display:none;position:fixed;inset:0;z-index:5000;background:rgba(28,46,74,.75);align-items:center;justify-content:center;}
+#modal-reglas{display:none;position:fixed;inset:0;z-index:5000;background:rgba(74,33,9,.75);align-items:center;justify-content:center;}
 #modal-reglas.open{display:flex;}
 .reglas-box{background:var(--perg-lt);border:3px solid var(--navy);border-top:5px solid var(--gold-br);max-width:520px;width:90%;max-height:80vh;overflow-y:auto;padding:30px 36px;}
 .reglas-box h3{font-family:'Cinzel',serif;font-size:16px;font-weight:900;color:var(--navy);letter-spacing:2px;margin-bottom:20px;border-bottom:2px solid var(--perg-dk);padding-bottom:10px;}
@@ -148,7 +148,7 @@ body{font-family:'Crimson Text',Georgia,serif;background:var(--perg);color:var(-
 ══════════════════════════════════════ */
 #screen-agente{
   display:none;position:fixed;inset:0;z-index:200;
-  background:rgba(28,46,74,.88);
+  background:rgba(74,33,9,.88);
   align-items:center;justify-content:center;
   overflow-y:auto;padding:20px;
 }
@@ -179,8 +179,8 @@ body{font-family:'Crimson Text',Georgia,serif;background:var(--perg);color:var(-
 
 /* Panel equipo */
 .ap-equipo-panel{
-  background:rgba(28,46,74,.06);
-  border:1.5px solid rgba(28,46,74,.2);
+  background:rgba(74,33,9,.06);
+  border:1.5px solid rgba(74,33,9,.2);
   padding:14px 16px;min-width:180px;text-align:center;
 }
 .ap-eq-lbl{font-family:'Cinzel',serif;font-size:8px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:8px;}
@@ -190,8 +190,8 @@ body{font-family:'Crimson Text',Georgia,serif;background:var(--perg);color:var(-
 
 /* Mision box */
 .ap-mision{
-  background:rgba(28,46,74,.06);
-  border:1px solid rgba(28,46,74,.15);
+  background:rgba(74,33,9,.06);
+  border:1px solid rgba(74,33,9,.15);
   padding:14px 18px;margin-bottom:20px;
   font-size:14px;line-height:1.75;color:var(--navy-md);
 }
@@ -199,7 +199,7 @@ body{font-family:'Crimson Text',Georgia,serif;background:var(--perg);color:var(-
 
 /* Indicadores iniciales */
 .ap-inds{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:22px;}
-.ind-c{background:var(--perg);border:1.5px solid rgba(28,46,74,.15);padding:10px 6px;text-align:center;}
+.ind-c{background:var(--perg);border:1.5px solid rgba(74,33,9,.15);padding:10px 6px;text-align:center;}
 .ind-ico{font-size:18px;margin-bottom:3px;}
 .ind-lbl{font-family:'Cinzel',serif;font-size:7px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:5px;}
 .ind-dots{font-size:13px;letter-spacing:2px;}
@@ -226,7 +226,7 @@ body{font-family:'Crimson Text',Georgia,serif;background:var(--perg);color:var(-
 /* Header */
 .app-hdr{
   grid-column:1/4;
-  background:rgba(28,46,74,.97);
+  background:rgba(74,33,9,.97);
   border-bottom:3px solid var(--gold-br);
   display:flex;align-items:center;justify-content:space-between;
   padding:0 14px;
@@ -243,7 +243,7 @@ body{font-family:'Crimson Text',Georgia,serif;background:var(--perg);color:var(-
 /* ── TABLERO DE ERAS ── */
 .era-board{
   grid-column:1/4;
-  position:relative;border:2px solid rgba(28,46,74,.45);
+  position:relative;border:2px solid rgba(74,33,9,.45);
   display:flex;align-items:center;
   padding:0 10px;gap:0;overflow:hidden;min-height:52px;
 }
@@ -257,12 +257,12 @@ body{font-family:'Crimson Text',Georgia,serif;background:var(--perg);color:var(-
 
 .sb{font-family:'Cinzel',serif;font-size:8px;font-weight:700;letter-spacing:2px;padding:5px 8px;background:var(--navy);color:var(--perg);white-space:nowrap;flex-shrink:0;border:1px solid var(--gold-br);}
 .eb{font-family:'Cinzel',serif;font-size:8px;font-weight:700;letter-spacing:2px;padding:5px 8px;background:var(--gold-br);color:var(--navy);white-space:nowrap;flex-shrink:0;}
-.enc-b{font-family:'Cinzel',serif;font-size:7px;font-weight:700;letter-spacing:1px;padding:3px 7px;background:rgba(28,46,74,.12);color:var(--navy);border:1px solid rgba(28,46,74,.25);white-space:nowrap;flex-shrink:0;}
+.enc-b{font-family:'Cinzel',serif;font-size:7px;font-weight:700;letter-spacing:1px;padding:3px 7px;background:rgba(74,33,9,.12);color:var(--navy);border:1px solid rgba(74,33,9,.25);white-space:nowrap;flex-shrink:0;}
 .era-blk{display:flex;align-items:center;flex:1;}
 .era-lbl{font-family:'Cinzel',serif;font-size:7px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:0 5px;flex-shrink:0;white-space:nowrap;}
 .era-lbl.e1{color:var(--era1);}.era-lbl.e2{color:var(--era2);}.era-lbl.e3{color:var(--era3);}
 .era-nds{display:flex;align-items:center;flex:1;}
-.esep{width:1px;height:32px;background:rgba(28,46,74,.2);margin:0 6px;flex-shrink:0;}
+.esep{width:1px;height:32px;background:rgba(74,33,9,.2);margin:0 6px;flex-shrink:0;}
 
 /* Nodos — círculos sobre el mapa */
 .node{
@@ -271,14 +271,14 @@ body{font-family:'Crimson Text',Georgia,serif;background:var(--perg);color:var(-
   font-family:'Cinzel',serif;font-size:9px;font-weight:700;
   transition:all .35s;cursor:default;
   border:2.5px solid;background:rgba(237,224,186,.92);
-  box-shadow:0 1px 5px rgba(28,46,74,.22);
+  box-shadow:0 1px 5px rgba(74,33,9,.22);
 }
 .node.n1{border-color:var(--era1);color:var(--era1);}
 .node.n1.done{background:var(--era1);border-color:var(--era1);color:white;}
 .node.n1.active{background:var(--era1);border-color:var(--gold-br);color:white;transform:scale(1.25);box-shadow:0 0 12px rgba(42,106,74,.55);}
 .node.n2{border-color:var(--era2);color:var(--era2);}
 .node.n2.done{background:var(--era2);border-color:var(--era2);color:var(--perg);}
-.node.n2.active{background:var(--era2);border-color:var(--gold-br);color:var(--perg);transform:scale(1.25);box-shadow:0 0 12px rgba(28,46,74,.55);}
+.node.n2.active{background:var(--era2);border-color:var(--gold-br);color:var(--perg);transform:scale(1.25);box-shadow:0 0 12px rgba(74,33,9,.55);}
 .node.n3{border-color:var(--era3);color:var(--era3);}
 .node.n3.done{background:var(--era3);border-color:var(--era3);color:white;}
 .node.n3.active{background:var(--era3);border-color:var(--gold-br);color:white;transform:scale(1.25);box-shadow:0 0 12px rgba(122,32,32,.55);}
@@ -287,7 +287,7 @@ body{font-family:'Crimson Text',Georgia,serif;background:var(--perg);color:var(-
 .nl1{background:var(--era1);}.nl2{background:var(--era2);}.nl3{background:var(--era3);}
 
 /* Paneles laterales */
-.panel{background:rgba(237,224,186,.96);border:2px solid rgba(28,46,74,.28);overflow-y:auto;}
+.panel{background:rgba(237,224,186,.96);border:2px solid rgba(74,33,9,.28);overflow-y:auto;}
 .phdr{background:var(--navy);color:var(--perg);font-family:'Cinzel',serif;font-size:8px;font-weight:700;letter-spacing:3px;padding:6px 12px;flex-shrink:0;}
 .pbody{padding:10px 12px;}
 .left-p{grid-row:3/4;}.right-p{grid-row:3/4;}
@@ -296,7 +296,7 @@ body{font-family:'Crimson Text',Georgia,serif;background:var(--perg);color:var(-
 .center-p{
   grid-row:3/4;
   background:rgba(237,224,186,.96);
-  border:2px solid rgba(28,46,74,.28);
+  border:2px solid rgba(74,33,9,.28);
   display:flex;flex-direction:column;overflow:hidden;
 }
 
@@ -316,16 +316,16 @@ body{font-family:'Crimson Text',Georgia,serif;background:var(--perg);color:var(-
 .bc1{background:#c84060;}.bc2{background:var(--gold-br);}.bc3{background:var(--grn);}.bc4{background:var(--teal);}
 
 /* Situación */
-.sit-box{padding:13px 14px 10px;border-bottom:2px solid rgba(28,46,74,.15);flex-shrink:0;}
+.sit-box{padding:13px 14px 10px;border-bottom:2px solid rgba(74,33,9,.15);flex-shrink:0;}
 .sit-tipo{font-family:'Cinzel',serif;font-size:8px;font-weight:700;letter-spacing:3px;text-transform:uppercase;margin-bottom:5px;}
 .sit-tipo.situacion{color:var(--teal);}.sit-tipo.crisis{color:var(--red);}.sit-tipo.final{color:var(--gold-br);}
 .sit-tit{font-family:'Cinzel',serif;font-size:14px;font-weight:700;color:var(--navy);margin-bottom:6px;line-height:1.3;}
 .sit-desc{font-size:13px;line-height:1.6;color:var(--navy-md);}
 
 /* Biblioteca */
-.bib-tog{padding:7px 13px;border-bottom:1px solid rgba(28,46,74,.12);font-family:'Cinzel',serif;font-size:8px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--navy);cursor:pointer;display:flex;justify-content:space-between;align-items:center;background:var(--perg-mid);flex-shrink:0;transition:.15s;}
+.bib-tog{padding:7px 13px;border-bottom:1px solid rgba(74,33,9,.12);font-family:'Cinzel',serif;font-size:8px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--navy);cursor:pointer;display:flex;justify-content:space-between;align-items:center;background:var(--perg-mid);flex-shrink:0;transition:.15s;}
 .bib-tog:hover{background:var(--navy);color:var(--perg);}
-.bib-panel{display:none;border-bottom:2px solid rgba(28,46,74,.15);max-height:145px;overflow-y:auto;flex-shrink:0;}
+.bib-panel{display:none;border-bottom:2px solid rgba(74,33,9,.15);max-height:145px;overflow-y:auto;flex-shrink:0;}
 .hi{padding:8px 13px;border-bottom:1px solid var(--perg-dk);cursor:pointer;font-size:12px;border-left:3px solid transparent;transition:.15s;}
 .hi:hover{background:var(--perg);border-left-color:var(--gold-br);}
 .hi.done{border-left-color:var(--grn);color:#557;cursor:default;}
@@ -343,15 +343,15 @@ body{font-family:'Crimson Text',Georgia,serif;background:var(--perg);color:var(-
 .card{
   width:160px;
   background:var(--perg-lt);
-  border:2px solid rgba(28,46,74,.28);
+  border:2px solid rgba(74,33,9,.28);
   cursor:pointer;font-size:12px;text-align:left;
   transition:all .22s;position:relative;overflow:hidden;
   display:flex;flex-direction:column;
-  box-shadow:0 3px 10px rgba(28,46,74,.14);
+  box-shadow:0 3px 10px rgba(74,33,9,.14);
 }
 .card:hover:not(.locked){
   transform:translateY(-6px) scale(1.025);
-  box-shadow:0 12px 28px rgba(28,46,74,.24);
+  box-shadow:0 12px 28px rgba(74,33,9,.24);
   border-color:var(--gold-br);
 }
 
@@ -360,7 +360,7 @@ body{font-family:'Crimson Text',Georgia,serif;background:var(--perg);color:var(-
   padding:8px 10px;
   display:flex;align-items:center;gap:7px;
   flex-shrink:0;
-  border-bottom:1px solid rgba(28,46,74,.15);
+  border-bottom:1px solid rgba(74,33,9,.15);
 }
 .card-head-icon{
   width:28px;height:28px;border-radius:50%;
@@ -384,7 +384,7 @@ body{font-family:'Crimson Text',Georgia,serif;background:var(--perg);color:var(-
 /* Footer carta */
 .card-foot{
   padding:7px 10px;
-  border-top:1px solid rgba(28,46,74,.1);
+  border-top:1px solid rgba(74,33,9,.1);
   display:flex;align-items:center;justify-content:space-between;
   flex-shrink:0;
 }
@@ -401,11 +401,11 @@ body{font-family:'Crimson Text',Georgia,serif;background:var(--perg);color:var(-
 .cc-com .card-reward{color:#2a6a4a;}
 
 /* Liderazgo */
-.cc-lid .card-head{background:linear-gradient(135deg,#1c2e4a,#0e1e34);}
+.cc-lid .card-head{background:linear-gradient(135deg,#4a2109,#0e1e34);}
 .cc-lid .card-head-icon{border-color:rgba(196,144,48,.5);}
 .cc-lid .card-cat{color:var(--perg);}
 .cc-lid .card-tipo-badge{color:var(--gold-br);border-color:rgba(196,144,48,.4);}
-.cc-lid .card-reward{color:#1c2e4a;}
+.cc-lid .card-reward{color:#4a2109;}
 
 /* Bienestar */
 .cc-bien .card-head{background:linear-gradient(135deg,#2a5024,#1a3a18);}
@@ -422,21 +422,21 @@ body{font-family:'Crimson Text',Georgia,serif;background:var(--perg);color:var(-
 .cc-plan .card-reward{color:#6b4423;}
 
 /* Default */
-.cc-def .card-head{background:linear-gradient(135deg,#2a4268,#1a2e54);}
+.cc-def .card-head{background:linear-gradient(135deg,#7a3410,#1a2e54);}
 .cc-def .card-head-icon{border-color:rgba(196,144,48,.5);}
 .cc-def .card-cat{color:var(--perg);}
 .cc-def .card-tipo-badge{color:var(--gold-br);border-color:rgba(196,144,48,.4);}
-.cc-def .card-reward{color:#2a4268;}
+.cc-def .card-reward{color:#7a3410;}
 
 /* Carta PROFESIONAL vs BÁSICA */
-.tipo-prof{background:rgba(28,46,74,.1);color:var(--navy-md);border-color:rgba(28,46,74,.2);}
+.tipo-prof{background:rgba(74,33,9,.1);color:var(--navy-md);border-color:rgba(74,33,9,.2);}
 .tipo-bas{background:rgba(160,80,20,.1);color:#884010;border-color:rgba(160,80,20,.25);}
 .cc-com .tipo-prof,.cc-lid .tipo-prof,.cc-bien .tipo-prof,.cc-plan .tipo-prof{background:rgba(255,255,255,.15);color:white;border-color:rgba(255,255,255,.3);}
 .cc-com .tipo-bas,.cc-lid .tipo-bas,.cc-bien .tipo-bas,.cc-plan .tipo-bas{background:rgba(255,200,100,.2);color:#ffd080;border-color:rgba(255,200,100,.4);}
 
 /* Carta bloqueada */
-.card.locked{background:var(--perg-mid);border:2px dashed rgba(28,46,74,.2);cursor:pointer;opacity:.72;}
-.card.locked:hover{opacity:1;border-color:var(--gold-br);transform:translateY(-3px);box-shadow:0 8px 20px rgba(28,46,74,.18);}
+.card.locked{background:var(--perg-mid);border:2px dashed rgba(74,33,9,.2);cursor:pointer;opacity:.72;}
+.card.locked:hover{opacity:1;border-color:var(--gold-br);transform:translateY(-3px);box-shadow:0 8px 20px rgba(74,33,9,.18);}
 .lock-badge{position:absolute;top:8px;right:8px;background:var(--navy);color:var(--perg);font-family:'Cinzel',serif;font-size:7px;letter-spacing:1px;padding:2px 6px;text-transform:uppercase;border:1px solid var(--gold-br);}
 .unlock-h{font-family:'Cinzel',serif;font-size:8px;font-weight:700;letter-spacing:1px;color:var(--gold);text-transform:uppercase;margin-top:4px;}
 .unlock-s{font-size:10px;color:var(--navy-md);margin-top:2px;}
@@ -464,7 +464,7 @@ body{font-family:'Crimson Text',Georgia,serif;background:var(--perg);color:var(-
 /* ══════════════════════════════════════
    MODAL CAPACITACIÓN — Nuevo nivel
 ══════════════════════════════════════ */
-#modal{display:none;position:fixed;inset:0;z-index:500;background:rgba(28,46,74,.85);align-items:center;justify-content:center;}
+#modal{display:none;position:fixed;inset:0;z-index:500;background:rgba(74,33,9,.85);align-items:center;justify-content:center;}
 .modal-box{
   background:var(--perg-lt);
   border:3px solid var(--navy);border-top:5px solid var(--gold-br);
@@ -484,19 +484,19 @@ body{font-family:'Crimson Text',Georgia,serif;background:var(--perg);color:var(-
 
 /* Contenido modal */
 .modal-body{padding:20px 24px;}
-.modal-badge{display:inline-block;background:rgba(28,46,74,.08);border:1px solid rgba(28,46,74,.2);padding:3px 13px;font-family:'Cinzel',serif;font-size:8px;letter-spacing:2px;color:var(--navy-md);text-transform:uppercase;margin-bottom:12px;}
+.modal-badge{display:inline-block;background:rgba(74,33,9,.08);border:1px solid rgba(74,33,9,.2);padding:3px 13px;font-family:'Cinzel',serif;font-size:8px;letter-spacing:2px;color:var(--navy-md);text-transform:uppercase;margin-bottom:12px;}
 .modal-titulo{font-family:'Cinzel',serif;font-size:16px;font-weight:700;color:var(--navy);margin-bottom:10px;letter-spacing:1px;}
 .modal-cont{
   font-size:14px;line-height:1.8;color:var(--navy-md);
   margin-bottom:16px;
   background:rgba(255,255,255,.5);
-  border:1px solid rgba(28,46,74,.1);
+  border:1px solid rgba(74,33,9,.1);
   padding:12px 14px;
 }
 .modal-preg{font-family:'Cinzel',serif;font-size:10px;letter-spacing:1px;color:var(--gold);margin-bottom:10px;text-align:center;}
 .modal-inp{
   width:100%;padding:11px 14px;
-  background:var(--perg);border:2px solid rgba(28,46,74,.3);
+  background:var(--perg);border:2px solid rgba(74,33,9,.3);
   font-family:'Cinzel',serif;font-size:13px;color:var(--navy);
   text-align:center;outline:none;margin-bottom:14px;transition:.18s;
 }
@@ -510,8 +510,8 @@ body{font-family:'Crimson Text',Georgia,serif;background:var(--perg);color:var(-
 
 /* Confirmación de acción */
 .modal-accion-preview{
-  background:rgba(28,46,74,.06);
-  border:1px solid rgba(28,46,74,.15);
+  background:rgba(74,33,9,.06);
+  border:1px solid rgba(74,33,9,.15);
   padding:12px 16px;margin-bottom:16px;
   display:flex;align-items:center;gap:12px;
 }
@@ -522,7 +522,7 @@ body{font-family:'Crimson Text',Georgia,serif;background:var(--perg);color:var(-
 .map-efecto{font-family:'Cinzel',serif;font-size:10px;color:var(--teal);margin-top:4px;font-weight:700;}
 
 /* ── ENCUENTRO ── */
-#enc-modal{display:none;position:fixed;inset:0;z-index:600;background:rgba(28,46,74,.93);align-items:center;justify-content:center;}
+#enc-modal{display:none;position:fixed;inset:0;z-index:600;background:rgba(74,33,9,.93);align-items:center;justify-content:center;}
 .enc-box{background:var(--navy);border:3px solid var(--gold-br);max-width:500px;width:96%;padding:40px;text-align:center;}
 .enc-ico{font-size:44px;margin-bottom:12px;}
 .enc-tag{font-family:'Cinzel',serif;font-size:8px;letter-spacing:4px;text-transform:uppercase;color:var(--gold-br);margin-bottom:8px;}
@@ -539,7 +539,7 @@ body{font-family:'Crimson Text',Georgia,serif;background:var(--perg);color:var(-
 .final-detail{font-family:'Cinzel',serif;font-size:11px;letter-spacing:1px;color:var(--navy-md);margin-top:12px;line-height:2.3;}
 .final-detail span{color:var(--navy);font-weight:700;}
 
-::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-track{background:var(--perg);}::-webkit-scrollbar-thumb{background:rgba(28,46,74,.3);}
+::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-track{background:var(--perg);}::-webkit-scrollbar-thumb{background:rgba(74,33,9,.3);}
   </style>
 </head>
 <body>
@@ -564,13 +564,13 @@ body{font-family:'Crimson Text',Georgia,serif;background:var(--perg);color:var(-
       <!-- SVG del tablero que flota sobre el mapa -->
       <svg id="tablero-svg" viewBox="0 0 800 420" xmlns="http://www.w3.org/2000/svg">
         <!-- Decoración brújula -->
-        <text x="680" y="60" font-family="serif" font-size="40" fill="rgba(28,46,74,0.25)" text-anchor="middle">✦</text>
-        <text x="680" y="75" font-family="serif" font-size="9" fill="rgba(28,46,74,0.35)" text-anchor="middle" letter-spacing="2">N</text>
-        <text x="680" y="98" font-family="serif" font-size="9" fill="rgba(28,46,74,0.35)" text-anchor="middle" letter-spacing="2">S</text>
+        <text x="680" y="60" font-family="serif" font-size="40" fill="rgba(74,33,9,0.25)" text-anchor="middle">✦</text>
+        <text x="680" y="75" font-family="serif" font-size="9" fill="rgba(74,33,9,0.35)" text-anchor="middle" letter-spacing="2">N</text>
+        <text x="680" y="98" font-family="serif" font-size="9" fill="rgba(74,33,9,0.35)" text-anchor="middle" letter-spacing="2">S</text>
 
         <!-- ERA I — Organización del Trabajo -->
         <text x="100" y="75" font-family="'Cinzel',serif" font-size="9" fill="#2a6a4a" font-weight="700" text-anchor="middle" letter-spacing="2">ERA I — ORGANIZACIÓN DEL TRABAJO</text>
-        <text x="100" y="90" font-family="serif" font-size="10" fill="rgba(28,46,74,0.35)" text-anchor="middle">Subsistema de Diseño Organizacional</text>
+        <text x="100" y="90" font-family="serif" font-size="10" fill="rgba(74,33,9,0.35)" text-anchor="middle">Subsistema de Diseño Organizacional</text>
         <!-- Línea ERA I -->
         <line x1="20" y1="140" x2="200" y2="140" stroke="#2a6a4a" stroke-width="2.5" stroke-opacity="0.5" stroke-dasharray="6,3"/>
         <!-- Nodos ERA I -->
@@ -587,28 +587,28 @@ body{font-family:'Crimson Text',Georgia,serif;background:var(--perg);color:var(-
         <text x="30" y="115" font-size="14" text-anchor="middle">⚙️</text>
         <!-- Encuentro 1 -->
         <rect x="192" y="128" width="52" height="24" rx="2" fill="rgba(196,144,48,0.2)" stroke="rgba(196,144,48,0.5)" stroke-width="1.5"/>
-        <text x="218" y="143" font-family="'Cinzel',serif" font-size="7" fill="#7a5e1a" text-anchor="middle" font-weight="700" letter-spacing="1">ENCUENTRO 1</text>
+        <text x="218" y="143" font-family="'Cinzel',serif" font-size="7" fill="#8a4d1e" text-anchor="middle" font-weight="700" letter-spacing="1">ENCUENTRO 1</text>
 
         <!-- ERA II — Gestión del Desempeño -->
-        <text x="400" y="75" font-family="'Cinzel',serif" font-size="9" fill="#1c2e4a" font-weight="700" text-anchor="middle" letter-spacing="2">ERA II — GESTIÓN DEL DESEMPEÑO</text>
-        <text x="400" y="90" font-family="serif" font-size="10" fill="rgba(28,46,74,0.35)" text-anchor="middle">Subsistema de Gestión del Desempeño</text>
-        <line x1="260" y1="220" x2="480" y2="220" stroke="#1c2e4a" stroke-width="2.5" stroke-opacity="0.45" stroke-dasharray="6,3"/>
-        <circle cx="270" cy="220" r="18" fill="rgba(237,224,186,0.95)" stroke="#1c2e4a" stroke-width="2.5"/>
-        <text x="270" y="225" font-family="'Cinzel',serif" font-size="11" fill="#1c2e4a" text-anchor="middle" font-weight="700">5</text>
-        <circle cx="330" cy="220" r="18" fill="rgba(237,224,186,0.95)" stroke="#1c2e4a" stroke-width="2.5"/>
-        <text x="330" y="225" font-family="'Cinzel',serif" font-size="11" fill="#1c2e4a" text-anchor="middle" font-weight="700">6</text>
-        <circle cx="390" cy="220" r="18" fill="rgba(237,224,186,0.95)" stroke="#1c2e4a" stroke-width="2.5"/>
-        <text x="390" y="225" font-family="'Cinzel',serif" font-size="11" fill="#1c2e4a" text-anchor="middle" font-weight="700">7</text>
-        <circle cx="450" cy="220" r="18" fill="rgba(237,224,186,0.95)" stroke="#1c2e4a" stroke-width="2.5"/>
-        <text x="450" y="225" font-family="'Cinzel',serif" font-size="11" fill="#1c2e4a" text-anchor="middle" font-weight="700">8</text>
-        <circle cx="270" cy="190" r="14" fill="#1c2e4a" fill-opacity="0.12" stroke="#1c2e4a" stroke-width="1.5" stroke-opacity="0.35"/>
+        <text x="400" y="75" font-family="'Cinzel',serif" font-size="9" fill="#4a2109" font-weight="700" text-anchor="middle" letter-spacing="2">ERA II — GESTIÓN DEL DESEMPEÑO</text>
+        <text x="400" y="90" font-family="serif" font-size="10" fill="rgba(74,33,9,0.35)" text-anchor="middle">Subsistema de Gestión del Desempeño</text>
+        <line x1="260" y1="220" x2="480" y2="220" stroke="#4a2109" stroke-width="2.5" stroke-opacity="0.45" stroke-dasharray="6,3"/>
+        <circle cx="270" cy="220" r="18" fill="rgba(237,224,186,0.95)" stroke="#4a2109" stroke-width="2.5"/>
+        <text x="270" y="225" font-family="'Cinzel',serif" font-size="11" fill="#4a2109" text-anchor="middle" font-weight="700">5</text>
+        <circle cx="330" cy="220" r="18" fill="rgba(237,224,186,0.95)" stroke="#4a2109" stroke-width="2.5"/>
+        <text x="330" y="225" font-family="'Cinzel',serif" font-size="11" fill="#4a2109" text-anchor="middle" font-weight="700">6</text>
+        <circle cx="390" cy="220" r="18" fill="rgba(237,224,186,0.95)" stroke="#4a2109" stroke-width="2.5"/>
+        <text x="390" y="225" font-family="'Cinzel',serif" font-size="11" fill="#4a2109" text-anchor="middle" font-weight="700">7</text>
+        <circle cx="450" cy="220" r="18" fill="rgba(237,224,186,0.95)" stroke="#4a2109" stroke-width="2.5"/>
+        <text x="450" y="225" font-family="'Cinzel',serif" font-size="11" fill="#4a2109" text-anchor="middle" font-weight="700">8</text>
+        <circle cx="270" cy="190" r="14" fill="#4a2109" fill-opacity="0.12" stroke="#4a2109" stroke-width="1.5" stroke-opacity="0.35"/>
         <text x="270" y="195" font-size="14" text-anchor="middle">🎯</text>
         <rect x="462" y="208" width="52" height="24" rx="2" fill="rgba(196,144,48,0.2)" stroke="rgba(196,144,48,0.5)" stroke-width="1.5"/>
-        <text x="488" y="223" font-family="'Cinzel',serif" font-size="7" fill="#7a5e1a" text-anchor="middle" font-weight="700" letter-spacing="1">ENCUENTRO 2</text>
+        <text x="488" y="223" font-family="'Cinzel',serif" font-size="7" fill="#8a4d1e" text-anchor="middle" font-weight="700" letter-spacing="1">ENCUENTRO 2</text>
 
         <!-- ERA III — Desarrollo del Equipo -->
         <text x="650" y="75" font-family="'Cinzel',serif" font-size="9" fill="#7a2020" font-weight="700" text-anchor="middle" letter-spacing="2">ERA III — DESARROLLO DEL EQUIPO</text>
-        <text x="650" y="90" font-family="serif" font-size="10" fill="rgba(28,46,74,0.35)" text-anchor="middle">Subsistema de Desarrollo de Personas</text>
+        <text x="650" y="90" font-family="serif" font-size="10" fill="rgba(74,33,9,0.35)" text-anchor="middle">Subsistema de Desarrollo de Personas</text>
         <line x1="530" y1="310" x2="760" y2="310" stroke="#7a2020" stroke-width="2.5" stroke-opacity="0.45" stroke-dasharray="6,3"/>
         <circle cx="540" cy="310" r="18" fill="rgba(237,224,186,0.95)" stroke="#7a2020" stroke-width="2.5"/>
         <text x="540" y="315" font-family="'Cinzel',serif" font-size="11" fill="#7a2020" text-anchor="middle" font-weight="700">9</text>
@@ -634,9 +634,9 @@ body{font-family:'Crimson Text',Georgia,serif;background:var(--perg);color:var(-
         </defs>
 
         <!-- Texto eje transversal -->
-        <rect x="50" y="370" width="700" height="38" rx="3" fill="rgba(28,46,74,0.08)" stroke="rgba(28,46,74,0.2)" stroke-width="1"/>
-        <text x="400" y="383" font-family="'Cinzel',serif" font-size="9" fill="#1c2e4a" text-anchor="middle" font-weight="700" letter-spacing="2">EJE TRANSVERSAL: RELACIONES HUMANAS</text>
-        <text x="400" y="399" font-family="serif" font-size="10" fill="rgba(28,46,74,0.6)" text-anchor="middle">Comunicación · Conflictos · Trabajo en equipo · Clima organizacional</text>
+        <rect x="50" y="370" width="700" height="38" rx="3" fill="rgba(74,33,9,0.08)" stroke="rgba(74,33,9,0.2)" stroke-width="1"/>
+        <text x="400" y="383" font-family="'Cinzel',serif" font-size="9" fill="#4a2109" text-anchor="middle" font-weight="700" letter-spacing="2">EJE TRANSVERSAL: RELACIONES HUMANAS</text>
+        <text x="400" y="399" font-family="serif" font-size="10" fill="rgba(74,33,9,0.6)" text-anchor="middle">Comunicación · Conflictos · Trabajo en equipo · Clima organizacional</text>
       </svg>
     </div>
 

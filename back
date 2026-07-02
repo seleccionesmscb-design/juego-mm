@@ -1,14 +1,17 @@
 /**
  * MISIÓN MUNI — Code.gs (VERSIÓN MEJORADA 2026)
  * Simulador de Gestión para Mandos Medios — Municipalidad de Bariloche
- * 
+ *
  * CAMBIOS REALIZADOS:
  * - Validación de legajo ahora busca en la hoja "Agentes"
  * - validarLegajo() es más flexible (acepta letras, números, guiones)
  * - iniciarPartida() usa los datos reales del agente encontrado
+ * - Base de datos migrada a la planilla "MisionMuni_BaseDatos"
+ * - Lectura de hoja "Situaciones" adaptada al nuevo orden de columnas
+ *   (ID, Título, Descripción, Área, ERA, Trayecto, Tipo)
  */
 
-const SS_ID = "1vOVwStSPmihkk9d4WzLKBjju_shRR_jrPDDRcQaSraU";
+const SS_ID = "19Uk0MQT4a0Tarnx1H2qiVPX6YaAMg_FQsrhjla8VHBc";
 
 function doGet() {
   return HtmlService.createTemplateFromFile('Index').evaluate()
@@ -138,14 +141,14 @@ function cargarHerramientas(ss) {
   const hoja = ss.getSheetByName("Herramientas");
   if (!hoja) return [];
   return hoja.getDataRange().getValues().slice(1).map(f => ({
-    id:         String(f[0]).trim(),
-    nombre:     f[1],
-    contenido:  f[2],
-    area:       f[3],
-    insigniaID: f[4],
-    pregunta:   f[5] || "¿Confirmás la lectura del módulo?",
-    respuesta:  String(f[6] || "si").trim().toLowerCase(),
-    duracion:   f[7] || "5 min"
+    id:          String(f[0]).trim(),
+    nombre:      f[1],
+    contenido:   f[2],
+    area:        f[3],
+    insigniaID:  f[4],
+    pregunta:    f[5] || "¿Confirmás la lectura del módulo?",
+    respuesta:   String(f[6] || "si").trim().toLowerCase(),
+    competencia: f[7] || ""
   }));
 }
 
@@ -168,7 +171,7 @@ function cargarAcciones(ss, herramientasUsuario) {
       id:              String(f[0]),
       cat:             f[1],
       texto:           f[2],
-      microlearning:   f[8] || "",
+      situacionId:     f[8] || "",
       req:             req,
       recursoGanado:   f[4] || "comunicacion",
       cantidadRecurso: Number(f[5]) || 1,
@@ -185,11 +188,12 @@ function cargarAcciones(ss, herramientasUsuario) {
 function obtenerSituacionAleatoria(ss, area) {
   const hoja = ss.getSheetByName("Situaciones");
   if (!hoja) return { titulo: "Sin datos", desc: "Verificá la hoja 'Situaciones'.", tipo: "situacion" };
+  // Columnas: ID(0) | Título(1) | Descripción(2) | Área(3) | ERA(4) | Trayecto(5) | Tipo(6)
   const datos = hoja.getDataRange().getValues().slice(1);
   let filtrados = datos.filter(f => f[3] && f[3].toString().toLowerCase() === area.toLowerCase());
   if (!filtrados.length) filtrados = datos;
   const e = filtrados[Math.floor(Math.random() * filtrados.length)];
-  return { titulo: e[1], desc: e[2], tipo: e[4] || "situacion" };
+  return { titulo: e[1], desc: e[2], era: e[4] || "", trayecto: e[5] || "", tipo: (e[6] || "situacion").toString().toLowerCase() };
 }
 
 // ─────────────────────────────────────────────
