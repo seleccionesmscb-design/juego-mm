@@ -309,11 +309,13 @@ button{font:inherit}
   </div>
   <div class="login-wrap">
     <div class="login-card">
-      <div class="login-eyebrow">INGRESÁ TU LEGAJO</div>
-      <p class="login-p">Conocé a tu equipo para comenzar la misión. Tu dirección y compañeros ya están asignados.</p>
-      <input id="inp-legajo" class="legajo-inp" type="number" placeholder="Ej: 15946" maxlength="10">
-      <button class="btn-primary" onclick="validarLegajo()">VALIDAR LEGAJO</button>
-      <div id="legajo-status" class="legajo-status"></div>
+      <div id="legajo-form">
+        <div class="login-eyebrow">INGRESÁ TU LEGAJO</div>
+        <p class="login-p">Conocé a tu equipo para comenzar la misión. Tu dirección y compañeros ya están asignados.</p>
+        <input id="inp-legajo" class="legajo-inp" type="number" placeholder="Ej: 15946" maxlength="10">
+        <button class="btn-primary" onclick="validarLegajo()">VALIDAR LEGAJO</button>
+        <div id="legajo-status" class="legajo-status"></div>
+      </div>
       <div id="agente-card" class="agente-card">
         <div class="ac-nombre" id="ac-nombre"></div>
         <div class="ac-info" id="ac-info"></div>
@@ -563,11 +565,11 @@ function validarLegajo() {
       hideLoader();
       if(res && res.encontrado) {
         agenteData = { legajo: legajo, nombre: res.nombre, direccion: res.direccion };
-        showStatus('✓ Legajo encontrado','ok');
         document.getElementById('ac-nombre').innerText = res.nombre;
         document.getElementById('ac-info').innerText = 'Legajo ' + legajo + ' · ' + res.direccion;
         document.getElementById('ac-equipo').innerText = 'Dirección de ' + res.direccion;
         document.getElementById('agente-card').classList.add('visible');
+        document.getElementById('legajo-form').style.display = 'none';
       } else {
         showStatus('Legajo no encontrado. Verificá el número o consultá con RRHH.','err');
         document.getElementById('agente-card').classList.remove('visible');
