@@ -15,6 +15,11 @@
  *   las situaciones se filtran por Era además de por Área.
  * - Se sacó el nombre de fantasía del equipo (animales); ahora se usa
  *   la Dirección como identidad del equipo.
+ * - El progreso de cada agente se guarda automáticamente (hoja
+ *   "Progreso", creada sola si no existe) y se retoma donde quedó al
+ *   volver a ingresar el mismo legajo.
+ * - Los módulos de capacitación admiten preguntas de opción múltiple
+ *   además de la respuesta libre (columnas OpcionA..OpcionD, opcionales).
  */
 
 const SS_ID = "19Uk0MQT4a0Tarnx1H2qiVPX6YaAMg_FQsrhjla8VHBc";
@@ -114,6 +119,59 @@ function competenciasIniciales(catalogo) {
 }
 
 // ─────────────────────────────────────────────
+// GUARDAR / RETOMAR PROGRESO POR LEGAJO
+// Se guarda el estado completo como JSON en la hoja "Progreso" (se
+// crea sola con sus encabezados la primera vez). No toca la hoja
+// "Partidas" existente para no romper datos manuales previos.
+// ─────────────────────────────────────────────
+function obtenerHojaProgreso(ss) {
+  let hoja = ss.getSheetByName("Progreso");
+  if (!hoja) {
+    hoja = ss.insertSheet("Progreso");
+    hoja.appendRow(["Legajo", "NombreAgente", "Direccion", "Casillero", "Encuentro", "UltimaActividad", "EstadoJSON"]);
+  }
+  return hoja;
+}
+
+function guardarProgreso(estado) {
+  const ss = SpreadsheetApp.openById(SS_ID);
+  const hoja = obtenerHojaProgreso(ss);
+  const legajoStr = String(estado.legajo).trim();
+  const datos = hoja.getDataRange().getValues();
+
+  let filaIdx = -1;
+  for (let i = 1; i < datos.length; i++) {
+    if (String(datos[i][0]).trim() === legajoStr) { filaIdx = i + 1; break; }
+  }
+
+  const fila = [
+    estado.legajo, estado.nombreAgente, estado.direccion,
+    estado.casillero, estado.encuentro, new Date(), JSON.stringify(estado)
+  ];
+
+  if (filaIdx > 0) hoja.getRange(filaIdx, 1, 1, fila.length).setValues([fila]);
+  else hoja.appendRow(fila);
+}
+
+function cargarProgreso(legajo) {
+  const ss = SpreadsheetApp.openById(SS_ID);
+  const hoja = obtenerHojaProgreso(ss);
+  const legajoStr = String(legajo).trim();
+  const datos = hoja.getDataRange().getValues().slice(1);
+
+  for (const fila of datos) {
+    if (String(fila[0]).trim() === legajoStr) {
+      try {
+        return JSON.parse(fila[6]);
+      } catch (e) {
+        return null;
+      }
+    }
+  }
+  return null;
+}
+
+// ─────────────────────────────────────────────
 // INICIO DEL JUEGO (MEJORADO)
 // ─────────────────────────────────────────────
 function iniciarPartida(legajo, direccion, nombreEquipo, nombreLider) {
@@ -131,26 +189,33 @@ function iniciarPartida(legajo, direccion, nombreEquipo, nombreLider) {
 
   const catalogoCompetencias = cargarCompetencias(ss);
 
-  // Usar los datos reales del agente
-  const estado = {
-    legajo:       String(agente.legajo).trim(),
-    nombreAgente: agente.nombre,
-    nombreEquipo: nombreEquipo || ("Dirección de " + agente.direccion),
-    nombreLider:  nombreLider,
-    direccion:    agente.direccion,
-    equipo:       obtenerEquipo(agente.direccion),
-    casillero:    0,
-    recursos:     { comunicacion: 0, liderazgo: 0, bienestar: 0, planificacion: 0 },
-    herramientas: [],
-    insignias:    [],
-    competencias: competenciasIniciales(catalogoCompetencias),
-    encuentro:    1
-  };
+  // Si el legajo ya tiene una partida guardada, se retoma donde quedó
+  let estado = cargarProgreso(agente.legajo);
+  let retomada = !!estado;
+
+  if (!estado) {
+    estado = {
+      legajo:       String(agente.legajo).trim(),
+      nombreAgente: agente.nombre,
+      nombreEquipo: nombreEquipo || ("Dirección de " + agente.direccion),
+      nombreLider:  nombreLider,
+      direccion:    agente.direccion,
+      equipo:       obtenerEquipo(agente.direccion),
+      casillero:    0,
+      recursos:     { comunicacion: 0, liderazgo: 0, bienestar: 0, planificacion: 0 },
+      herramientas: [],
+      insignias:    [],
+      competencias: competenciasIniciales(catalogoCompetencias),
+      encuentro:    1
+    };
+    guardarProgreso(estado);
+  }
 
   return {
     estado:              estado,
+    retomada:            retomada,
     situacion:           obtenerSituacionAleatoria(ss, estado.direccion, estado.casillero),
-    cartas:               cargarAcciones(ss, []),
+    cartas:               cargarAcciones(ss, estado.herramientas),
     biblioteca:           cargarHerramientas(ss),
     competenciasCatalogo: catalogoCompetencias
   };
@@ -159,26 +224,35 @@ function iniciarPartida(legajo, direccion, nombreEquipo, nombreLider) {
 // ─────────────────────────────────────────────
 // HERRAMIENTAS / MICROLEARNING
 // Columnas: ID | Nombre | Contenido | Área | InsigniaID | Pregunta |
-//           RespuestaCorrecta | Competencia | VideoURL* | InfografiaURL*
-// (*) VideoURL e InfografiaURL son opcionales: si la hoja todavía no
-// tiene esas columnas, simplemente quedan vacías y la tarjeta muestra
-// únicamente el contenido en texto.
+//           RespuestaCorrecta | Competencia | VideoURL* | InfografiaURL* |
+//           OpcionA* | OpcionB* | OpcionC* | OpcionD*
+// (*) Opcionales: si la hoja todavía no tiene esas columnas quedan
+// vacías. Sin VideoURL/InfografiaURL la tarjeta muestra solo texto.
+// Sin OpcionA..D la pregunta se responde con texto libre (como antes);
+// si hay al menos 2 opciones cargadas, se muestra como opción múltiple
+// y RespuestaCorrecta debe coincidir con el texto de la opción correcta.
 // ─────────────────────────────────────────────
 function cargarHerramientas(ss) {
   const hoja = ss.getSheetByName("Herramientas");
   if (!hoja) return [];
-  return hoja.getDataRange().getValues().slice(1).map(f => ({
-    id:            String(f[0]).trim(),
-    nombre:        f[1],
-    contenido:     f[2],
-    area:          f[3],
-    insigniaID:    f[4],
-    pregunta:      f[5] || "¿Confirmás la lectura del módulo?",
-    respuesta:     String(f[6] || "si").trim().toLowerCase(),
-    competencia:   f[7] || "",
-    videoUrl:      f[8] || "",
-    infografiaUrl: f[9] || ""
-  }));
+  return hoja.getDataRange().getValues().slice(1).map(f => {
+    const opciones = [f[10], f[11], f[12], f[13]]
+      .map(o => (o || "").toString().trim())
+      .filter(o => o !== "");
+    return {
+      id:            String(f[0]).trim(),
+      nombre:        f[1],
+      contenido:     f[2],
+      area:          f[3],
+      insigniaID:    f[4],
+      pregunta:      f[5] || "¿Confirmás la lectura del módulo?",
+      respuesta:     String(f[6] || "si").trim().toLowerCase(),
+      competencia:   f[7] || "",
+      videoUrl:      f[8] || "",
+      infografiaUrl: f[9] || "",
+      opciones:      opciones
+    };
+  });
 }
 
 function completarCapacitacion(estado, toolID, insigniaID) {
@@ -195,6 +269,7 @@ function completarCapacitacion(estado, toolID, insigniaID) {
     estado.competencias[cod] = Math.min(5, estado.competencias[cod] + 1);
   }
 
+  guardarProgreso(estado);
   return { estado, cartas: cargarAcciones(ss, estado.herramientas) };
 }
 
@@ -267,6 +342,8 @@ function procesarAccion(estado, accionID, cat, recursoGanado, cantidadRecurso) {
   const esFinalizado = estado.casillero >= TOTAL_CASILLEROS;
   const esEncuentro  = !esFinalizado && estado.casillero % CASILLEROS_POR_ERA === 0;
   if (esEncuentro) estado.encuentro += 1;
+
+  guardarProgreso(estado);
 
   return {
     estado,
