@@ -29,518 +29,262 @@
   --teal:     #2a6a4a;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Crimson Text',Georgia,serif;background:var(--perg);color:var(--navy);min-height:100vh;overflow:hidden}
+body{font-family:'Crimson Text',Georgia,serif;background:var(--perg);color:var(--navy);min-height:100vh;overflow-x:hidden}
+button{font:inherit}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:var(--perg)}::-webkit-scrollbar-thumb{background:rgba(74,33,9,.3)}
 
-/* ── FONDO MAPA (toda la app) ── */
-#map-bg{
-  position:fixed;inset:0;z-index:0;
-  background:var(--map-bg-img) center/cover no-repeat;
-}
+#map-bg{position:fixed;inset:0;z-index:0;background:var(--map-bg-img) center/cover no-repeat;}
 
 /* ── LOADER ── */
 #loader{display:none;position:fixed;inset:0;z-index:9000;background:rgba(232,213,163,.94);align-items:center;justify-content:center;}
-.loader-inn{background:var(--navy);border:2px solid var(--gold-br);padding:22px 38px;}
+.loader-inn{background:var(--navy);border:2px solid var(--gold-br);padding:22px 38px;border-radius:12px;}
 .loader-txt{font-family:'Cinzel',serif;font-size:11px;letter-spacing:5px;color:var(--perg);animation:pulse 1.2s infinite;}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+@keyframes mmpulse{0%,100%{box-shadow:0 0 0 0 rgba(192,83,30,.55)}50%{box-shadow:0 0 0 10px rgba(192,83,30,0)}}
+@keyframes mmglow{0%,100%{box-shadow:0 5px 14px rgba(160,60,20,.35)}50%{box-shadow:0 5px 22px rgba(160,60,20,.65)}}
 
 /* ══════════════════════════════════════
-   PANTALLA 1: BIENVENIDA + TABLERO
-   El tablero del mapa es el fondo,
-   el panel de bienvenida flota encima
+   PANTALLA LOGIN
 ══════════════════════════════════════ */
-#screen-welcome{
-  position:fixed;inset:0;z-index:100;
-  display:flex;flex-direction:column;
-  overflow:hidden;
-}
+.screen-full{position:fixed;inset:0;z-index:100;overflow-y:auto;}
+#screen-login .topbar-login{position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between;padding:16px 30px;}
+.brand-grp{display:flex;align-items:center;gap:10px;}
+.brand-ico{font-size:20px;}
+.brand-nm{font-family:'Cinzel',serif;font-size:16px;font-weight:900;letter-spacing:4px;color:var(--navy);}
+.brand-sub{font-family:'Cinzel',serif;font-size:7px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;}
+.brand-tag{font-family:'Cinzel',serif;font-size:7px;letter-spacing:1.5px;color:var(--navy-md);text-align:right;line-height:1.8;}
 
-/* Header */
-.hdr-welcome{
-  background:rgba(74,33,9,.97);
-  border-bottom:3px solid var(--gold-br);
-  padding:10px 28px;
-  display:flex;align-items:center;justify-content:space-between;
-  flex-shrink:0;position:relative;z-index:2;
+.login-wrap{position:relative;z-index:2;display:flex;align-items:center;justify-content:center;min-height:calc(100vh - 60px);padding:20px;}
+.login-card{
+  width:100%;max-width:440px;
+  background:linear-gradient(170deg,#fbeed3,#f2d9a9);
+  border:1px solid #cf9a54;border-radius:18px;
+  padding:34px 32px 28px;text-align:center;
+  box-shadow:0 22px 48px rgba(70,33,9,.30), inset 0 0 0 2px rgba(150,78,30,.12);
 }
-.logo-grp{display:flex;align-items:center;gap:12px;}
-.logo-ico{font-size:22px;}
-.game-nm{font-family:'Cinzel',serif;font-size:22px;font-weight:900;letter-spacing:5px;color:var(--perg);line-height:1;}
-.game-sub{font-family:'Cinzel',serif;font-size:7px;letter-spacing:3px;color:var(--perg-dk);text-transform:uppercase;margin-top:2px;}
-.hdr-tag{font-family:'Cinzel',serif;font-size:7px;letter-spacing:2px;color:var(--perg-dk);text-align:right;line-height:1.9;}
-
-/* Área principal: tablero + panel lateral */
-.welcome-body{
-  flex:1;display:flex;overflow:hidden;position:relative;z-index:1;
-}
-
-/* El tablero del mapa ocupa el resto de la pantalla */
-.tablero-fondo{
-  flex:1;position:relative;overflow:hidden;
-  display:flex;align-items:center;justify-content:center;
-}
-/* Overlay semi-translucido sobre el mapa */
-.tablero-fondo::after{
-  content:'';position:absolute;inset:0;
-  background:rgba(237,224,186,.25);
-  pointer-events:none;
-}
-
-/* SVG del tablero */
-#tablero-svg{
-  width:100%;height:100%;
-  position:absolute;inset:0;
-}
-
-/* ── CARD FLOTANTE DE REGISTRO (centrada sobre el mapa) ── */
-.welcome-card{
-  position:absolute;
-  top:50%;left:50%;
-  transform:translate(-50%,-50%);
-  z-index:10;
-  width:380px;
-  background:rgba(237,224,186,.97);
-  border:2px solid rgba(74,33,9,.3);
-  border-top:4px solid var(--gold-br);
-  box-shadow:0 8px 40px rgba(74,33,9,.35);
-  padding:28px 30px 24px;
-}
-.reg-eyebrow{font-family:'Cinzel',serif;font-size:8px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:6px;display:flex;align-items:center;gap:6px;}
-.reg-eyebrow::after{content:'';flex:1;height:1px;background:var(--gold);opacity:.3;}
-.reg-h1{font-family:'Cinzel',serif;font-size:20px;font-weight:900;color:var(--navy);line-height:1.2;margin-bottom:6px;}
-.reg-p{font-size:13px;line-height:1.6;color:var(--navy-md);margin-bottom:16px;}
-.legajo-box{background:rgba(255,255,255,.6);border:2px solid rgba(74,33,9,.2);padding:14px 16px;margin-bottom:14px;}
-.legajo-lbl{font-family:'Cinzel',serif;font-size:8px;letter-spacing:2.5px;text-transform:uppercase;color:var(--navy-md);margin-bottom:8px;display:block;}
-.legajo-row{display:flex;gap:8px;}
-.legajo-inp{flex:1;padding:11px 14px;background:rgba(255,255,255,.8);border:1.5px solid rgba(74,33,9,.3);font-family:'Cinzel',serif;font-size:16px;font-weight:700;color:var(--navy);outline:none;letter-spacing:2px;transition:.18s;}
-.legajo-inp:focus{border-color:var(--gold-br);background:white;}
-.legajo-inp::placeholder{color:#b0a070;font-weight:400;font-size:13px;letter-spacing:.5px;}
-.btn-validar{padding:11px 18px;background:var(--navy);color:var(--perg);border:2px solid var(--gold-br);font-family:'Cinzel',serif;font-size:11px;font-weight:700;letter-spacing:2px;cursor:pointer;transition:.18s;white-space:nowrap;}
-.btn-validar:hover{background:var(--gold-br);color:var(--navy);}
+.login-eyebrow{font-family:'Cinzel',serif;font-size:11px;font-weight:700;letter-spacing:3px;color:var(--gold-br);}
+.login-p{margin:10px 0 20px;font-size:14px;line-height:1.5;color:var(--gold);}
+.legajo-inp{width:100%;padding:13px 15px;font-family:'Spectral',Georgia,serif;font-size:18px;font-weight:600;letter-spacing:2px;text-align:center;color:#301a0a;background:#fffaf0;border:2px solid #cf9a54;border-radius:10px;outline:none;margin-bottom:14px;transition:.18s;}
+.legajo-inp:focus{border-color:var(--gold-br);}
+.legajo-inp::placeholder{color:#b0a070;font-weight:400;font-size:14px;letter-spacing:.5px;}
+.btn-primary{display:inline-flex;align-items:center;justify-content:center;gap:9px;width:100%;padding:13px;font-family:'Cinzel',serif;font-size:13px;font-weight:700;letter-spacing:2px;color:#fff;background:linear-gradient(160deg,#e39445,var(--gold-br));border:none;border-radius:10px;cursor:pointer;box-shadow:0 8px 18px rgba(160,60,20,.34);transition:.18s;}
+.btn-primary:hover{filter:brightness(1.07);transform:translateY(-1px);}
 .legajo-status{font-size:12px;margin-top:8px;min-height:16px;}
 .legajo-status.ok{color:var(--grn);font-weight:700;}
 .legajo-status.err{color:var(--red);}
 .legajo-status.loading{color:var(--navy-md);font-style:italic;}
-.agente-card{display:none;background:rgba(74,33,9,.07);border:1px solid rgba(74,33,9,.2);padding:12px 14px;margin-top:10px;}
+.agente-card{display:none;background:rgba(74,33,9,.06);border:1px solid rgba(74,33,9,.18);border-radius:12px;padding:14px 16px;margin-top:12px;text-align:left;}
 .agente-card.visible{display:block;}
 .ac-nombre{font-family:'Cinzel',serif;font-size:14px;font-weight:700;color:var(--navy);margin-bottom:2px;}
 .ac-info{font-size:13px;color:var(--navy-md);margin-bottom:4px;}
-.ac-equipo-nm{font-family:'Cinzel',serif;font-size:12px;font-weight:700;color:var(--teal);}
-.btn-comenzar{width:100%;padding:13px;background:var(--teal);color:var(--perg-lt);border:2px solid rgba(42,106,74,.4);font-family:'Cinzel',serif;font-size:14px;font-weight:700;letter-spacing:4px;cursor:pointer;transition:.18s;margin-top:10px;}
-.btn-comenzar:hover{background:var(--navy);border-color:var(--gold-br);}
-.card-footer{display:flex;justify-content:center;margin-top:14px;}
-.btn-reglas{background:none;border:none;font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);cursor:pointer;padding:4px 8px;text-decoration:underline;text-underline-offset:3px;}
-.btn-reglas:hover{color:var(--navy);}
+.ac-equipo-nm{font-family:'Cinzel',serif;font-size:12px;font-weight:700;color:var(--teal);margin-bottom:10px;}
+.link-btn{background:none;border:none;font-family:'Spectral',Georgia,serif;font-size:12.5px;letter-spacing:.3px;color:var(--gold-br);cursor:pointer;text-decoration:underline;padding:4px;}
+.card-footer{margin-top:16px;}
 
-/* ── MODAL REGLAS ── */
-#modal-reglas{display:none;position:fixed;inset:0;z-index:5000;background:rgba(74,33,9,.75);align-items:center;justify-content:center;}
+/* ══════════════════════════════════════
+   PANTALLA BIENVENIDA / EQUIPO
+══════════════════════════════════════ */
+#screen-bienvenida{background:var(--navy);}
+.bienv-wrap{position:relative;z-index:2;max-width:1080px;margin:0 auto;padding:40px 24px;}
+.bienv-card{background:linear-gradient(170deg,#fbeed3,#f2d9a9);border:1px solid #cf9a54;border-radius:18px;padding:30px;box-shadow:0 22px 48px rgba(70,33,9,.30),inset 0 0 0 2px rgba(150,78,30,.12);}
+.bienv-grid{display:grid;grid-template-columns:1.35fr 1fr;gap:30px;align-items:stretch;}
+@media(max-width:780px){.bienv-grid{grid-template-columns:1fr;}}
+.bienv-hello{font-family:'Spectral',Georgia,serif;font-style:italic;font-weight:600;font-size:19px;color:var(--gold-br);}
+.bienv-name{font-family:'Cinzel',serif;font-weight:800;font-size:30px;line-height:1.05;color:#301a0a;margin-top:2px;}
+.bienv-meta{margin-top:8px;font-size:14px;color:var(--gold);}
+.bienv-dir{font-weight:600;font-size:14px;color:#301a0a;}
+.bienv-lbl{margin:20px 0 9px;font-family:'Cinzel',serif;font-size:11px;font-weight:700;letter-spacing:2.5px;color:var(--gold);}
+.bienv-team{display:flex;gap:14px;flex-wrap:wrap;}
+.bt-av{display:flex;flex-direction:column;align-items:center;width:78px;text-align:center;}
+.bt-circ{width:46px;height:46px;border-radius:50%;background:linear-gradient(150deg,#e8a95e,var(--gold));display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-weight:700;font-size:15px;color:#fff;border:2px solid #f6e4c6;box-shadow:0 4px 10px rgba(90,40,12,.24);}
+.bt-nm{margin-top:5px;font-family:'Spectral',Georgia,serif;font-weight:600;font-size:11px;line-height:1.15;color:#301a0a;}
+.bt-role{font-size:9.5px;color:var(--gold);}
+.bienv-tareas{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.bt-item{display:flex;align-items:center;gap:8px;background:rgba(255,250,240,.62);border:1px solid #d7a866;border-radius:9px;padding:9px 11px;}
+.bt-dot{width:8px;height:8px;background:var(--gold-br);transform:rotate(45deg);flex:none;}
+.bt-item span{font-size:12.5px;color:#301a0a;}
+.bienv-side{background:rgba(255,250,240,.55);border:1px solid #d7a866;border-radius:13px;padding:20px 18px;display:flex;flex-direction:column;}
+.bienv-side-lbl{font-family:'Cinzel',serif;font-size:11px;font-weight:700;letter-spacing:2px;color:var(--gold);margin-bottom:14px;}
+.ind-row{margin-bottom:15px;}
+.ind-row-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;}
+.ind-row-lbl{display:flex;align-items:center;gap:7px;font-family:'Spectral',Georgia,serif;font-weight:600;font-size:12.5px;color:#301a0a;}
+.ind-dot{width:10px;height:10px;border-radius:3px;flex:none;}
+.ind-row-val{font-family:'Cinzel',serif;font-size:12px;font-weight:700;color:#301a0a;}
+.ind-bar-bg{height:9px;background:#e6c491;border-radius:6px;overflow:hidden;box-shadow:inset 0 1px 2px rgba(90,40,12,.2);}
+.ind-bar-fg{height:100%;border-radius:6px;transition:width .5s;}
+.bienv-actions{display:flex;align-items:center;justify-content:center;gap:18px;margin-top:24px;flex-wrap:wrap;}
+.bienv-actions .btn-primary{width:auto;padding:15px 38px;font-size:15px;}
+
+/* ══════════════════════════════════════
+   APP BAR + NAV
+══════════════════════════════════════ */
+#app{display:none;position:relative;z-index:10;min-height:100vh;background:var(--perg);}
+.appbar{position:sticky;top:0;z-index:40;display:flex;align-items:center;gap:20px;flex-wrap:wrap;padding:10px 24px;background:linear-gradient(180deg,var(--navy-md),var(--navy));color:var(--perg);box-shadow:0 6px 20px rgba(50,18,4,.42);border-bottom:4px solid var(--gold-br);}
+.appbar-logo{font-family:'Cinzel',serif;font-size:15px;font-weight:900;letter-spacing:4px;color:var(--perg);flex:none;}
+.appbar-nav{display:flex;gap:5px;background:rgba(0,0,0,.24);padding:4px;border-radius:11px;border:1px solid rgba(240,207,148,.20);}
+.nav-btn{background:transparent;color:#e6bd85;border:none;border-radius:8px;padding:8px 16px;font-family:'Spectral',Georgia,serif;font-weight:500;font-size:12.5px;letter-spacing:.5px;cursor:pointer;transition:.15s;}
+.nav-btn.active{background:var(--gold-br);color:#fff;font-weight:600;}
+.appbar-spacer{flex:1;}
+.btn-reglas-top{display:flex;align-items:center;gap:7px;background:transparent;color:var(--perg);border:1px solid rgba(240,207,148,.42);border-radius:9px;padding:7px 14px;font-family:'Spectral',Georgia,serif;font-weight:600;font-size:12px;letter-spacing:.5px;cursor:pointer;transition:.15s;}
+.btn-reglas-top:hover{background:rgba(240,207,148,.14);}
+.profile-chip{display:flex;align-items:center;gap:10px;padding:5px 13px 5px 6px;background:rgba(0,0,0,.22);border-radius:999px;border:1px solid rgba(240,207,148,.20);}
+.profile-av{width:37px;height:37px;border-radius:50%;background:linear-gradient(150deg,#e39445,var(--gold-br));display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-weight:700;font-size:14px;color:#fff;border:2px solid var(--perg);flex:none;}
+.profile-info{line-height:1.15;font-family:'Spectral',Georgia,serif;}
+.profile-nm{font-weight:600;font-size:12.5px;color:var(--perg);}
+.profile-tm{font-weight:500;font-size:10.5px;color:#e0b579;}
+
+.screen-body{max-width:1400px;margin:0 auto;padding:22px 26px 40px;display:none;}
+.screen-body.active{display:block;}
+
+/* ── TABLERO ── */
+.tablero-grid{display:grid;grid-template-columns:1fr 300px;gap:24px;align-items:start;}
+@media(max-width:900px){.tablero-grid{grid-template-columns:1fr;}}
+.tablero-title{display:flex;align-items:baseline;gap:14px;margin-bottom:18px;flex-wrap:wrap;}
+.tablero-title h2{font-family:'Cinzel',serif;font-size:22px;color:#301a0a;}
+.tablero-title span{font-size:13px;font-style:italic;color:var(--gold);}
+.lane{background:linear-gradient(170deg,rgba(251,238,211,.94),rgba(240,214,166,.94));border:1px solid #d29d57;border-radius:15px;padding:16px 22px 20px;box-shadow:0 10px 26px rgba(80,38,10,.18);margin-bottom:20px;}
+.lane-hdr{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+.lane-chip{font-family:'Cinzel',serif;font-size:11px;font-weight:700;letter-spacing:1.5px;padding:5px 12px;border-radius:7px;color:#fff;flex:none;}
+.lane-nm{font-family:'Spectral',Georgia,serif;font-weight:600;font-size:13.5px;color:#301a0a;}
+.lane-stops{display:flex;justify-content:space-between;flex-wrap:wrap;gap:14px;position:relative;}
+.lane-stop{display:flex;flex-direction:column;align-items:center;flex:none;}
+.lane-med{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-weight:700;font-size:16px;position:relative;}
+.lane-med.done{background:linear-gradient(160deg,#7e8a3c,#566425);border:3px solid #eef0d8;color:#fff;box-shadow:0 6px 14px rgba(70,80,30,.3);}
+.lane-med.current{background:linear-gradient(160deg,#e39445,var(--gold-br));border:3px solid #f6e4cb;color:#fff;animation:mmpulse 2s infinite;}
+.lane-med.pending{background:linear-gradient(160deg,#f6e6c6,#e8cfa0);border:3px solid #cf9a54;color:#8a4d1e;}
+.lane-med.locked{background:linear-gradient(160deg,#e8dcc4,#cdbe9e);border:3px solid #b9a883;color:#9a8765;}
+.lane-med-lbl{margin-top:5px;font-family:'Spectral',Georgia,serif;font-size:10px;color:#4a2109;}
+.legend-row{display:flex;gap:20px;flex-wrap:wrap;margin-top:6px;padding:12px 18px;background:rgba(122,52,16,.08);border-radius:11px;}
+.legend-it{display:flex;align-items:center;gap:7px;font-family:'Spectral',Georgia,serif;font-weight:500;font-size:12px;color:#4a2109;}
+.legend-dot{width:15px;height:15px;border-radius:50%;flex:none;}
+
+.side-card{background:linear-gradient(170deg,#fbeed3,#f0d6a6);border:1px solid #d29d57;border-radius:15px;padding:18px;box-shadow:0 10px 24px rgba(80,38,10,.18);margin-bottom:16px;}
+.side-lbl{font-family:'Cinzel',serif;font-size:11px;font-weight:700;letter-spacing:2px;color:var(--gold);margin-bottom:13px;}
+.res-item{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px dashed rgba(150,80,35,.26);}
+.res-item:last-child{border-bottom:none;}
+.res-left{display:flex;align-items:center;gap:8px;}
+.res-dot{width:10px;height:10px;border-radius:50%;flex:none;}
+.res-nm{font-family:'Spectral',Georgia,serif;font-weight:500;font-size:12.5px;color:#4a2109;}
+.res-val{font-family:'Cinzel',serif;font-size:14px;font-weight:700;color:#301a0a;}
+.ins-row{display:flex;flex-wrap:wrap;gap:6px;}
+.ins-badge{width:34px;height:34px;border-radius:50%;border:2px solid var(--gold-br);display:flex;align-items:center;justify-content:center;font-size:16px;background:var(--perg);}
+
+/* ── SITUACIÓN ── */
+.situ-grid{display:grid;grid-template-columns:1fr 280px;gap:24px;align-items:start;}
+@media(max-width:900px){.situ-grid{grid-template-columns:1fr;}}
+.situ-card{background:linear-gradient(170deg,#fbeed3,#f0d6a6);border:1px solid #d29d57;border-radius:16px;padding:24px 26px;box-shadow:0 12px 30px rgba(80,38,10,.20);margin-bottom:22px;}
+.situ-badge{display:inline-block;color:#fff;font-family:'Cinzel',serif;font-size:10px;font-weight:700;letter-spacing:1.5px;padding:4px 11px;border-radius:6px;margin-bottom:12px;}
+.situ-badge.situacion{background:var(--teal);}.situ-badge.crisis{background:var(--red);}.situ-badge.final{background:var(--gold-br);}
+.situ-tit{font-family:'Cinzel',serif;font-size:26px;font-weight:800;line-height:1.1;color:#301a0a;margin-bottom:10px;}
+.situ-desc{font-family:'Spectral',Georgia,serif;font-size:15px;line-height:1.55;color:#6a3f1c;}
+.hand-hdr{display:flex;align-items:baseline;gap:12px;margin:6px 0 14px;flex-wrap:wrap;}
+.hand-hdr h3{font-family:'Cinzel',serif;font-size:16px;letter-spacing:1px;color:#301a0a;}
+.hand-hdr span{font-style:italic;font-size:12.5px;color:var(--gold);}
+.cards-row{display:flex;gap:16px;flex-wrap:wrap;}
+
+.mm-card{width:180px;cursor:pointer;transition:transform .18s ease;}
+.mm-card:hover{transform:translateY(-7px);}
+.mm-card.selected{transform:translateY(-9px);}
+.mm-frame{padding:9px;border-radius:16px;box-shadow:0 12px 24px rgba(40,20,8,.34), inset 0 1px 0 rgba(255,225,175,.22);}
+.mm-card.selected .mm-frame{outline:3px solid var(--gold-br);outline-offset:2px;}
+.mm-inner{border-radius:11px;box-shadow:inset 0 0 0 2px rgba(150,80,35,.14);padding:14px 12px;display:flex;flex-direction:column;align-items:center;gap:8px;min-height:230px;position:relative;background:linear-gradient(175deg,#fbf1d9,#f0d9ac);border:1px solid #caa46a;}
+.mm-inner.locked{background:linear-gradient(175deg,#efe6d3,#ddceb0);border-color:#b7a685;filter:saturate(.65);}
+.mm-stud{position:absolute;width:8px;height:8px;transform:rotate(45deg);box-shadow:0 0 0 1.5px rgba(255,240,210,.5);}
+.mm-band{align-self:stretch;text-align:center;color:#fff7e8;font-family:'Cinzel',serif;font-weight:700;font-size:8.5px;letter-spacing:1.5px;padding:4px 9px;border-radius:7px;box-shadow:inset 0 -2px 0 rgba(0,0,0,.18);}
+.mm-med{width:60px;height:60px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-weight:700;font-size:24px;color:#fff;box-shadow:0 5px 12px rgba(120,60,15,.35);margin-top:4px;}
+.mm-lock{width:64px;height:64px;border-radius:50%;background:linear-gradient(160deg,#c2b299,#8a7a62);border:3px solid #ece0c9;display:flex;align-items:center;justify-content:center;box-shadow:0 5px 12px rgba(80,45,15,.28);margin-top:4px;font-size:22px;}
+.mm-title{font-family:'Cinzel',serif;font-weight:700;font-size:13px;line-height:1.14;color:#301a0a;text-align:center;}
+.mm-desc{font-family:'Spectral',Georgia,serif;font-size:11.5px;line-height:1.32;color:#6a3f1c;text-align:center;flex:1;}
+.mm-pips{display:flex;align-items:center;gap:4px;}
+.mm-pip{width:9px;height:9px;transform:rotate(45deg);box-shadow:inset 0 0 0 1px rgba(255,255,255,.35);}
+.mm-foot{font-family:'Cinzel',serif;font-weight:700;font-size:9px;letter-spacing:.5px;text-align:center;padding:4px 10px;border-radius:999px;}
+
+.confirm-bar{display:none;align-items:center;justify-content:space-between;gap:16px;margin-top:20px;padding:16px 20px;background:rgba(122,52,16,.08);border:2px solid var(--gold-br);border-radius:14px;flex-wrap:wrap;}
+.confirm-bar.visible{display:flex;}
+.confirm-txt{font-family:'Spectral',Georgia,serif;font-size:14px;color:#4a2109;}
+.confirm-txt strong{color:var(--gold-br);}
+
+/* ── CAPACITACIÓN ── */
+.cap-grid{display:grid;grid-template-columns:1fr 280px;gap:24px;align-items:start;}
+@media(max-width:900px){.cap-grid{grid-template-columns:1fr;}}
+.cap-card{background:linear-gradient(170deg,#fbeed3,#f0d6a6);border:1px solid #d29d57;border-radius:16px;padding:24px 26px;box-shadow:0 12px 30px rgba(80,38,10,.20);}
+.cap-badges{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:10px;}
+.cap-badge{display:inline-block;color:#f0cf94;background:var(--navy);font-family:'Cinzel',serif;font-size:10px;font-weight:700;letter-spacing:1.5px;padding:4px 11px;border-radius:6px;}
+.cap-tit{font-family:'Cinzel',serif;font-size:24px;font-weight:800;color:#301a0a;margin-bottom:6px;}
+.cap-p{font-family:'Spectral',Georgia,serif;font-size:14px;line-height:1.5;color:#6a3f1c;margin-bottom:16px;}
+.cap-cont{background:rgba(255,250,240,.62);border:1px solid #cf9a54;border-radius:12px;padding:20px 22px;min-height:180px;font-family:'Spectral',Georgia,serif;font-size:14px;line-height:1.65;color:#4a2109;}
+.cap-q{margin-top:20px;}
+.cap-q-lbl{font-family:'Cinzel',serif;font-weight:700;font-size:14px;letter-spacing:1px;color:#301a0a;margin-bottom:12px;}
+.cap-q-txt{font-family:'Spectral',Georgia,serif;font-weight:600;font-size:13.5px;color:#4a2109;margin-bottom:10px;}
+.modal-inp{width:100%;padding:11px 14px;background:var(--perg);border:2px solid rgba(74,33,9,.3);font-family:'Cinzel',serif;font-size:13px;color:var(--navy);text-align:center;outline:none;margin-bottom:12px;border-radius:8px;transition:.18s;}
+.modal-inp:focus{border-color:var(--gold-br);}
+.cap-err{margin-bottom:10px;font-family:'Spectral',Georgia,serif;font-weight:600;font-size:13px;color:#b03a26;}
+.unlock-banner{margin-top:6px;display:flex;align-items:center;gap:16px;padding:18px 20px;background:linear-gradient(160deg,#fdf3dc,#f4dcab);border:2px solid var(--gold-br);border-radius:14px;flex-wrap:wrap;}
+.unlock-med{width:58px;height:58px;border-radius:50%;background:linear-gradient(160deg,#e39445,#a8410f);border:3px solid #f6e4cb;display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-weight:700;font-size:22px;color:#fff;flex:none;animation:mmglow 2.2s infinite;}
+.unlock-tit{font-family:'Cinzel',serif;font-weight:800;font-size:17px;color:#301a0a;}
+.unlock-sub{font-family:'Spectral',Georgia,serif;font-size:13px;color:#6a3f1c;}
+.flujo-item{display:flex;align-items:center;gap:9px;font-family:'Spectral',Georgia,serif;font-weight:500;font-size:12px;color:#f7e3bf;margin-bottom:6px;}
+.flujo-diamond{width:7px;height:7px;background:var(--gold-br);transform:rotate(45deg);flex:none;}
+.side-dark{background:linear-gradient(170deg,var(--navy-md),var(--navy));border-radius:15px;padding:18px;box-shadow:0 10px 24px rgba(50,18,4,.28);border:1px solid rgba(240,207,148,.18);}
+.side-dark .side-lbl{color:#f0cf94;}
+.bib-list-item{padding:10px 12px;border-radius:9px;cursor:pointer;font-family:'Spectral',Georgia,serif;font-size:12.5px;transition:.15s;border:1px solid transparent;margin-bottom:6px;}
+.bib-list-item:hover{background:rgba(255,255,255,.4);border-color:var(--gold-br);}
+.bib-list-item.done{opacity:.6;cursor:default;}
+.bib-list-item .hi-tit{font-family:'Cinzel',serif;font-weight:700;font-size:11px;color:var(--navy);}
+.bib-list-item .hi-sub{font-size:10.5px;color:var(--navy-md);}
+
+/* ══════════════════════════════════════
+   MODALES
+══════════════════════════════════════ */
+#modal-reglas{display:none;position:fixed;inset:0;z-index:5000;background:rgba(50,20,6,.62);backdrop-filter:blur(3px);align-items:center;justify-content:center;padding:24px;}
 #modal-reglas.open{display:flex;}
-.reglas-box{background:var(--perg-lt);border:3px solid var(--navy);border-top:5px solid var(--gold-br);max-width:520px;width:90%;max-height:80vh;overflow-y:auto;padding:30px 36px;}
-.reglas-box h3{font-family:'Cinzel',serif;font-size:16px;font-weight:900;color:var(--navy);letter-spacing:2px;margin-bottom:20px;border-bottom:2px solid var(--perg-dk);padding-bottom:10px;}
-.rule-it{display:flex;gap:12px;margin-bottom:14px;}
-.rule-n{font-family:'Cinzel',serif;font-size:20px;color:var(--gold-br);flex-shrink:0;width:24px;font-weight:700;}
-.rule-it p{font-size:14px;line-height:1.65;color:var(--navy-md);padding-top:2px;}
-.rule-it p strong{color:var(--navy);}
-.rules-hr{height:1px;background:var(--perg-dk);margin:14px 0;}
-.btn-cerrar-reglas{width:100%;padding:12px;margin-top:20px;background:var(--navy);color:var(--perg);border:2px solid var(--gold-br);font-family:'Cinzel',serif;font-size:11px;font-weight:700;letter-spacing:3px;cursor:pointer;transition:.18s;}
-.btn-cerrar-reglas:hover{background:var(--gold-br);color:var(--navy);}
+.reglas-box{max-width:760px;width:100%;background:linear-gradient(170deg,#fbeed3,#f0d6a6);border:2px solid var(--gold-br);border-radius:20px;padding:36px 40px;box-shadow:0 34px 70px rgba(0,0,0,.44),inset 0 0 0 2px rgba(150,80,30,.14);max-height:88vh;overflow-y:auto;}
+.reglas-hdr{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;}
+.reglas-eyebrow{font-family:'Cinzel',serif;font-size:11px;font-weight:700;letter-spacing:3px;color:var(--gold-br);margin-bottom:6px;}
+.reglas-box h3{font-family:'Cinzel',serif;font-size:28px;font-weight:800;color:#301a0a;}
+.reglas-close{width:38px;height:38px;border-radius:50%;border:1px solid #cf9a54;background:rgba(255,250,240,.6);color:#7a3e19;font-family:'Spectral',Georgia,serif;font-weight:700;font-size:18px;cursor:pointer;line-height:1;flex:none;}
+.reglas-sub{margin:2px 0 20px;font-family:'Spectral',Georgia,serif;font-style:italic;font-size:15px;color:var(--gold);}
+.reglas-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px 26px;}
+@media(max-width:600px){.reglas-grid{grid-template-columns:1fr;}}
+.rule-it{display:flex;align-items:flex-start;gap:14px;}
+.rule-n{width:32px;height:32px;border-radius:50%;background:linear-gradient(160deg,#e39445,var(--gold-br));color:#fff;font-family:'Cinzel',serif;font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center;flex:none;box-shadow:0 4px 10px rgba(160,60,20,.28);}
+.rule-it p{font-family:'Spectral',Georgia,serif;font-weight:500;font-size:14.5px;line-height:1.5;color:#4a2109;}
+.rule-it p strong{color:#301a0a;}
 
-/* ══════════════════════════════════════
-   PANTALLA 2: PRESENTACIÓN DEL AGENTE
-══════════════════════════════════════ */
-#screen-agente{
-  display:none;position:fixed;inset:0;z-index:200;
-  background:rgba(74,33,9,.88);
-  align-items:center;justify-content:center;
-  overflow-y:auto;padding:20px;
-}
-.agente-presentacion{
-  background:var(--perg-lt);
-  border:3px solid var(--navy);
-  border-top:5px solid var(--gold-br);
-  max-width:820px;width:100%;
-  padding:32px 40px;
-}
-.ap-grid{display:grid;grid-template-columns:auto 1fr auto;gap:28px;align-items:start;margin-bottom:24px;}
+#enc-modal{display:none;position:fixed;inset:0;z-index:600;background:rgba(74,33,9,.93);align-items:center;justify-content:center;}
+.enc-box{background:var(--navy);border:3px solid var(--gold-br);border-radius:16px;max-width:500px;width:96%;padding:40px;text-align:center;}
+.enc-ico{font-size:44px;margin-bottom:12px;}
+.enc-tag{font-family:'Cinzel',serif;font-size:9px;letter-spacing:4px;text-transform:uppercase;color:var(--gold-br);margin-bottom:8px;}
+.enc-box h2{font-family:'Cinzel',serif;font-size:20px;font-weight:900;color:var(--perg);margin-bottom:12px;letter-spacing:2px;}
+.enc-box p{font-family:'Spectral',Georgia,serif;font-size:15px;line-height:1.7;color:var(--perg-dk);margin-bottom:20px;}
 
-/* Avatar grande */
+#final-screen{display:none;position:fixed;inset:0;z-index:700;background:var(--navy);align-items:center;justify-content:center;}
+.final-box{background:linear-gradient(170deg,#fbeed3,#f2d9a9);border:4px solid var(--gold-br);border-radius:18px;max-width:540px;width:97%;padding:44px;text-align:center;}
+.final-tag{font-family:'Cinzel',serif;font-size:11px;letter-spacing:5px;text-transform:uppercase;color:var(--gold-br);margin-bottom:7px;}
+.final-box h1{font-family:'Cinzel',serif;font-size:30px;font-weight:900;color:#301a0a;letter-spacing:3px;margin-bottom:6px;}
+.final-score{font-family:'Cinzel',serif;font-size:58px;font-weight:900;color:var(--gold-br);line-height:1;margin:10px 0;}
+.final-nivel{font-family:'Cinzel',serif;font-size:12px;letter-spacing:5px;text-transform:uppercase;color:var(--gold);margin-bottom:13px;}
+.final-detail{font-family:'Cinzel',serif;font-size:11px;letter-spacing:1px;color:var(--gold);margin-top:12px;line-height:2.3;}
+.final-detail span{color:#301a0a;font-weight:700;}
 
-/* Info central */
-.ap-info{}
-.ap-eyebrow{font-family:'Cinzel',serif;font-size:8px;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:5px;}
-.ap-nombre{font-family:'Cinzel',serif;font-size:26px;font-weight:900;color:var(--navy);letter-spacing:1px;line-height:1.1;margin-bottom:4px;}
-.ap-legajo{font-size:14px;color:var(--navy-md);margin-bottom:4px;}
-.ap-dir{font-size:14px;color:var(--navy-md);}
-.ap-equipo-badge{
-  display:inline-block;margin-top:8px;
-  padding:5px 16px;background:var(--navy);
-  border:2px solid var(--gold-br);
-  font-family:'Cinzel',serif;font-size:12px;font-weight:700;
-  letter-spacing:3px;color:var(--perg);
-}
-
-/* Panel equipo */
-.ap-equipo-panel{
-  background:rgba(74,33,9,.06);
-  border:1.5px solid rgba(74,33,9,.2);
-  padding:14px 16px;min-width:180px;text-align:center;
-}
-.ap-eq-lbl{font-family:'Cinzel',serif;font-size:8px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:8px;}
-.ap-eq-avatars{display:flex;justify-content:center;gap:6px;flex-wrap:wrap;}
-.ap-eq-av{width:36px;height:36px;border-radius:50%;border:2px solid var(--navy);overflow:hidden;background:var(--perg-mid);}
-.ap-eq-av svg{width:100%;height:100%;}
-
-/* Mision box */
-.ap-mision{
-  background:rgba(74,33,9,.06);
-  border:1px solid rgba(74,33,9,.15);
-  padding:14px 18px;margin-bottom:20px;
-  font-size:14px;line-height:1.75;color:var(--navy-md);
-}
-.ap-mision strong{color:var(--gold-br);}
-
-/* Indicadores iniciales */
-.ap-inds{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:22px;}
-.ind-c{background:var(--perg);border:1.5px solid rgba(74,33,9,.15);padding:10px 6px;text-align:center;}
-.ind-ico{font-size:18px;margin-bottom:3px;}
-.ind-lbl{font-family:'Cinzel',serif;font-size:7px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:5px;}
-.ind-dots{font-size:13px;letter-spacing:2px;}
-
-.btn-empezar{
-  padding:13px 52px;background:var(--navy);color:var(--perg);
-  border:2px solid var(--gold-br);
-  font-family:'Cinzel',serif;font-size:14px;font-weight:700;
-  letter-spacing:5px;cursor:pointer;transition:.2s;
-  display:block;margin:0 auto;
-}
-.btn-empezar:hover{background:var(--gold-br);color:var(--navy);}
-
-/* ══════════════════════════════════════
-   PANTALLA 3: DASHBOARD
-══════════════════════════════════════ */
-#app{
-  display:none;position:relative;z-index:10;height:100vh;
-  grid-template-columns:190px 1fr 210px;
-  grid-template-rows:46px 52px 1fr;
-  gap:4px;padding:4px;
-}
-
-/* Header */
-.app-hdr{
-  grid-column:1/4;
-  background:rgba(74,33,9,.97);
-  border-bottom:3px solid var(--gold-br);
-  display:flex;align-items:center;justify-content:space-between;
-  padding:0 14px;
-}
-.app-hdr-left{display:flex;align-items:center;gap:10px;}
-.app-logo{font-family:'Cinzel',serif;font-size:16px;font-weight:900;letter-spacing:5px;color:var(--perg);}
-.app-dir{font-family:'Cinzel',serif;font-size:8px;font-weight:600;letter-spacing:2px;color:var(--perg);padding:3px 9px;border:1px solid rgba(196,144,48,.4);text-transform:uppercase;}
-
-/* Avatar pequeño en header */
-.app-hdr-avatar{display:flex;align-items:center;gap:10px;}
-.hdr-player-info{font-family:'Cinzel',serif;font-size:8px;letter-spacing:1px;color:var(--perg-dk);text-align:right;line-height:1.7;}
-.hdr-player-info strong{color:var(--perg);font-size:9px;}
-
-/* ── TABLERO DE ERAS ── */
-.era-board{
-  grid-column:1/4;
-  position:relative;border:2px solid rgba(74,33,9,.45);
-  display:flex;align-items:center;
-  padding:0 10px;gap:0;overflow:hidden;min-height:52px;
-}
-.era-board::before{
-  content:'';position:absolute;inset:0;z-index:0;
-  background:var(--map-bg-img) center/cover no-repeat;
-  opacity:.5;
-}
-.era-board::after{content:'';position:absolute;inset:0;z-index:1;background:rgba(237,224,186,.62);}
-.era-board>*{position:relative;z-index:2;}
-
-.sb{font-family:'Cinzel',serif;font-size:8px;font-weight:700;letter-spacing:2px;padding:5px 8px;background:var(--navy);color:var(--perg);white-space:nowrap;flex-shrink:0;border:1px solid var(--gold-br);}
-.eb{font-family:'Cinzel',serif;font-size:8px;font-weight:700;letter-spacing:2px;padding:5px 8px;background:var(--gold-br);color:var(--navy);white-space:nowrap;flex-shrink:0;}
-.enc-b{font-family:'Cinzel',serif;font-size:7px;font-weight:700;letter-spacing:1px;padding:3px 7px;background:rgba(74,33,9,.12);color:var(--navy);border:1px solid rgba(74,33,9,.25);white-space:nowrap;flex-shrink:0;}
-.era-blk{display:flex;align-items:center;flex:1;}
-.era-lbl{font-family:'Cinzel',serif;font-size:7px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:0 5px;flex-shrink:0;white-space:nowrap;}
-.era-lbl.e1{color:var(--era1);}.era-lbl.e2{color:var(--era2);}.era-lbl.e3{color:var(--era3);}
-.era-nds{display:flex;align-items:center;flex:1;}
-.esep{width:1px;height:32px;background:rgba(74,33,9,.2);margin:0 6px;flex-shrink:0;}
-
-/* Nodos — círculos sobre el mapa */
-.node{
-  width:30px;height:30px;border-radius:50%;flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;
-  font-family:'Cinzel',serif;font-size:9px;font-weight:700;
-  transition:all .35s;cursor:default;
-  border:2.5px solid;background:rgba(237,224,186,.92);
-  box-shadow:0 1px 5px rgba(74,33,9,.22);
-}
-.node.n1{border-color:var(--era1);color:var(--era1);}
-.node.n1.done{background:var(--era1);border-color:var(--era1);color:white;}
-.node.n1.active{background:var(--era1);border-color:var(--gold-br);color:white;transform:scale(1.25);box-shadow:0 0 12px rgba(42,106,74,.55);}
-.node.n2{border-color:var(--era2);color:var(--era2);}
-.node.n2.done{background:var(--era2);border-color:var(--era2);color:var(--perg);}
-.node.n2.active{background:var(--era2);border-color:var(--gold-br);color:var(--perg);transform:scale(1.25);box-shadow:0 0 12px rgba(74,33,9,.55);}
-.node.n3{border-color:var(--era3);color:var(--era3);}
-.node.n3.done{background:var(--era3);border-color:var(--era3);color:white;}
-.node.n3.active{background:var(--era3);border-color:var(--gold-br);color:white;transform:scale(1.25);box-shadow:0 0 12px rgba(122,32,32,.55);}
-
-.nl{flex:1;height:2px;min-width:3px;max-width:16px;opacity:.4;}
-.nl1{background:var(--era1);}.nl2{background:var(--era2);}.nl3{background:var(--era3);}
-
-/* Paneles laterales */
-.panel{background:var(--perg-lt);border:2px solid rgba(74,33,9,.28);overflow-y:auto;}
-.phdr{background:var(--navy);color:var(--perg);font-family:'Cinzel',serif;font-size:8px;font-weight:700;letter-spacing:3px;padding:6px 12px;flex-shrink:0;}
-.pbody{padding:10px 12px;}
-.left-p{grid-row:3/4;}.right-p{grid-row:3/4;}
-
-/* Panel central */
-.center-p{
-  grid-row:3/4;
-  background:var(--perg-lt);
-  border:2px solid rgba(74,33,9,.28);
-  display:flex;flex-direction:column;overflow:hidden;
-}
-
-/* Mini avatar panel izq */
-.mini-agente{display:flex;align-items:center;gap:8px;padding-bottom:10px;border-bottom:1px solid var(--perg-dk);margin-bottom:10px;}
-.mini-nm{font-family:'Cinzel',serif;font-size:11px;font-weight:700;color:var(--navy);}
-.mini-dir{font-size:11px;color:var(--navy-md);font-style:italic;}
-.mini-equipo{font-family:'Cinzel',serif;font-size:10px;font-weight:700;color:var(--teal);}
-
-/* Indicadores */
-.stat{margin-bottom:8px;}
-.stat-row{display:flex;justify-content:space-between;margin-bottom:3px;align-items:center;}
-.stat-lbl{font-family:'Cinzel',serif;font-size:7px;letter-spacing:1.5px;text-transform:uppercase;color:var(--navy-md);}
-.stat-val{font-family:'Cinzel',serif;font-size:9px;font-weight:700;color:var(--navy);}
-.bar-bg{height:4px;background:var(--perg-dk);}
-.bar-fg{height:100%;transition:width .6s;}
-.bc1{background:#c84060;}.bc2{background:var(--gold-br);}.bc3{background:var(--grn);}.bc4{background:var(--teal);}
-
-/* Situación */
-.sit-box{padding:13px 14px 10px;border-bottom:2px solid rgba(74,33,9,.15);flex-shrink:0;}
-.sit-tipo{font-family:'Cinzel',serif;font-size:8px;font-weight:700;letter-spacing:3px;text-transform:uppercase;margin-bottom:5px;}
-.sit-tipo.situacion{color:var(--teal);}.sit-tipo.crisis{color:var(--red);}.sit-tipo.final{color:var(--gold-br);}
-.sit-tit{font-family:'Cinzel',serif;font-size:14px;font-weight:700;color:var(--navy);margin-bottom:6px;line-height:1.3;}
-.sit-desc{font-size:13px;line-height:1.6;color:var(--navy-md);}
-
-/* Biblioteca */
-.bib-tog{padding:7px 13px;border-bottom:1px solid rgba(74,33,9,.12);font-family:'Cinzel',serif;font-size:8px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--navy);cursor:pointer;display:flex;justify-content:space-between;align-items:center;background:var(--perg-mid);flex-shrink:0;transition:.15s;}
-.bib-tog:hover{background:var(--navy);color:var(--perg);}
-.bib-panel{display:none;border-bottom:2px solid rgba(74,33,9,.15);max-height:145px;overflow-y:auto;flex-shrink:0;}
-.hi{padding:8px 13px;border-bottom:1px solid var(--perg-dk);cursor:pointer;font-size:12px;border-left:3px solid transparent;transition:.15s;}
-.hi:hover{background:var(--perg);border-left-color:var(--gold-br);}
-.hi.done{border-left-color:var(--grn);color:#557;cursor:default;}
-.hi-tit{font-family:'Cinzel',serif;font-size:10px;font-weight:700;color:var(--navy);margin-bottom:1px;}
-.hi-sub{font-size:10px;color:var(--navy-md);}
-
-/* ══════════════════════════════════════
-   CARTAS — Nivel alto, tipo infografía
-══════════════════════════════════════ */
-.cards-area{flex:1;overflow-y:auto;padding:10px 11px;}
-.cards-lbl{font-family:'Cinzel',serif;font-size:7px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:8px;text-align:center;}
-.cards-grid{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;}
-
-/* CARTA BASE — Diseño premium */
-.card{
-  width:160px;
-  background:var(--perg-lt);
-  border:2px solid rgba(74,33,9,.28);
-  cursor:pointer;font-size:12px;text-align:left;
-  transition:all .22s;position:relative;overflow:hidden;
-  display:flex;flex-direction:column;
-  box-shadow:0 3px 10px rgba(74,33,9,.14);
-}
-.card:hover:not(.locked){
-  transform:translateY(-6px) scale(1.025);
-  box-shadow:0 12px 28px rgba(74,33,9,.24);
-  border-color:var(--gold-br);
-}
-
-/* Cabecera de la carta — tipo panel de infografía */
-.card-head{
-  padding:8px 10px;
-  display:flex;align-items:center;gap:7px;
-  flex-shrink:0;
-  border-bottom:1px solid rgba(74,33,9,.15);
-}
-.card-head-icon{
-  width:28px;height:28px;border-radius:50%;
-  border:2px solid rgba(255,255,255,.5);
-  display:flex;align-items:center;justify-content:center;
-  font-size:14px;flex-shrink:0;
-  background:rgba(255,255,255,.25);
-}
-.card-head-info{flex:1;min-width:0;}
-.card-cat{font-family:'Cinzel',serif;font-size:7px;font-weight:700;letter-spacing:2px;text-transform:uppercase;opacity:.85;}
-.card-tipo-badge{
-  font-family:'Cinzel',serif;font-size:7px;font-weight:600;
-  letter-spacing:1px;text-transform:uppercase;
-  padding:1px 6px;border:1px solid;display:inline-block;margin-top:1px;
-}
-
-/* Cuerpo carta */
-.card-body{padding:9px 10px;flex:1;}
-.card-txt{font-size:12px;line-height:1.45;color:var(--navy);}
-
-/* Footer carta */
-.card-foot{
-  padding:7px 10px;
-  border-top:1px solid rgba(74,33,9,.1);
-  display:flex;align-items:center;justify-content:space-between;
-  flex-shrink:0;
-}
-.card-reward{font-family:'Cinzel',serif;font-size:9px;font-weight:700;}
-.card-arr{font-size:12px;color:var(--gold);opacity:.45;transition:.18s;}
-.card:hover:not(.locked) .card-arr{opacity:1;transform:translateX(3px);}
-
-/* ──── COLORES POR CATEGORÍA ──── */
-/* Comunicación */
-.cc-com .card-head{background:linear-gradient(135deg,#2a6a4a,#1a5a3a);}
-.cc-com .card-head-icon{border-color:rgba(255,255,255,.4);}
-.cc-com .card-cat{color:rgba(255,255,255,.9);}
-.cc-com .card-tipo-badge{color:rgba(255,255,255,.85);border-color:rgba(255,255,255,.35);}
-.cc-com .card-reward{color:#2a6a4a;}
-
-/* Liderazgo */
-.cc-lid .card-head{background:linear-gradient(135deg,#4a2109,#0e1e34);}
-.cc-lid .card-head-icon{border-color:rgba(196,144,48,.5);}
-.cc-lid .card-cat{color:var(--perg);}
-.cc-lid .card-tipo-badge{color:var(--gold-br);border-color:rgba(196,144,48,.4);}
-.cc-lid .card-reward{color:#4a2109;}
-
-/* Bienestar */
-.cc-bien .card-head{background:linear-gradient(135deg,#2a5024,#1a3a18);}
-.cc-bien .card-head-icon{border-color:rgba(255,255,255,.4);}
-.cc-bien .card-cat{color:rgba(255,255,255,.9);}
-.cc-bien .card-tipo-badge{color:rgba(255,255,255,.85);border-color:rgba(255,255,255,.35);}
-.cc-bien .card-reward{color:#2a5024;}
-
-/* Planificación */
-.cc-plan .card-head{background:linear-gradient(135deg,#6b4423,#4a2e14);}
-.cc-plan .card-head-icon{border-color:rgba(255,255,255,.4);}
-.cc-plan .card-cat{color:rgba(255,255,255,.9);}
-.cc-plan .card-tipo-badge{color:rgba(255,255,255,.85);border-color:rgba(255,255,255,.35);}
-.cc-plan .card-reward{color:#6b4423;}
-
-/* Default */
-.cc-def .card-head{background:linear-gradient(135deg,#7a3410,#1a2e54);}
-.cc-def .card-head-icon{border-color:rgba(196,144,48,.5);}
-.cc-def .card-cat{color:var(--perg);}
-.cc-def .card-tipo-badge{color:var(--gold-br);border-color:rgba(196,144,48,.4);}
-.cc-def .card-reward{color:#7a3410;}
-
-/* Carta PROFESIONAL vs BÁSICA */
-.tipo-prof{background:rgba(74,33,9,.1);color:var(--navy-md);border-color:rgba(74,33,9,.2);}
-.tipo-bas{background:rgba(160,80,20,.1);color:#884010;border-color:rgba(160,80,20,.25);}
-.cc-com .tipo-prof,.cc-lid .tipo-prof,.cc-bien .tipo-prof,.cc-plan .tipo-prof{background:rgba(255,255,255,.15);color:white;border-color:rgba(255,255,255,.3);}
-.cc-com .tipo-bas,.cc-lid .tipo-bas,.cc-bien .tipo-bas,.cc-plan .tipo-bas{background:rgba(255,200,100,.2);color:#ffd080;border-color:rgba(255,200,100,.4);}
-
-/* Carta bloqueada */
-.card.locked{background:var(--perg-mid);border:2px dashed rgba(74,33,9,.2);cursor:pointer;opacity:.72;}
-.card.locked:hover{opacity:1;border-color:var(--gold-br);transform:translateY(-3px);box-shadow:0 8px 20px rgba(74,33,9,.18);}
-.lock-badge{position:absolute;top:8px;right:8px;background:var(--navy);color:var(--perg);font-family:'Cinzel',serif;font-size:7px;letter-spacing:1px;padding:2px 6px;text-transform:uppercase;border:1px solid var(--gold-br);}
-.unlock-h{font-family:'Cinzel',serif;font-size:8px;font-weight:700;letter-spacing:1px;color:var(--gold);text-transform:uppercase;margin-top:4px;}
-.unlock-s{font-size:10px;color:var(--navy-md);margin-top:2px;}
-
-/* Panel derecho — recursos */
-.res-row{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--perg-dk);}
-.res-row:last-child{border-bottom:none;}
-.rdot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
-.rinfo{flex:1;}
-.rnm{font-family:'Cinzel',serif;font-size:8px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;}
-.rsub{font-size:10px;color:var(--navy-md);line-height:1.3;}
-.rval{font-family:'Cinzel',serif;font-size:22px;font-weight:700;color:var(--navy);min-width:26px;text-align:right;}
-.ins-row{display:flex;flex-wrap:wrap;gap:5px;padding-top:3px;}
-
-/* Insignia display */
-.ins-badge{
-  width:34px;height:34px;border-radius:50%;
-  border:2px solid var(--gold-br);
-  display:flex;align-items:center;justify-content:center;
-  font-size:16px;background:var(--perg);
-  cursor:default;transition:.15s;
-}
-.ins-badge:hover{transform:scale(1.1);}
-
-/* ══════════════════════════════════════
-   MODAL CAPACITACIÓN — Nuevo nivel
-══════════════════════════════════════ */
 #modal{display:none;position:fixed;inset:0;z-index:500;background:rgba(74,33,9,.85);align-items:center;justify-content:center;}
-.modal-box{
-  background:var(--perg-lt);
-  border:3px solid var(--navy);border-top:5px solid var(--gold-br);
-  max-width:560px;width:96%;padding:0;
-  max-height:92vh;overflow-y:auto;
-}
-
-/* Cabecera modal */
-.modal-hdr{
-  background:var(--navy);padding:16px 22px;
-  display:flex;align-items:center;gap:12px;
-}
+.modal-box{background:var(--perg-lt);border:3px solid var(--navy);border-top:5px solid var(--gold-br);border-radius:14px;max-width:520px;width:96%;padding:0;max-height:90vh;overflow-y:auto;}
+.modal-hdr{background:var(--navy);padding:16px 22px;display:flex;align-items:center;gap:12px;border-radius:11px 11px 0 0;}
 .modal-hdr-ico{font-size:24px;}
-.modal-hdr-txt{}
 .modal-hdr-titulo{font-family:'Cinzel',serif;font-size:14px;font-weight:900;color:var(--perg);letter-spacing:1px;}
 .modal-hdr-sub{font-family:'Cinzel',serif;font-size:8px;letter-spacing:3px;color:var(--gold-br);text-transform:uppercase;margin-top:2px;}
-
-/* Contenido modal */
 .modal-body{padding:20px 24px;}
-.modal-badge{display:inline-block;background:rgba(74,33,9,.08);border:1px solid rgba(74,33,9,.2);padding:3px 13px;font-family:'Cinzel',serif;font-size:8px;letter-spacing:2px;color:var(--navy-md);text-transform:uppercase;margin-bottom:12px;}
-.modal-titulo{font-family:'Cinzel',serif;font-size:16px;font-weight:700;color:var(--navy);margin-bottom:10px;letter-spacing:1px;}
-.modal-cont{
-  font-size:14px;line-height:1.8;color:var(--navy-md);
-  margin-bottom:16px;
-  background:rgba(255,255,255,.5);
-  border:1px solid rgba(74,33,9,.1);
-  padding:12px 14px;
-}
-.modal-preg{font-family:'Cinzel',serif;font-size:10px;letter-spacing:1px;color:var(--gold);margin-bottom:10px;text-align:center;}
-.modal-inp{
-  width:100%;padding:11px 14px;
-  background:var(--perg);border:2px solid rgba(74,33,9,.3);
-  font-family:'Cinzel',serif;font-size:13px;color:var(--navy);
-  text-align:center;outline:none;margin-bottom:14px;transition:.18s;
-}
-.modal-inp:focus{border-color:var(--gold-br);}
-.modal-btns{display:flex;gap:9px;justify-content:center;}
-.mbtn{padding:10px 26px;font-family:'Cinzel',serif;font-size:11px;font-weight:700;letter-spacing:2px;cursor:pointer;transition:.18s;border:2px solid var(--navy);}
+.modal-accion-preview{background:rgba(74,33,9,.06);border:1px solid rgba(74,33,9,.15);border-radius:10px;padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;gap:12px;}
+.map-ico{font-size:28px;flex-shrink:0;}
+.map-cat{font-family:'Cinzel',serif;font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:3px;}
+.map-txt{font-family:'Spectral',Georgia,serif;font-size:14px;color:var(--navy);line-height:1.4;}
+.map-efecto{font-family:'Cinzel',serif;font-size:10px;color:var(--teal);margin-top:4px;font-weight:700;}
+.modal-btns{display:flex;gap:9px;justify-content:center;margin-top:6px;}
+.mbtn{padding:10px 26px;font-family:'Cinzel',serif;font-size:11px;font-weight:700;letter-spacing:2px;cursor:pointer;transition:.18s;border-radius:9px;border:2px solid var(--navy);}
 .mbtn.prim{background:var(--navy);color:var(--perg);}
 .mbtn.prim:hover{background:var(--gold-br);color:var(--navy);border-color:var(--gold-br);}
 .mbtn.sec{background:transparent;color:var(--navy);}
 .mbtn.sec:hover{background:var(--perg-dk);}
-
-/* Confirmación de acción */
-.modal-accion-preview{
-  background:rgba(74,33,9,.06);
-  border:1px solid rgba(74,33,9,.15);
-  padding:12px 16px;margin-bottom:16px;
-  display:flex;align-items:center;gap:12px;
-}
-.map-ico{font-size:28px;flex-shrink:0;}
-.map-info{}
-.map-cat{font-family:'Cinzel',serif;font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:3px;}
-.map-txt{font-size:14px;color:var(--navy);line-height:1.4;}
-.map-efecto{font-family:'Cinzel',serif;font-size:10px;color:var(--teal);margin-top:4px;font-weight:700;}
-
-/* ── ENCUENTRO ── */
-#enc-modal{display:none;position:fixed;inset:0;z-index:600;background:rgba(74,33,9,.93);align-items:center;justify-content:center;}
-.enc-box{background:var(--navy);border:3px solid var(--gold-br);max-width:500px;width:96%;padding:40px;text-align:center;}
-.enc-ico{font-size:44px;margin-bottom:12px;}
-.enc-tag{font-family:'Cinzel',serif;font-size:8px;letter-spacing:4px;text-transform:uppercase;color:var(--gold-br);margin-bottom:8px;}
-.enc-box h2{font-family:'Cinzel',serif;font-size:20px;font-weight:900;color:var(--perg);margin-bottom:12px;letter-spacing:2px;}
-.enc-box p{font-size:15px;line-height:1.7;color:var(--perg-dk);margin-bottom:20px;}
-
-/* ── FINAL ── */
-#final-screen{display:none;position:fixed;inset:0;z-index:700;background:var(--navy);align-items:center;justify-content:center;}
-.final-box{background:var(--perg-lt);border:4px solid var(--gold-br);max-width:540px;width:97%;padding:44px;text-align:center;}
-.final-tag{font-family:'Cinzel',serif;font-size:9px;letter-spacing:5px;text-transform:uppercase;color:var(--gold);margin-bottom:7px;}
-.final-box h1{font-family:'Cinzel',serif;font-size:30px;font-weight:900;color:var(--navy);letter-spacing:3px;margin-bottom:6px;}
-.final-score{font-family:'Cinzel',serif;font-size:58px;font-weight:900;color:var(--gold-br);line-height:1;margin:10px 0;}
-.final-nivel{font-family:'Cinzel',serif;font-size:12px;letter-spacing:5px;text-transform:uppercase;color:var(--navy-md);margin-bottom:13px;}
-.final-detail{font-family:'Cinzel',serif;font-size:11px;letter-spacing:1px;color:var(--navy-md);margin-top:12px;line-height:2.3;}
-.final-detail span{color:var(--navy);font-weight:700;}
-
-::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-track{background:var(--perg);}::-webkit-scrollbar-thumb{background:rgba(74,33,9,.3);}
   </style>
 </head>
 <body>
@@ -548,42 +292,194 @@ body{font-family:'Crimson Text',Georgia,serif;background:var(--perg);color:var(-
 <div id="loader"><div class="loader-inn"><div class="loader-txt">CARGANDO MISIÓN…</div></div></div>
 
 <!-- ══════════════════════════════════════
-     PANTALLA 1: BIENVENIDA + TABLERO
+     PANTALLA: LOGIN
 ══════════════════════════════════════ -->
-<div id="screen-welcome">
-  <div class="hdr-welcome">
-    <div class="logo-grp">
-      <span class="logo-ico">🏛️</span>
-      <div><div class="game-nm">MISIÓN MUNI</div><div class="game-sub">Academia de Mandos Medios · Bariloche</div></div>
+<div id="screen-login" class="screen-full">
+  <div class="topbar-login">
+    <div class="brand-grp">
+      <span class="brand-ico">🏛️</span>
+      <div><div class="brand-nm">MISIÓN MUNI</div><div class="brand-sub">Academia de Mandos Medios · Bariloche</div></div>
     </div>
-    <div class="hdr-tag">Municipalidad de San Carlos de Bariloche<br>Dirección de Recursos Humanos · 2026</div>
+    <div class="brand-tag">Municipalidad de San Carlos de Bariloche<br>Dirección de Recursos Humanos · 2026</div>
   </div>
-
-  <div class="welcome-body" style="position:relative;flex:1;overflow:hidden;">
-    <!-- Tablero visual sobre el mapa -->
-    <div class="tablero-fondo"></div>
-
-    <!-- Card de registro flotante centrada -->
-    <div class="welcome-card">
-      <span class="reg-eyebrow">Registro Municipal</span>
-      <h1 class="reg-h1">Liderá personas.<br>Tomá decisiones.</h1>
-      <p class="reg-p">Ingresá tu legajo para acceder al juego. Tu equipo y dirección ya están asignados.</p>
-      <div class="legajo-box">
-        <span class="legajo-lbl">Número de legajo</span>
-        <div class="legajo-row">
-          <input id="inp-legajo" class="legajo-inp" type="number" placeholder="Ej: 14567" maxlength="10">
-          <button class="btn-validar" onclick="validarLegajo()">VALIDAR</button>
-        </div>
-        <div id="legajo-status" class="legajo-status"></div>
-      </div>
+  <div class="login-wrap">
+    <div class="login-card">
+      <div class="login-eyebrow">INGRESÁ TU LEGAJO</div>
+      <p class="login-p">Conocé a tu equipo para comenzar la misión. Tu dirección y compañeros ya están asignados.</p>
+      <input id="inp-legajo" class="legajo-inp" type="number" placeholder="Ej: 15946" maxlength="10">
+      <button class="btn-primary" onclick="validarLegajo()">VALIDAR LEGAJO</button>
+      <div id="legajo-status" class="legajo-status"></div>
       <div id="agente-card" class="agente-card">
         <div class="ac-nombre" id="ac-nombre"></div>
         <div class="ac-info" id="ac-info"></div>
         <div class="ac-equipo-nm" id="ac-equipo"></div>
-        <button class="btn-comenzar" onclick="mostrarPresentacion()">▶ COMENZAR MISIÓN</button>
+        <button class="btn-primary" onclick="mostrarPresentacion()">▶ COMENZAR MISIÓN</button>
       </div>
       <div class="card-footer">
-        <button class="btn-reglas" onclick="abrirReglas()">📋 Ver reglas del juego</button>
+        <button class="link-btn" onclick="abrirReglas()">📋 Ver reglas del juego</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     PANTALLA: BIENVENIDA / EQUIPO
+══════════════════════════════════════ -->
+<div id="screen-bienvenida" class="screen-full" style="display:none">
+  <div class="bienv-wrap">
+    <div class="bienv-card">
+      <div class="bienv-grid">
+        <div>
+          <div class="bienv-hello">¡Bienvenida/o,</div>
+          <div class="bienv-name" id="bv-nombre"></div>
+          <div class="bienv-meta" id="bv-legajo"></div>
+          <div class="bienv-dir" id="bv-dir"></div>
+          <div class="bienv-lbl">TU EQUIPO — <span id="bv-equipo-nm"></span></div>
+          <div class="bienv-team" id="bv-team"></div>
+          <div class="bienv-lbl">COMO JEFE/A DE EQUIPO, TU MISIÓN SERÁ</div>
+          <div class="bienv-tareas">
+            <div class="bt-item"><div class="bt-dot"></div><span>Tomar decisiones estratégicas</span></div>
+            <div class="bt-item"><div class="bt-dot"></div><span>Resolver situaciones reales</span></div>
+            <div class="bt-item"><div class="bt-dot"></div><span>Completar módulos de capacitación</span></div>
+            <div class="bt-item"><div class="bt-dot"></div><span>Obtener recursos para tu Dirección</span></div>
+          </div>
+        </div>
+        <div class="bienv-side">
+          <div class="bienv-side-lbl">INDICADORES INICIALES</div>
+          <div id="bv-inds"></div>
+        </div>
+      </div>
+      <div class="bienv-actions">
+        <button class="btn-primary" onclick="iniciarJuego()">▶ EMPEZAR A JUGAR</button>
+        <button class="link-btn" onclick="abrirReglas()">Ver reglas del juego</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     APP (post-login)
+══════════════════════════════════════ -->
+<div id="app">
+  <div class="appbar">
+    <div class="appbar-logo">MISIÓN MUNI</div>
+    <div class="appbar-nav">
+      <button class="nav-btn" id="nav-tablero" onclick="go('tablero')">Tablero</button>
+      <button class="nav-btn" id="nav-situacion" onclick="go('situacion')">Situación</button>
+      <button class="nav-btn" id="nav-capacitacion" onclick="go('capacitacion')">Capacitación</button>
+    </div>
+    <div class="appbar-spacer"></div>
+    <button class="btn-reglas-top" onclick="abrirReglas()">📋 Reglas</button>
+    <div class="profile-chip">
+      <div class="profile-av" id="profile-av"></div>
+      <div class="profile-info">
+        <div class="profile-nm" id="profile-nm"></div>
+        <div class="profile-tm" id="profile-tm"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TABLERO -->
+  <div class="screen-body" id="scr-tablero">
+    <div class="tablero-grid">
+      <div>
+        <div class="tablero-title"><h2 id="tab-dir-title"></h2><span>Tu recorrido por las 3 Eras del programa</span></div>
+        <div id="lanes-wrap"></div>
+        <div class="legend-row">
+          <div class="legend-it"><div class="legend-dot" style="background:linear-gradient(160deg,#7e8a3c,#566425)"></div>Completado</div>
+          <div class="legend-it"><div class="legend-dot" style="background:linear-gradient(160deg,#e39445,var(--gold-br))"></div>Actual</div>
+          <div class="legend-it"><div class="legend-dot" style="background:linear-gradient(160deg,#f6e6c6,#e8cfa0);border:1px solid #cf9a54"></div>Pendiente</div>
+          <div class="legend-it"><div class="legend-dot" style="background:linear-gradient(160deg,#e8dcc4,#cdbe9e);border:1px solid #b9a883"></div>Bloqueada</div>
+        </div>
+      </div>
+      <div>
+        <div class="side-card">
+          <div class="side-lbl">TUS INDICADORES</div>
+          <div id="tab-inds"></div>
+        </div>
+        <div class="side-card">
+          <div class="side-lbl">TUS RECURSOS</div>
+          <div id="tab-recursos"></div>
+        </div>
+        <div class="side-card" style="margin-bottom:0">
+          <div class="side-lbl">🎖 INSIGNIAS</div>
+          <div class="ins-row" id="ins-row"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SITUACIÓN -->
+  <div class="screen-body" id="scr-situacion">
+    <div class="situ-grid">
+      <div>
+        <div class="situ-card">
+          <div class="situ-badge" id="sit-tipo"></div>
+          <div class="situ-tit" id="sit-title"></div>
+          <div class="situ-desc" id="sit-desc"></div>
+        </div>
+        <div class="hand-hdr"><h3>Tu mano de cartas</h3><span>Las respuestas básicas son rápidas pero bajan tus indicadores · las mejores se desbloquean con capacitación</span></div>
+        <div class="cards-row" id="cards-grid"></div>
+        <div class="confirm-bar" id="confirm-bar">
+          <div class="confirm-txt" id="confirm-txt"></div>
+          <div style="display:flex;gap:9px">
+            <button class="mbtn prim" onclick="confirmarAccion()">CONFIRMAR</button>
+            <button class="mbtn sec" onclick="cancelarSeleccion()">CANCELAR</button>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="side-card">
+          <div class="side-lbl">TUS INDICADORES</div>
+          <div id="sit-inds"></div>
+        </div>
+        <div class="side-card" style="margin-bottom:0">
+          <div class="side-lbl">TUS RECURSOS</div>
+          <div id="sit-recursos"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CAPACITACIÓN -->
+  <div class="screen-body" id="scr-capacitacion">
+    <div class="cap-grid">
+      <div class="cap-card" id="cap-card-list">
+        <div class="cap-badges"><span class="cap-badge">📚 MICROLEARNING</span></div>
+        <div class="cap-tit">Módulos de capacitación</div>
+        <p class="cap-p">Estudiá un módulo y respondé la pregunta para desbloquear su carta de herramienta y sumarla a tu mano.</p>
+        <div id="bib-list"></div>
+      </div>
+      <div class="cap-card" id="cap-card-detail" style="display:none">
+        <div class="cap-badges">
+          <span class="cap-badge">📚 MICROLEARNING</span>
+          <span class="cap-badge" style="background:var(--gold-br);color:#fff" id="cap-area-badge"></span>
+        </div>
+        <h2 class="cap-tit" id="cap-tit"></h2>
+        <p class="cap-p">Leé el contenido y respondé la pregunta para desbloquear la carta y sumarla a tu mano.</p>
+        <div class="cap-cont" id="cap-cont"></div>
+        <div class="cap-q">
+          <div class="cap-q-lbl">Cuestionario · respondé para desbloquear</div>
+          <div class="cap-q-txt" id="cap-preg"></div>
+          <input class="modal-inp" id="cap-inp" placeholder="Escribí tu respuesta…">
+          <div id="cap-err" class="cap-err" style="display:none">Respuesta incorrecta. Revisá el contenido del módulo e intentá de nuevo.</div>
+          <button class="btn-primary" style="width:auto;padding:12px 24px" onclick="verificarCapacitacion()">VERIFICAR Y DESBLOQUEAR CARTA</button>
+          <button class="link-btn" onclick="volverABiblioteca()" style="margin-left:10px">← Volver a los módulos</button>
+        </div>
+      </div>
+      <div>
+        <div class="side-card">
+          <div class="side-lbl">TUS INDICADORES</div>
+          <div id="cap-inds"></div>
+        </div>
+        <div class="side-dark" style="margin-bottom:0">
+          <div class="side-lbl">LÓGICA DEL APRENDIZAJE</div>
+          <div class="flujo-item"><div class="flujo-diamond"></div>Problema</div>
+          <div class="flujo-item"><div class="flujo-diamond"></div>Capacitación</div>
+          <div class="flujo-item"><div class="flujo-diamond"></div>Herramienta</div>
+          <div class="flujo-item"><div class="flujo-diamond"></div>Aplicación</div>
+          <div class="flujo-item" style="margin-bottom:0"><div class="flujo-diamond"></div>Resultado</div>
+        </div>
       </div>
     </div>
   </div>
@@ -592,144 +488,34 @@ body{font-family:'Crimson Text',Georgia,serif;background:var(--perg);color:var(-
 <!-- MODAL REGLAS -->
 <div id="modal-reglas">
   <div class="reglas-box">
-    <h3>⚑ REGLAS DE MISIÓN MUNI</h3>
-    <div class="rule-it"><div class="rule-n">1</div><p>Tu legajo define tu <strong>equipo y dirección</strong>. No elegís — ya estás asignado junto a tus compañeros del programa.</p></div>
-    <div class="rule-it"><div class="rule-n">2</div><p>Avanzás por <strong>12 casilleros</strong> en 3 Eras. Cada era tiene un tema: Organizar el trabajo, Gestionar el desempeño y Desarrollar el equipo.</p></div>
-    <div class="rule-it"><div class="rule-n">3</div><p>En cada turno aparece una <strong>situación o crisis</strong>. Elegís una carta de acción. Las decisiones modifican tus 4 indicadores.</p></div>
-    <div class="rule-it"><div class="rule-n">4</div><p>Las cartas <strong>PROFESIONALES</strong> están bloqueadas. Estudiás el módulo de capacitación, respondés una pregunta y las desbloqueás — ganando una insignia.</p></div>
-    <div class="rule-it"><div class="rule-n">5</div><p>Al terminar cada era llegás a un <strong>encuentro presencial</strong> donde llevás los recursos acumulados para trabajar con otros equipos.</p></div>
-    <div class="rules-hr"></div>
-    <div class="rule-it"><div class="rule-n">🏆</div><p>Gana quien mejor <strong>equilibra indicadores</strong> y usa estratégicamente los recursos. No gana quien más acumula, sino quien mejor gestiona.</p></div>
-    <button class="btn-cerrar-reglas" onclick="cerrarReglas()">✕ CERRAR</button>
+    <div class="reglas-hdr">
+      <div><div class="reglas-eyebrow">MISIÓN MUNI</div><h3>Reglas del juego</h3></div>
+      <button class="reglas-close" onclick="cerrarReglas()">✕</button>
+    </div>
+    <p class="reglas-sub">Aprender a gestionar, gestionando.</p>
+    <div class="reglas-grid">
+      <div class="rule-it"><div class="rule-n">1</div><p>Tu legajo define tu <strong>equipo y dirección</strong>. No elegís — ya estás asignado junto a tus compañeros del programa.</p></div>
+      <div class="rule-it"><div class="rule-n">2</div><p>Avanzás por <strong>12 casilleros</strong> en 3 Eras. Cada era tiene un tema: Organizar el trabajo, Gestionar el desempeño y Desarrollar el equipo.</p></div>
+      <div class="rule-it"><div class="rule-n">3</div><p>En cada turno aparece una <strong>situación o crisis</strong>. Elegís una carta de acción. Las decisiones modifican tus 4 indicadores.</p></div>
+      <div class="rule-it"><div class="rule-n">4</div><p>Las cartas <strong>PROFESIONALES</strong> están bloqueadas. Estudiás el módulo de capacitación, respondés una pregunta y las desbloqueás — ganando una insignia.</p></div>
+      <div class="rule-it"><div class="rule-n">5</div><p>Al terminar cada era llegás a un <strong>encuentro presencial</strong> donde llevás los recursos acumulados para trabajar con otros equipos.</p></div>
+      <div class="rule-it"><div class="rule-n">🏆</div><p>Gana quien mejor <strong>equilibra indicadores</strong> y usa estratégicamente los recursos. No gana quien más acumula, sino quien mejor gestiona.</p></div>
+    </div>
+    <button class="btn-primary" style="margin-top:24px" onclick="cerrarReglas()">ENTENDIDO, ¡COMENCEMOS!</button>
   </div>
 </div>
 
-<!-- ══════════════════════════════════════
-     PANTALLA 2: PRESENTACIÓN DEL AGENTE
-══════════════════════════════════════ -->
-<div id="screen-agente">
-  <div class="agente-presentacion">
-    <div class="ap-grid" style="grid-template-columns:1fr auto;">
-      <div class="ap-info">
-        <div class="ap-eyebrow">Tu misión comienza ahora</div>
-        <div class="ap-nombre" id="ap-nombre"></div>
-        <div class="ap-legajo" id="ap-legajo-txt"></div>
-        <div class="ap-dir" id="ap-dir-txt"></div>
-        <div class="ap-equipo-badge" id="ap-equipo-txt"></div>
-      </div>
-      <div class="ap-equipo-panel" style="text-align:center;">
-        <div class="ap-eq-lbl">Tu equipo</div>
-        <div style="font-family:'Cinzel',serif;font-size:22px;font-weight:900;color:var(--teal);margin:10px 0;" id="ap-equipo-nm2"></div>
-      </div>
-    </div>
-    <div class="ap-mision" id="ap-mision-txt"></div>
-    <div style="font-family:'Cinzel',serif;font-size:8px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:9px;">Indicadores de partida</div>
-    <div class="ap-inds" id="ap-inds"></div>
-    <button class="btn-empezar" onclick="iniciarJuego()">▶ EMPEZAR A JUGAR</button>
-  </div>
-</div>
-
-<!-- ══════════════════════════════════════
-     PANTALLA 3: DASHBOARD
-══════════════════════════════════════ -->
-<div id="app">
-  <div class="app-hdr">
-    <div class="app-hdr-left">
-      <div class="app-logo">MISIÓN MUNI</div>
-      <div class="app-dir" id="app-dir"></div>
-    </div>
-    <div class="app-hdr-avatar">
-      <div class="hdr-player-info" id="hdr-info"></div>
-    </div>
-  </div>
-
-  <div class="era-board" id="era-board"></div>
-
-  <div class="panel left-p">
-    <div class="phdr">👤 MI PERFIL</div>
-    <div class="pbody">
-      <div class="mini-agente">
-        <div>
-          <div class="mini-nm" id="mini-nm"></div>
-          <div class="mini-dir" id="mini-dir"></div>
-          <div class="mini-equipo" id="mini-equipo"></div>
-        </div>
-      </div>
-      <div style="font-family:'Cinzel',serif;font-size:7px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:8px">Indicadores</div>
-      <div id="ind-panel"></div>
-    </div>
-  </div>
-
-  <div class="center-p">
-    <div class="sit-box">
-      <div class="sit-tipo" id="sit-tipo"></div>
-      <div class="sit-tit" id="sit-title"></div>
-      <div class="sit-desc" id="sit-desc"></div>
-    </div>
-    <div class="bib-tog" onclick="toggleBib()">📚 MÓDULOS DE CAPACITACIÓN <span id="bib-arrow">▼</span></div>
-    <div class="bib-panel" id="bib-panel"></div>
-    <div class="cards-area">
-      <div class="cards-lbl">— ELEGÍ UNA ACCIÓN —</div>
-      <div class="cards-grid" id="cards-grid"></div>
-    </div>
-  </div>
-
-  <div class="panel right-p">
-    <div class="phdr">🧰 HERRAMIENTAS RRHH</div>
-    <div class="pbody">
-      <div class="res-row"><div class="rdot" style="background:var(--teal)"></div><div class="rinfo"><div class="rnm" style="color:var(--teal)">Comunicación</div><div class="rsub">Feedback y vínculos</div></div><div class="rval" id="r-com">0</div></div>
-      <div class="res-row"><div class="rdot" style="background:var(--navy)"></div><div class="rinfo"><div class="rnm" style="color:var(--navy)">Liderazgo</div><div class="rsub">Conducción del equipo</div></div><div class="rval" id="r-lid">0</div></div>
-      <div class="res-row"><div class="rdot" style="background:var(--grn)"></div><div class="rinfo"><div class="rnm" style="color:var(--grn)">Bienestar</div><div class="rsub">Clima y motivación</div></div><div class="rval" id="r-bien">0</div></div>
-      <div class="res-row"><div class="rdot" style="background:#6b4423"></div><div class="rinfo"><div class="rnm" style="color:#6b4423">Planificación</div><div class="rsub">Organización operativa</div></div><div class="rval" id="r-plan">0</div></div>
-    </div>
-    <div class="phdr" style="margin-top:2px">🎖 INSIGNIAS</div>
-    <div class="pbody"><div class="ins-row" id="ins-row"><span style="font-size:11px;font-style:italic;color:var(--navy-md)">Completá módulos para ganar insignias</span></div></div>
-  </div>
-</div>
-
-<!-- MODAL CAPACITACIÓN / ACCIÓN -->
-<div id="modal">
-  <div class="modal-box">
-    <div class="modal-hdr">
-      <div class="modal-hdr-ico" id="m-hdr-ico">📖</div>
-      <div class="modal-hdr-txt">
-        <div class="modal-hdr-titulo" id="m-hdr-titulo"></div>
-        <div class="modal-hdr-sub" id="m-hdr-sub"></div>
-      </div>
-    </div>
-    <div class="modal-body">
-      <div id="m-badge" class="modal-badge" style="display:none"></div>
-      <div id="m-accion-preview" class="modal-accion-preview" style="display:none">
-        <div class="map-ico" id="m-acc-ico">⚡</div>
-        <div class="map-info">
-          <div class="map-cat" id="m-acc-cat"></div>
-          <div class="map-txt" id="m-acc-txt"></div>
-          <div class="map-efecto" id="m-acc-efecto"></div>
-        </div>
-      </div>
-      <div class="modal-cont" id="m-cont" style="display:none"></div>
-      <div class="modal-preg" id="m-preg"></div>
-      <input class="modal-inp" id="m-inp" placeholder="Escribí tu respuesta…">
-      <div class="modal-btns">
-        <button class="mbtn prim" onclick="confirmarModal()">CONFIRMAR</button>
-        <button class="mbtn sec" onclick="cerrarModal()">CANCELAR</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ENCUENTRO -->
+<!-- MODAL CAPACITACIÓN LOCKED-CARD / ACCIÓN INFO (encuentro y final) -->
 <div id="enc-modal">
   <div class="enc-box">
     <div class="enc-ico">🤝</div>
     <div class="enc-tag">Encuentro Presencial</div>
     <h2 id="enc-titulo"></h2>
     <p id="enc-desc"></p>
-    <button class="btn-empezar" onclick="cerrarEncuentro()">CONTINUAR ▶</button>
+    <button class="btn-primary" style="width:auto;padding:13px 40px" onclick="cerrarEncuentro()">CONTINUAR ▶</button>
   </div>
 </div>
 
-<!-- FINAL -->
 <div id="final-screen">
   <div class="final-box">
     <div class="final-tag">✦ Misión Completada ✦</div>
@@ -744,33 +530,33 @@ body{font-family:'Crimson Text',Georgia,serif;background:var(--perg);color:var(-
 
 <script>
 const IND = {
-  clima:{lbl:'CLIMA',icon:'❤️',bar:'bc1'},
-  desempenio:{lbl:'DESEMPEÑO',icon:'🎯',bar:'bc2'},
-  desarrollo:{lbl:'DESARROLLO',icon:'📚',bar:'bc3'},
-  recursos:{lbl:'RECURSOS',icon:'💰',bar:'bc4'}
+  clima:{lbl:'Clima del equipo',icon:'❤️',color:'#b5461f'},
+  desempenio:{lbl:'Desempeño',icon:'🎯',color:'#d9862e'},
+  desarrollo:{lbl:'Desarrollo',icon:'📚',color:'#a06a1f'},
+  recursos:{lbl:'Recursos',icon:'💰',color:'#6b7530'}
+};
+const REC = {
+  comunicacion:{lbl:'Comunicación',sub:'Feedback y vínculos',color:'#b5461f'},
+  liderazgo:{lbl:'Liderazgo',sub:'Conducción del equipo',color:'#4a2109'},
+  bienestar:{lbl:'Bienestar',sub:'Clima y motivación',color:'#6b7530'},
+  planificacion:{lbl:'Planificación',sub:'Organización operativa',color:'#a06a1f'}
 };
 const ENC = {
   2:{titulo:'Encuentro 1 · Era I Completada',desc:'Completaste la Organización del Trabajo (casilleros 1–4). Reunite con los otros equipos para compartir aprendizajes y llevar los recursos obtenidos.'},
   3:{titulo:'Encuentro 2 · Era II Completada',desc:'Completaste la Gestión del Desempeño (casilleros 5–8). Nueva reunión grupal para evaluar el avance e integrar herramientas de gestión.'}
 };
 
-let g = null, modalData = null, bibOpen = false;
-let agenteData = null;
+let g = null, agenteData = null, currentScreen = 'tablero', selectedCard = null, capHerr = null;
 
-/* Asigna nombre de equipo ficticio basado en dirección */
 function getEquipo(direccion) {
   const equipos = {
-    'Hacienda': 'LOS CÓNDORES',
-    'Servicios Públicos': 'LOS PUMAS',
-    'Capital Humano': 'LOS HUEMULES',
-    'Obras Particulares': 'LOS GUANACOS',
-    'Tránsito': 'LOS ZORROS',
-    'Promoción Social': 'LOS PINGÜINOS'
+    'Hacienda': 'LOS CÓNDORES','Servicios Públicos': 'LOS PUMAS','Capital Humano': 'LOS HUEMULES',
+    'Obras Particulares': 'LOS GUANACOS','Tránsito': 'LOS ZORROS','Promoción Social': 'LOS PINGÜINOS'
   };
   return equipos[direccion] || 'EQUIPO ' + (direccion||'').toUpperCase().slice(0,8);
 }
 
-/* ── VALIDAR LEGAJO ── */
+/* ── LOGIN ── */
 function validarLegajo() {
   const legajo = document.getElementById('inp-legajo').value.trim();
   if(!legajo){showStatus('Ingresá un número de legajo','err');return;}
@@ -780,12 +566,7 @@ function validarLegajo() {
     .withSuccessHandler(res => {
       hideLoader();
       if(res && res.encontrado) {
-        agenteData = {
-          legajo: legajo,
-          nombre: res.nombre,
-          direccion: res.direccion,
-          equipo: getEquipo(res.direccion)
-        };
+        agenteData = { legajo: legajo, nombre: res.nombre, direccion: res.direccion, equipo: getEquipo(res.direccion) };
         showStatus('✓ Legajo encontrado','ok');
         document.getElementById('ac-nombre').innerText = res.nombre;
         document.getElementById('ac-info').innerText = 'Legajo ' + legajo + ' · ' + res.direccion;
@@ -796,157 +577,128 @@ function validarLegajo() {
         document.getElementById('agente-card').classList.remove('visible');
       }
     })
-    .withFailureHandler(e => {
-      hideLoader();
-      showStatus('Error al consultar. Intentá de nuevo.','err');
-    })
+    .withFailureHandler(e => { hideLoader(); showStatus('Error al consultar. Intentá de nuevo.','err'); })
     .buscarAgente(legajo);
 }
-
 function showStatus(msg, type) {
   const el = document.getElementById('legajo-status');
   el.innerText = msg; el.className = 'legajo-status ' + type;
 }
 
-/* ── MOSTRAR PANTALLA 2 ── */
+/* ── BIENVENIDA ── */
 function mostrarPresentacion() {
   if(!agenteData) return;
-  document.getElementById('screen-welcome').style.display = 'none';
-  document.getElementById('screen-agente').style.display = 'flex';
+  document.getElementById('screen-login').style.display = 'none';
+  document.getElementById('screen-bienvenida').style.display = 'block';
 
-  document.getElementById('ap-nombre').innerText = agenteData.nombre.toUpperCase();
-  document.getElementById('ap-legajo-txt').innerText = 'Legajo ' + agenteData.legajo;
-  document.getElementById('ap-dir-txt').innerText = 'Dirección de ' + agenteData.direccion;
-  document.getElementById('ap-equipo-txt').innerText = agenteData.equipo;
-  document.getElementById('ap-equipo-nm2').innerText = agenteData.equipo;
-
-  document.getElementById('ap-mision-txt').innerHTML =
-    `Como <strong>jefe/a de equipo</strong> en la Dirección de ${agenteData.direccion}, tu misión es tomar decisiones estratégicas, resolver situaciones reales y completar módulos de capacitación para desbloquear acciones avanzadas. Los <strong>recursos de RRHH</strong> que acumulás los llevás al encuentro presencial con tu equipo <strong>${agenteData.equipo}</strong>.`;
+  document.getElementById('bv-nombre').innerText = agenteData.nombre.toUpperCase() + '!';
+  document.getElementById('bv-legajo').innerText = 'Legajo ' + agenteData.legajo;
+  document.getElementById('bv-dir').innerText = 'Dirección de ' + agenteData.direccion;
+  document.getElementById('bv-equipo-nm').innerText = agenteData.equipo;
 
   showLoader();
   google.script.run
-    .withSuccessHandler(res => {hideLoader(); g = res; renderInds(res.estado.indicadores);})
-    .withFailureHandler(e => {hideLoader(); alert('Error: '+e.message);})
+    .withSuccessHandler(res => {
+      hideLoader(); g = res;
+      document.getElementById('bv-team').innerHTML = (g.estado.equipo||[]).map(m =>
+        `<div class="bt-av"><div class="bt-circ">${(m.nombre||'').split(' ').map(w=>w[0]).slice(0,2).join('')}</div><div class="bt-nm">${m.nombre}</div><div class="bt-role">${m.rol||''}</div></div>`
+      ).join('') || '<span style="font-size:12px;font-style:italic;color:var(--gold-br)">Tu equipo se irá completando durante la partida.</span>';
+      document.getElementById('bv-inds').innerHTML = renderIndBars(res.estado.indicadores, true);
+    })
+    .withFailureHandler(e => { hideLoader(); alert('Error: '+e.message); })
     .iniciarPartida(agenteData.legajo, agenteData.direccion, agenteData.equipo, agenteData.nombre);
 }
 
-function renderInds(indicadores) {
-  document.getElementById('ap-inds').innerHTML =
-    Object.entries(indicadores).map(([k,v]) =>
-      `<div class="ind-c"><div class="ind-ico">${IND[k]?.icon||'●'}</div><div class="ind-lbl">${IND[k]?.lbl||k}</div><div class="ind-dots">${dots(v)}</div></div>`
-    ).join('');
+function renderIndBars(indicadores, big) {
+  return Object.entries(indicadores).map(([k,v]) => {
+    const meta = IND[k] || {lbl:k,color:'#a06a1f'};
+    const pct = big ? (v*20) : (v*20);
+    return `<div class="ind-row"><div class="ind-row-top"><div class="ind-row-lbl"><div class="ind-dot" style="background:${meta.color}"></div>${meta.lbl}</div><div class="ind-row-val">${v}${big?'/5':'/5'}</div></div><div class="ind-bar-bg"><div class="ind-bar-fg" style="width:${pct}%;background:${meta.color}"></div></div></div>`;
+  }).join('');
 }
 
 /* ── INICIAR JUEGO ── */
 function iniciarJuego() {
-  document.getElementById('screen-agente').style.display = 'none';
-  document.getElementById('app').style.display = 'grid';
-  actualizarHdrAvatar();
+  document.getElementById('screen-bienvenida').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  document.getElementById('profile-av').innerText = (agenteData.nombre||'').split(' ').map(w=>w[0]).slice(0,2).join('');
+  document.getElementById('profile-nm').innerText = agenteData.nombre;
+  document.getElementById('profile-tm').innerText = agenteData.equipo;
+  document.getElementById('tab-dir-title').innerText = 'Dirección de ' + agenteData.direccion;
+  go('tablero');
   render();
 }
 
-function actualizarHdrAvatar() {
-  if(!agenteData) return;
-  document.getElementById('hdr-info').innerHTML = `<strong>${agenteData.nombre.split(' ')[0].toUpperCase()}</strong><br>${agenteData.equipo}`;
-  document.getElementById('mini-nm').innerText = agenteData.nombre;
-  document.getElementById('mini-dir').innerText = agenteData.direccion;
-  document.getElementById('mini-equipo').innerText = agenteData.equipo;
-  document.getElementById('app-dir').innerText = agenteData.direccion.toUpperCase();
+function go(screen) {
+  currentScreen = screen;
+  ['tablero','situacion','capacitacion'].forEach(s => {
+    document.getElementById('scr-'+s).classList.toggle('active', s===screen);
+    document.getElementById('nav-'+s).classList.toggle('active', s===screen);
+  });
+  if(screen==='capacitacion' && !capHerr) volverABiblioteca();
 }
 
-/* ── RENDER DASHBOARD ── */
+/* ── RENDER GENERAL ── */
 function render() {
+  if(!g) return;
   const e = g.estado;
-  renderBoard(e.casillero);
-  document.getElementById('ind-panel').innerHTML =
-    Object.entries(e.indicadores).map(([k,v]) =>
-      `<div class="stat"><div class="stat-row"><span class="stat-lbl">${IND[k]?.icon} ${IND[k]?.lbl||k}</span><span class="stat-val">${v}/5</span></div><div class="bar-bg"><div class="bar-fg ${IND[k]?.bar||'bc2'}" style="width:${v*20}%"></div></div></div>`
-    ).join('');
+  renderLanes(e.casillero);
+  document.getElementById('tab-inds').innerHTML = renderIndBars(e.indicadores, true);
+  document.getElementById('sit-inds').innerHTML = renderIndBars(e.indicadores, true);
+  document.getElementById('cap-inds').innerHTML = renderIndBars(e.indicadores, true);
+
+  const rec = e.recursos;
+  const recHtml = Object.entries(REC).map(([k,meta]) =>
+    `<div class="res-item"><div class="res-left"><div class="res-dot" style="background:${meta.color}"></div><div><div class="res-nm">${meta.lbl}</div></div></div><div class="res-val">${rec[k]??0}</div></div>`
+  ).join('');
+  document.getElementById('tab-recursos').innerHTML = recHtml;
+  document.getElementById('sit-recursos').innerHTML = recHtml;
+
+  document.getElementById('ins-row').innerHTML = e.insignias.length
+    ? e.insignias.map(i=>`<div class="ins-badge" title="${i}">🎖</div>`).join('')
+    : `<span style="font-size:11px;font-style:italic;color:var(--navy-md)">Completá módulos para ganar insignias</span>`;
 
   const tipo = (g.situacion.tipo||'situacion').toLowerCase();
   const tipoEl = document.getElementById('sit-tipo');
-  tipoEl.className = 'sit-tipo '+tipo;
+  tipoEl.className = 'situ-badge '+tipo;
   tipoEl.innerText = tipo==='crisis'?'⚡ CRISIS':tipo==='final'?'🏆 MISIÓN COMPLETADA':'📋 SITUACIÓN';
   document.getElementById('sit-title').innerText = g.situacion.titulo;
   document.getElementById('sit-desc').innerText = g.situacion.desc;
 
-  const rec = e.recursos;
-  document.getElementById('r-com').innerText = (rec.comunicacion??rec.personal??0);
-  document.getElementById('r-lid').innerText = (rec.liderazgo??rec.presupuesto??0);
-  document.getElementById('r-bien').innerText = (rec.bienestar??rec.horasExtras??0);
-  document.getElementById('r-plan').innerText = (rec.planificacion??rec.equipamiento??0);
-
-  const ins = document.getElementById('ins-row');
-  ins.innerHTML = e.insignias.length
-    ? e.insignias.map(i=>`<div class="ins-badge" title="${i}">🎖</div>`).join('')
-    : `<span style="font-size:11px;font-style:italic;color:var(--navy-md)">Completá módulos para ganar insignias</span>`;
-
-  renderBib(); renderCartas();
+  renderCartas();
+  renderBibList();
 }
 
-function renderBoard(cas) {
+/* ── TABLERO: ERAS/LANES ── */
+function renderLanes(cas) {
   const ERAS = [
-    {nm:'ERA I · Organización',cls:'e1',nodes:[1,2,3,4],nc:'n1',lc:'nl1',enc:'ENCUENTRO 1'},
-    {nm:'ERA II · Desempeño',  cls:'e2',nodes:[5,6,7,8],nc:'n2',lc:'nl2',enc:'ENCUENTRO 2'},
-    {nm:'ERA III · Desarrollo',cls:'e3',nodes:[9,10,11,12],nc:'n3',lc:'nl3',enc:null}
+    {r:'I',nm:'Organización del trabajo',color:'var(--era1)',nodes:[1,2,3,4],enc:'ENCUENTRO 1'},
+    {r:'II',nm:'Gestión del desempeño',color:'var(--era2)',nodes:[5,6,7,8],enc:'ENCUENTRO 2'},
+    {r:'III',nm:'Desarrollo del equipo',color:'var(--era3)',nodes:[9,10,11,12],enc:null}
   ];
-  let html = `<div class="sb">INICIO</div>`;
-  ERAS.forEach((era,ei) => {
-    if(ei>0){html+=`<div class="esep"></div>`;if(ERAS[ei-1].enc)html+=`<div class="enc-b">${ERAS[ei-1].enc}</div><div class="esep"></div>`}
-    html += `<div class="era-blk"><div class="era-lbl ${era.cls}">${era.nm}</div><div class="era-nds">`;
-    era.nodes.forEach((n,ni)=>{
-      const done=cas>n,active=cas===n;
-      html+=`<div class="node ${era.nc} ${done?'done':active?'active':''}">${done?'✓':n}</div>`;
-      if(ni<era.nodes.length-1) html+=`<div class="nl ${era.lc}"></div>`;
+  let html = '';
+  ERAS.forEach(era => {
+    html += `<div class="lane"><div class="lane-hdr"><div class="lane-chip" style="background:${era.color}">ERA ${era.r}</div><div class="lane-nm">${era.nm}</div></div><div class="lane-stops">`;
+    era.nodes.forEach(n => {
+      const st = cas>n ? 'done' : cas===n ? 'current' : 'pending';
+      html += `<div class="lane-stop"><div class="lane-med ${st}">${st==='done'?'✓':n}</div></div>`;
     });
-    html+=`</div></div>`;
+    html += `</div>`;
+    if(era.enc) html += `<div style="margin-top:12px;display:inline-block;padding:5px 12px;background:rgba(196,144,48,.16);border:1px solid rgba(196,144,48,.4);border-radius:7px;font-family:'Cinzel',serif;font-size:9px;font-weight:700;letter-spacing:1.5px;color:var(--gold)">${era.enc}</div>`;
+    html += `</div>`;
   });
-  html+=`<div class="esep"></div><div class="eb">🏁 META</div>`;
-  document.getElementById('era-board').innerHTML = html;
-}
-
-/* ── BIBLIOTECA ── */
-function renderBib() {
-  if(!g.biblioteca) return;
-  document.getElementById('bib-panel').innerHTML = g.biblioteca.map(h => {
-    const done = g.estado.herramientas.includes(h.id);
-    const onclk = done ? '' : `abrirHerr('${h.id}')`;
-    return `<div class="hi ${done?'done':''}" onclick="${onclk}">
-      <div class="hi-tit">${done?'✅':'📖'} ${h.nombre}</div>
-      <div class="hi-sub">${done?'Completado · Insignia obtenida':'Clic para estudiar el módulo'}</div>
-    </div>`;
-  }).join('');
-}
-function toggleBib(){
-  bibOpen=!bibOpen;
-  document.getElementById('bib-panel').style.display=bibOpen?'block':'none';
-  document.getElementById('bib-arrow').innerText=bibOpen?'▲':'▼';
-}
-function abrirHerr(id) {
-  const h = g.biblioteca.find(x=>x.id===id); if(!h) return;
-  modalData = {tipo:'herr', data:h};
-  document.getElementById('m-hdr-ico').innerText = '📖';
-  document.getElementById('m-hdr-titulo').innerText = h.nombre;
-  document.getElementById('m-hdr-sub').innerText = 'Módulo de Capacitación';
-  document.getElementById('m-badge').innerText = '📚 MICROLEARNING';
-  document.getElementById('m-badge').style.display = 'inline-block';
-  document.getElementById('m-accion-preview').style.display = 'none';
-  document.getElementById('m-cont').innerText = h.contenido;
-  document.getElementById('m-cont').style.display = 'block';
-  document.getElementById('m-preg').innerText = h.pregunta || '¿Confirmás la lectura del módulo?';
-  document.getElementById('m-inp').value = '';
-  document.getElementById('m-inp').placeholder = 'Escribí tu respuesta…';
-  document.getElementById('modal').style.display = 'flex';
+  document.getElementById('lanes-wrap').innerHTML = html;
 }
 
 /* ── CARTAS ── */
-function catCss(cat) {
-  if(!cat) return 'cc-def'; const c = cat.toLowerCase();
-  if(c.includes('comunic')) return 'cc-com';
-  if(c.includes('liderazg')||c.includes('profesion')) return 'cc-lid';
-  if(c.includes('bienestar')||c.includes('climat')) return 'cc-bien';
-  if(c.includes('planif')||c.includes('organiz')) return 'cc-plan';
-  return 'cc-def';
+function catColor(cat) {
+  if(!cat) return {band:'#6b4423',med:'linear-gradient(160deg,#93a04f,#59642a)',frame:'linear-gradient(160deg,#5d6a2c,#38401a)',stud:'#93a04f'};
+  const c = cat.toLowerCase();
+  if(c.includes('comunic')) return {band:'#1a5a3a',med:'linear-gradient(160deg,#4a9a6a,#1a5a3a)',frame:'linear-gradient(160deg,#2a6a4a,#1a3a28)',stud:'#4a9a6a'};
+  if(c.includes('liderazg')||c.includes('profesion')) return {band:'#a8410f',med:'linear-gradient(160deg,#e39445,#a8410f)',frame:'linear-gradient(160deg,#a8551f,#6e3212)',stud:'#e39445'};
+  if(c.includes('bienestar')||c.includes('climat')) return {band:'#b07a22',med:'linear-gradient(160deg,#e2b64e,#a8731b)',frame:'linear-gradient(160deg,#9a6a24,#5e3d10)',stud:'#e2b64e'};
+  if(c.includes('planif')||c.includes('organiz')) return {band:'#6b4423',med:'linear-gradient(160deg,#93a04f,#59642a)',frame:'linear-gradient(160deg,#5d6a2c,#38401a)',stud:'#93a04f'};
+  return {band:'#6b4423',med:'linear-gradient(160deg,#93a04f,#59642a)',frame:'linear-gradient(160deg,#5d6a2c,#38401a)',stud:'#93a04f'};
 }
 function catIcon(cat) {
   if(!cat) return '⚡'; const c = cat.toLowerCase();
@@ -960,93 +712,120 @@ function catIcon(cat) {
 function renderCartas() {
   const grid = document.getElementById('cards-grid');
   if(!g.cartas||!g.cartas.length){
-    grid.innerHTML='<p style="font-style:italic;color:var(--navy-md);text-align:center;padding:18px">Recorrido completo.</p>';return;
+    grid.innerHTML='<p style="font-style:italic;color:var(--navy-md);padding:18px">Recorrido completo.</p>';
+    document.getElementById('confirm-bar').classList.remove('visible');
+    return;
   }
   grid.innerHTML = g.cartas.map(c => {
-    const cc = catCss(c.cat);
+    const col = catColor(c.cat);
     const ico = catIcon(c.cat);
-    const esProfesional = (c.cat||'').toLowerCase().includes('profesion');
-    const esBasica = (c.cat||'').toLowerCase().includes('básic')||(c.cat||'').toLowerCase().includes('basic');
-    const badgeClass = esProfesional ? 'tipo-prof' : esBasica ? 'tipo-bas' : 'tipo-prof';
-    const badgeTxt = esProfesional ? '⭐ PROFESIONAL' : esBasica ? 'BÁSICA' : c.cat;
-    const reward = c.recursoGanado ? `+${c.cantidadRecurso} ${c.recursoGanado.toUpperCase()}` : '';
+    const reward = c.recursoGanado ? `+${c.cantidadRecurso} ${(REC[c.recursoGanado]?.lbl||c.recursoGanado).toUpperCase()}` : '';
+    const isSel = selectedCard && selectedCard.id===c.id;
 
     if(c.bloqueada) {
       const herr = g.biblioteca ? g.biblioteca.find(h=>h.id===c.req) : null;
       const hn = herr ? herr.nombre : c.req;
-      return `<div class="card locked" onclick="abrirHerr('${c.req}')" title="Clic para desbloquear">
-        <div class="lock-badge">🔒 BLOQUEADA</div>
-        <div class="card-head ${cc}" style="opacity:.6">
-          <div class="card-head-icon">${ico}</div>
-          <div class="card-head-info">
-            <div class="card-cat">${(c.cat||'').toUpperCase()}</div>
-            <div class="card-tipo-badge ${badgeClass}">${badgeTxt}</div>
+      return `<div class="mm-card" onclick="abrirHerrDesdeCarta('${c.req}')">
+        <div class="mm-frame" style="background:linear-gradient(160deg,#8a7a62,#5a4d3c);border:1px solid rgba(40,20,8,.5)">
+          <div class="mm-inner locked">
+            <div class="mm-band" style="background:#8c7a63">REQUIERE CAPACITACIÓN</div>
+            <div class="mm-lock">🔒</div>
+            <div class="mm-title">${c.texto}</div>
+            <div class="mm-desc" style="font-style:italic">Estudiá "${hn}" para desbloquear</div>
           </div>
-        </div>
-        <div class="card-body">
-          <div class="card-txt" style="color:var(--navy-md)">${c.texto}</div>
-          <div class="unlock-h">📖 ESTUDIAR PARA DESBLOQUEAR</div>
-          <div class="unlock-s">${hn}</div>
         </div>
       </div>`;
     }
 
-    return `<div class="card ${cc}" onclick="clickCarta('${c.id}','${c.cat}',false,'','${c.recursoGanado}',${c.cantidadRecurso},'${c.impactoInd}',${c.valorImpacto})">
-      <div class="card-head">
-        <div class="card-head-icon">${ico}</div>
-        <div class="card-head-info">
-          <div class="card-cat">${(c.cat||'').toUpperCase()}</div>
-          <div class="card-tipo-badge ${badgeClass}">${badgeTxt}</div>
+    return `<div class="mm-card ${isSel?'selected':''}" onclick="seleccionarCarta('${c.id}','${c.cat}','${c.recursoGanado}',${c.cantidadRecurso},'${c.impactoInd}',${c.valorImpacto},'${(c.texto||'').replace(/'/g,"\\'")}')">
+      <div class="mm-frame" style="background:${col.frame};border:1px solid rgba(40,20,8,.5)${isSel?';outline:3px solid var(--gold-br);outline-offset:2px':''}">
+        <div class="mm-inner">
+          <div class="mm-stud" style="top:7px;left:7px;background:${col.stud}"></div>
+          <div class="mm-stud" style="top:7px;right:7px;background:${col.stud}"></div>
+          <div class="mm-stud" style="bottom:7px;left:7px;background:${col.stud}"></div>
+          <div class="mm-stud" style="bottom:7px;right:7px;background:${col.stud}"></div>
+          <div class="mm-band" style="background:${col.band}">${(c.cat||'').toUpperCase()}</div>
+          <div class="mm-med" style="background:${col.med}">${ico}</div>
+          <div class="mm-title">${c.texto}</div>
+          <div class="mm-pips"><div class="mm-pip" style="background:${col.stud}"></div>${c.req?`<div class="mm-pip" style="background:${col.stud}"></div>`:''}</div>
+          <div class="mm-foot" style="color:var(--teal);background:rgba(107,117,48,.16)">${reward}</div>
         </div>
-      </div>
-      <div class="card-body">
-        <div class="card-txt">${c.texto}</div>
-      </div>
-      <div class="card-foot">
-        <div class="card-reward">${reward}</div>
-        <div class="card-arr">→</div>
       </div>
     </div>`;
   }).join('');
+  updateConfirmBar();
 }
 
-function clickCarta(id,cat,lock,req,recurso,cantidad,impInd,valImp) {
-  if(lock){abrirHerr(req);return;}
-  modalData = {tipo:'accion',data:{id,cat,recurso,cantidad,impInd,valImp}};
-  document.getElementById('m-hdr-ico').innerText = catIcon(cat);
-  document.getElementById('m-hdr-titulo').innerText = '¿Confirmás esta acción?';
-  document.getElementById('m-hdr-sub').innerText = 'Carta de acción · ' + cat;
-  document.getElementById('m-badge').style.display = 'none';
-  document.getElementById('m-cont').style.display = 'none';
-  // Preview de la acción
-  const preview = document.getElementById('m-accion-preview');
-  preview.style.display = 'flex';
-  document.getElementById('m-acc-ico').innerText = catIcon(cat);
-  document.getElementById('m-acc-cat').innerText = (cat||'').toUpperCase();
-  document.getElementById('m-acc-txt').innerText = `Sumará ${cantidad} punto(s) de ${recurso} y mejorará el indicador ${impInd}.`;
-  document.getElementById('m-acc-efecto').innerText = `+${cantidad} ${(recurso||'').toUpperCase()} → ${impInd} ↑`;
-  document.getElementById('m-preg').innerText = 'Escribí "si" para confirmar esta decisión.';
-  document.getElementById('m-inp').value = 'si';
-  document.getElementById('modal').style.display = 'flex';
+function seleccionarCarta(id,cat,recurso,cantidad,impInd,valImp,texto) {
+  selectedCard = {id,cat,recurso,cantidad,impInd,valImp,texto};
+  renderCartas();
+}
+function cancelarSeleccion() { selectedCard = null; renderCartas(); }
+function updateConfirmBar() {
+  const bar = document.getElementById('confirm-bar');
+  if(!selectedCard) { bar.classList.remove('visible'); return; }
+  bar.classList.add('visible');
+  document.getElementById('confirm-txt').innerHTML = `Vas a elegir: <strong>${selectedCard.texto}</strong>`;
+}
+function confirmarAccion() {
+  if(!selectedCard) return;
+  const d = selectedCard; selectedCard = null; showLoader();
+  google.script.run
+    .withSuccessHandler(res=>{
+      g=res; hideLoader();
+      if(res.finalizado) mostrarFinal();
+      else if(res.encuentro) mostrarEncuentro(res.nroEncuentro);
+      else render();
+    })
+    .withFailureHandler(e=>{hideLoader();alert(e.message);})
+    .procesarAccion(g.estado,d.id,d.cat,d.recurso,d.cantidad,d.impInd,d.valImp);
 }
 
-/* ── MODAL CONFIRMAR ── */
-function confirmarModal() {
-  if(!modalData) return;
-  const resp = document.getElementById('m-inp').value.trim().toLowerCase();
-  if(modalData.tipo==='herr') {
-    const h = modalData.data;
-    if(resp===h.respuesta) {
-      cerrarModal(); showLoader();
-      google.script.run.withSuccessHandler(res=>{g=res;hideLoader();render();}).withFailureHandler(e=>{hideLoader();alert(e.message);}).completarCapacitacion(g.estado,h.id,h.insigniaID);
-    } else alert('Respuesta incorrecta. Revisá el contenido del módulo e intentá de nuevo.');
-  } else if(modalData.tipo==='accion') {
-    if(resp!=='si'){cerrarModal();return;}
-    const d = modalData.data; cerrarModal(); showLoader();
-    google.script.run.withSuccessHandler(res=>{g=res;hideLoader();if(res.finalizado)mostrarFinal();else if(res.encuentro)mostrarEncuentro(res.nroEncuentro);else render();}).withFailureHandler(e=>{hideLoader();alert(e.message);}).procesarAccion(g.estado,d.id,d.cat,d.recurso,d.cantidad,d.impInd,d.valImp);
-  }
+/* ── CAPACITACIÓN ── */
+function renderBibList() {
+  if(!g.biblioteca) return;
+  document.getElementById('bib-list').innerHTML = g.biblioteca.map(h => {
+    const done = g.estado.herramientas.includes(h.id);
+    return `<div class="bib-list-item ${done?'done':''}" onclick="${done?'':`abrirHerramienta('${h.id}')`}">
+      <div class="hi-tit">${done?'✅':'📖'} ${h.nombre}</div>
+      <div class="hi-sub">${done?'Completado · insignia obtenida':'Clic para estudiar el módulo'}</div>
+    </div>`;
+  }).join('');
 }
-function cerrarModal(){document.getElementById('modal').style.display='none';modalData=null;}
+function volverABiblioteca() {
+  capHerr = null;
+  document.getElementById('cap-card-list').style.display = 'block';
+  document.getElementById('cap-card-detail').style.display = 'none';
+}
+function abrirHerrDesdeCarta(id) { go('capacitacion'); abrirHerramienta(id); }
+function abrirHerramienta(id) {
+  const h = g.biblioteca.find(x=>x.id===id); if(!h) return;
+  capHerr = h;
+  document.getElementById('cap-card-list').style.display = 'none';
+  document.getElementById('cap-card-detail').style.display = 'block';
+  document.getElementById('cap-area-badge').innerText = (h.area||'').toUpperCase();
+  document.getElementById('cap-tit').innerText = h.nombre;
+  document.getElementById('cap-cont').innerText = h.contenido;
+  document.getElementById('cap-preg').innerText = h.pregunta || '¿Confirmás la lectura del módulo?';
+  document.getElementById('cap-inp').value = '';
+  document.getElementById('cap-err').style.display = 'none';
+  if(currentScreen!=='capacitacion') go('capacitacion');
+}
+function verificarCapacitacion() {
+  if(!capHerr) return;
+  const resp = document.getElementById('cap-inp').value.trim().toLowerCase();
+  if(resp !== capHerr.respuesta) { document.getElementById('cap-err').style.display = 'block'; return; }
+  document.getElementById('cap-err').style.display = 'none';
+  const h = capHerr; showLoader();
+  google.script.run
+    .withSuccessHandler(res=>{ g=res; hideLoader(); volverABiblioteca(); render(); go('situacion'); })
+    .withFailureHandler(e=>{hideLoader();alert(e.message);})
+    .completarCapacitacion(g.estado, h.id, h.insigniaID);
+}
+
+/* ── MODAL REGLAS ── */
+function abrirReglas() { document.getElementById('modal-reglas').classList.add('open'); }
+function cerrarReglas() { document.getElementById('modal-reglas').classList.remove('open'); }
 
 /* ── ENCUENTRO ── */
 function mostrarEncuentro(nro) {
@@ -1057,14 +836,10 @@ function mostrarEncuentro(nro) {
 }
 function cerrarEncuentro(){document.getElementById('enc-modal').style.display='none';render();}
 
-/* ── MODAL REGLAS ── */
-function abrirReglas() { document.getElementById('modal-reglas').classList.add('open'); }
-function cerrarReglas() { document.getElementById('modal-reglas').classList.remove('open'); }
-
 /* ── FINAL ── */
 function mostrarFinal() {
   google.script.run.withSuccessHandler(p=>{
-document.getElementById('final-equipo').innerText = (agenteData?.equipo||'').toUpperCase();
+    document.getElementById('final-equipo').innerText = (agenteData?.equipo||'').toUpperCase();
     document.getElementById('final-score').innerText = p.promedioIndicadores+' / 5';
     document.getElementById('final-nivel').innerText = p.nivel.toUpperCase();
     document.getElementById('final-detail').innerHTML =
@@ -1074,10 +849,6 @@ document.getElementById('final-equipo').innerText = (agenteData?.equipo||'').toU
 }
 
 /* ── UTILS ── */
-function dots(v){
-  return '<span style="color:var(--gold-br)">'+('●'.repeat(Math.round(v)))+'</span>'
-       + '<span style="color:var(--perg-dk)">'+('○'.repeat(5-Math.round(v)))+'</span>';
-}
 function showLoader(){document.getElementById('loader').style.display='flex';}
 function hideLoader(){document.getElementById('loader').style.display='none';}
 </script>
