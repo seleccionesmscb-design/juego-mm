@@ -408,10 +408,6 @@ button{font:inherit}
           <div class="side-lbl">TUS COMPETENCIAS</div>
           <div id="tab-inds"></div>
         </div>
-        <div class="side-card">
-          <div class="side-lbl">TUS RECURSOS</div>
-          <div id="tab-recursos"></div>
-        </div>
         <div class="side-card" style="margin-bottom:0">
           <div class="side-lbl">🎖 INSIGNIAS</div>
           <div class="ins-row" id="ins-row"></div>
@@ -443,13 +439,9 @@ button{font:inherit}
         </div>
       </div>
       <div>
-        <div class="side-card">
+        <div class="side-card" style="margin-bottom:0">
           <div class="side-lbl">TUS COMPETENCIAS</div>
           <div id="sit-inds"></div>
-        </div>
-        <div class="side-card" style="margin-bottom:0">
-          <div class="side-lbl">TUS RECURSOS</div>
-          <div id="sit-recursos"></div>
         </div>
       </div>
     </div>
@@ -689,13 +681,6 @@ function render() {
   document.getElementById('tab-inds').innerHTML = renderCompetencias();
   document.getElementById('sit-inds').innerHTML = renderCompetencias();
   document.getElementById('cap-inds').innerHTML = renderCompetencias();
-
-  const rec = e.recursos;
-  const recHtml = Object.entries(REC).map(([k,meta]) =>
-    `<div class="res-item"><div class="res-left"><div class="res-dot" style="background:${meta.color}"></div><div><div class="res-nm">${meta.lbl}</div></div></div><div class="res-val">${rec[k]??0}</div></div>`
-  ).join('');
-  document.getElementById('tab-recursos').innerHTML = recHtml;
-  document.getElementById('sit-recursos').innerHTML = recHtml;
 
   document.getElementById('ins-row').innerHTML = e.insignias.length
     ? e.insignias.map(i=>`<div class="ins-badge" title="${i}">🎖</div>`).join('')
