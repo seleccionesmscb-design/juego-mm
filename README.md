@@ -325,10 +325,8 @@ Juego (MM) Misión Muni.png
 
 Acciones a llevar a cabo ahora.
 Quisiera mejorar el juego, poniendo la siguiente foto como fondo de pantalla. ChatGPT Image 5 may 2026, 17_00_50.png
-
-Los cambio a realizar en mi proyecto serian: 
-Primero que en la primera pagina sea una bienvenida al juego, con un emergente con las reglas del juego, que la persona pueda poner su legajo y la salude con el nombre y le presente a su equipo, como esta compuesto y que indicadores tiene. Quizas podria ser que le presente el equipo y le diga que tiene hacer durante el juego como jefe del equipo. Tambien quisiera que en la segunda hoja pongamos el foco en modificar las cartas, que vayamos a otro nivel de juego. Que el principal objetivo sea los microlearning que se desprenden de las cartas. 
-inspirate en esta ultima imagen pero con colores claros y tipo beige y verde claro 
+cambiar la base de datos a
+https://docs.google.com/spreadsheets/d/19Uk0MQT4a0Tarnx1H2qiVPX6YaAMg_FQsrhjla8VHBc/edit?usp=sharing
 
 
 
