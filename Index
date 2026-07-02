@@ -341,6 +341,10 @@ button{font:inherit}
           <div class="bienv-name" id="bv-nombre"></div>
           <div class="bienv-meta" id="bv-legajo"></div>
           <div class="bienv-dir" id="bv-dir"></div>
+          <p style="margin:14px 0 4px;font-family:'Spectral',Georgia,serif;font-size:13.5px;line-height:1.6;color:#4a2109">
+            <strong>Misión Muni</strong> es un simulador de gestión: vas a enfrentar situaciones reales de tu Dirección, elegir cómo resolverlas y capacitarte cuando lo necesites.
+            Cada módulo de capacitación que completes <strong>fortalece directamente una de tus competencias de gestión</strong> — el objetivo no es acumular recursos, sino terminar el recorrido con mejores herramientas para liderar tu equipo.
+          </p>
           <div class="bienv-lbl">TUS COMPAÑEROS DE DIRECCIÓN</div>
           <div class="bienv-team" id="bv-team"></div>
           <div class="bienv-lbl">COMO JEFE/A DE EQUIPO, TU MISIÓN SERÁ</div>
@@ -547,6 +551,23 @@ const REC = {
   planificacion:{lbl:'Planificación',sub:'Organización operativa',color:'#a06a1f'}
 };
 const COMP_COLORS = ['#b5461f','#4a2109','#6b7530','#a06a1f','#8a4d1e','#a8410f','#59642a'];
+// Agrupa las 7 competencias de gestión en 4 categorías genéricas para mostrar
+// en la pantalla de bienvenida (el detalle completo se mantiene en el juego).
+const GRUPOS_COMPETENCIA = [
+  { nombre: 'Comunicación',    match: n => /presión/i.test(n) },
+  { nombre: 'Liderazgo',       match: n => /liderazgo|decisiones/i.test(n) },
+  { nombre: 'Planificación',   match: n => /estratégica|políticas|planificación/i.test(n) },
+  { nombre: 'Gestión de equipo', match: n => /personas|desarrollo/i.test(n) }
+];
+function agruparCompetencias(catalogo) {
+  const grupos = [];
+  (catalogo||[]).forEach(c => {
+    const g = GRUPOS_COMPETENCIA.find(g => g.match(c.nombre||''));
+    const nombre = g ? g.nombre : (c.nombre||'');
+    if (!grupos.includes(nombre)) grupos.push(nombre);
+  });
+  return grupos;
+}
 const ENC = {
   2:{titulo:'Encuentro 1 · Era I Completada',desc:'Completaste la Organización del Trabajo (10 situaciones). Reunite con los otros equipos para compartir aprendizajes y llevar los recursos obtenidos.'},
   3:{titulo:'Encuentro 2 · Era II Completada',desc:'Completaste la Gestión del Desempeño (10 situaciones). Nueva reunión grupal para evaluar el avance e integrar herramientas de gestión.'}
@@ -600,8 +621,8 @@ function mostrarPresentacion() {
       document.getElementById('bv-team').innerHTML = (g.estado.equipo||[]).map(m =>
         `<div class="bt-av"><div class="bt-circ">${(m.nombre||'').split(' ').map(w=>w[0]).slice(0,2).join('')}</div><div class="bt-nm">${m.nombre}</div><div class="bt-role">${m.rol||''}</div></div>`
       ).join('') || '<span style="font-size:12px;font-style:italic;color:var(--gold-br)">Tu equipo se irá completando durante la partida.</span>';
-      document.getElementById('bv-inds').innerHTML = (g.competenciasCatalogo||[]).map(c =>
-        `<div class="bt-item" style="margin-bottom:8px"><div class="bt-dot"></div><span>${c.nombre}</span></div>`
+      document.getElementById('bv-inds').innerHTML = agruparCompetencias(g.competenciasCatalogo).map(nombre =>
+        `<div class="bt-item" style="margin-bottom:8px"><div class="bt-dot"></div><span>${nombre}</span></div>`
       ).join('') || '<span style="font-size:12px;font-style:italic;color:var(--gold-br)">Sin competencias cargadas.</span>';
     })
     .withFailureHandler(e => { hideLoader(); alert('Error: '+e.message); })
