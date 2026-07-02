@@ -7,11 +7,19 @@
  * - validarLegajo() es más flexible (acepta letras, números, guiones)
  * - iniciarPartida() usa los datos reales del agente encontrado
  * - Base de datos migrada a la planilla "MisionMuni_BaseDatos"
- * - Lectura de hoja "Situaciones" adaptada al nuevo orden de columnas
- *   (ID, Título, Descripción, Área, ERA, Trayecto, Tipo)
+ * - Se reemplazaron los indicadores genéricos (clima/desempeño/desarrollo)
+ *   por el progreso real de las Competencias de Gestión (hoja
+ *   "Competencias_Gestion"): cada módulo de capacitación fortalece
+ *   directamente la competencia que tiene asignada.
+ * - El tablero ahora recorre 10 situaciones por Era (30 en total) y
+ *   las situaciones se filtran por Era además de por Área.
+ * - Se sacó el nombre de fantasía del equipo (animales); ahora se usa
+ *   la Dirección como identidad del equipo.
  */
 
 const SS_ID = "19Uk0MQT4a0Tarnx1H2qiVPX6YaAMg_FQsrhjla8VHBc";
+const CASILLEROS_POR_ERA = 10;
+const TOTAL_CASILLEROS = CASILLEROS_POR_ERA * 3;
 
 function doGet() {
   return HtmlService.createTemplateFromFile('Index').evaluate()
@@ -38,10 +46,10 @@ function buscarAgente(legajo) {
   const ss = SpreadsheetApp.openById(SS_ID);
   const hoja = ss.getSheetByName("Agentes");
   if (!hoja) return { encontrado: false };
-  
+
   const datos = hoja.getDataRange().getValues().slice(1); // saltar cabecera
   const legajoStr = String(legajo).trim();
-  
+
   for (const fila of datos) {
     if (String(fila[0]).trim() === legajoStr) {
       return {
@@ -84,14 +92,25 @@ function obtenerEquipo(direccion) {
   return equipos[direccion] || [];
 }
 
-function obtenerIndicadoresIniciales(direccion) {
-  const base = {
-    "Hacienda":           { clima: 3, desempenio: 2, desarrollo: 3, recursos: 4 },
-    "Servicios Públicos": { clima: 4, desempenio: 3, desarrollo: 2, recursos: 3 },
-    "Capital Humano":     { clima: 3, desempenio: 3, desarrollo: 4, recursos: 2 },
-    "Obras Particulares": { clima: 2, desempenio: 4, desarrollo: 3, recursos: 3 }
-  };
-  return base[direccion] || { clima: 3, desempenio: 3, desarrollo: 3, recursos: 3 };
+// ─────────────────────────────────────────────
+// COMPETENCIAS DE GESTIÓN (reemplazan a los indicadores)
+// ─────────────────────────────────────────────
+function cargarCompetencias(ss) {
+  const hoja = ss.getSheetByName("Competencias_Gestion");
+  if (!hoja) return [];
+  return hoja.getDataRange().getValues().slice(1)
+    .filter(f => f[0])
+    .map(f => ({
+      codigo:     String(f[0]).trim(),
+      nombre:     f[1],
+      definicion: f[2] || ""
+    }));
+}
+
+function competenciasIniciales(catalogo) {
+  const comp = {};
+  catalogo.forEach(c => { comp[c.codigo] = 0; });
+  return comp;
 }
 
 // ─────────────────────────────────────────────
@@ -99,22 +118,24 @@ function obtenerIndicadoresIniciales(direccion) {
 // ─────────────────────────────────────────────
 function iniciarPartida(legajo, direccion, nombreEquipo, nombreLider) {
   const ss = SpreadsheetApp.openById(SS_ID);
-  
+
   // Validación básica
   const val = validarLegajo(legajo);
   if (!val.valido) return { error: val.mensaje };
-  
+
   // Buscar el agente en la base de datos
   const agente = buscarAgente(legajo);
   if (!agente.encontrado) {
     return { error: "Legajo no encontrado. Por favor, verificá que sea correcto." };
   }
-  
+
+  const catalogoCompetencias = cargarCompetencias(ss);
+
   // Usar los datos reales del agente
   const estado = {
     legajo:       String(agente.legajo).trim(),
     nombreAgente: agente.nombre,
-    nombreEquipo: nombreEquipo,
+    nombreEquipo: nombreEquipo || ("Dirección de " + agente.direccion),
     nombreLider:  nombreLider,
     direccion:    agente.direccion,
     equipo:       obtenerEquipo(agente.direccion),
@@ -122,40 +143,58 @@ function iniciarPartida(legajo, direccion, nombreEquipo, nombreLider) {
     recursos:     { comunicacion: 0, liderazgo: 0, bienestar: 0, planificacion: 0 },
     herramientas: [],
     insignias:    [],
-    indicadores:  obtenerIndicadoresIniciales(agente.direccion),
+    competencias: competenciasIniciales(catalogoCompetencias),
     encuentro:    1
   };
-  
+
   return {
-    estado:     estado,
-    situacion:  obtenerSituacionAleatoria(ss, estado.direccion),
-    cartas:     cargarAcciones(ss, []),
-    biblioteca: cargarHerramientas(ss)
+    estado:              estado,
+    situacion:           obtenerSituacionAleatoria(ss, estado.direccion, estado.casillero),
+    cartas:               cargarAcciones(ss, []),
+    biblioteca:           cargarHerramientas(ss),
+    competenciasCatalogo: catalogoCompetencias
   };
 }
 
 // ─────────────────────────────────────────────
 // HERRAMIENTAS / MICROLEARNING
+// Columnas: ID | Nombre | Contenido | Área | InsigniaID | Pregunta |
+//           RespuestaCorrecta | Competencia | VideoURL* | InfografiaURL*
+// (*) VideoURL e InfografiaURL son opcionales: si la hoja todavía no
+// tiene esas columnas, simplemente quedan vacías y la tarjeta muestra
+// únicamente el contenido en texto.
 // ─────────────────────────────────────────────
 function cargarHerramientas(ss) {
   const hoja = ss.getSheetByName("Herramientas");
   if (!hoja) return [];
   return hoja.getDataRange().getValues().slice(1).map(f => ({
-    id:          String(f[0]).trim(),
-    nombre:      f[1],
-    contenido:   f[2],
-    area:        f[3],
-    insigniaID:  f[4],
-    pregunta:    f[5] || "¿Confirmás la lectura del módulo?",
-    respuesta:   String(f[6] || "si").trim().toLowerCase(),
-    competencia: f[7] || ""
+    id:            String(f[0]).trim(),
+    nombre:        f[1],
+    contenido:     f[2],
+    area:          f[3],
+    insigniaID:    f[4],
+    pregunta:      f[5] || "¿Confirmás la lectura del módulo?",
+    respuesta:     String(f[6] || "si").trim().toLowerCase(),
+    competencia:   f[7] || "",
+    videoUrl:      f[8] || "",
+    infografiaUrl: f[9] || ""
   }));
 }
 
 function completarCapacitacion(estado, toolID, insigniaID) {
+  const ss = SpreadsheetApp.openById(SS_ID);
+
   if (!estado.herramientas.includes(toolID)) estado.herramientas.push(toolID);
   if (insigniaID && !estado.insignias.includes(insigniaID)) estado.insignias.push(insigniaID);
-  const ss = SpreadsheetApp.openById(SS_ID);
+
+  // La capacitación fortalece directamente la competencia asignada a la herramienta
+  const herramienta = cargarHerramientas(ss).find(h => h.id === toolID);
+  if (herramienta && herramienta.competencia) {
+    const cod = herramienta.competencia;
+    if (!estado.competencias.hasOwnProperty(cod)) estado.competencias[cod] = 0;
+    estado.competencias[cod] = Math.min(5, estado.competencias[cod] + 1);
+  }
+
   return { estado, cartas: cargarAcciones(ss, estado.herramientas) };
 }
 
@@ -175,60 +214,65 @@ function cargarAcciones(ss, herramientasUsuario) {
       req:             req,
       recursoGanado:   f[4] || "comunicacion",
       cantidadRecurso: Number(f[5]) || 1,
-      impactoInd:      f[6] || "desempenio",
-      valorImpacto:    Number(f[7]) || 1,
       bloqueada:       req !== "" ? !herramientasUsuario.includes(req) : false
     };
   });
 }
 
 // ─────────────────────────────────────────────
-// SITUACIONES
+// SITUACIONES — ahora filtran también por Era (10 por Era)
 // ─────────────────────────────────────────────
-function obtenerSituacionAleatoria(ss, area) {
+function eraDeCasillero(casillero) {
+  const n = casillero + 1; // próxima situación a resolver
+  if (n <= CASILLEROS_POR_ERA) return "ERA I";
+  if (n <= CASILLEROS_POR_ERA * 2) return "ERA II";
+  return "ERA III";
+}
+
+function obtenerSituacionAleatoria(ss, area, casillero) {
   const hoja = ss.getSheetByName("Situaciones");
   if (!hoja) return { titulo: "Sin datos", desc: "Verificá la hoja 'Situaciones'.", tipo: "situacion" };
   // Columnas: ID(0) | Título(1) | Descripción(2) | Área(3) | ERA(4) | Trayecto(5) | Tipo(6)
   const datos = hoja.getDataRange().getValues().slice(1);
-  let filtrados = datos.filter(f => f[3] && f[3].toString().toLowerCase() === area.toLowerCase());
+  const era = eraDeCasillero(casillero || 0);
+
+  let filtrados = datos.filter(f => (f[4] || "").toString().toUpperCase() === era);
+  const porAreaYEra = filtrados.filter(f => f[3] && f[3].toString().toLowerCase() === (area || "").toLowerCase());
+  if (porAreaYEra.length) filtrados = porAreaYEra;
   if (!filtrados.length) filtrados = datos;
+
   const e = filtrados[Math.floor(Math.random() * filtrados.length)];
-  return { titulo: e[1], desc: e[2], era: e[4] || "", trayecto: e[5] || "", tipo: (e[6] || "situacion").toString().toLowerCase() };
+  return { titulo: e[1], desc: e[2], era: e[4] || era, trayecto: e[5] || "", tipo: (e[6] || "situacion").toString().toLowerCase() };
 }
 
 // ─────────────────────────────────────────────
 // PROCESAR ACCIÓN
 // ─────────────────────────────────────────────
-function procesarAccion(estado, accionID, cat, recursoGanado, cantidadRecurso, impactoInd, valorImpacto) {
+function procesarAccion(estado, accionID, cat, recursoGanado, cantidadRecurso) {
   const ss = SpreadsheetApp.openById(SS_ID);
   estado.casillero += 1;
 
   if (estado.recursos.hasOwnProperty(recursoGanado)) {
     estado.recursos[recursoGanado] += cantidadRecurso;
   } else {
-    if (cat === "Profesional") { 
-      estado.recursos.liderazgo += 150; 
-      estado.recursos.planificacion += 1; 
-    }
-    else { 
-      estado.recursos.comunicacion += 1;  
-      estado.recursos.bienestar += 1; 
+    if (cat === "Profesional") {
+      estado.recursos.liderazgo += 1;
+      estado.recursos.planificacion += 1;
+    } else {
+      estado.recursos.comunicacion += 1;
+      estado.recursos.bienestar += 1;
     }
   }
 
-  if (estado.indicadores.hasOwnProperty(impactoInd)) {
-    estado.indicadores[impactoInd] = Math.min(5, Math.max(1, estado.indicadores[impactoInd] + valorImpacto));
-  }
-
-  const esFinalizado = estado.casillero >= 12;
-  const esEncuentro  = !esFinalizado && estado.casillero % 4 === 0;
+  const esFinalizado = estado.casillero >= TOTAL_CASILLEROS;
+  const esEncuentro  = !esFinalizado && estado.casillero % CASILLEROS_POR_ERA === 0;
   if (esEncuentro) estado.encuentro += 1;
 
   return {
     estado,
     situacion:    esFinalizado
-      ? { titulo: "¡MISIÓN CUMPLIDA!", desc: "Llegaste al encuentro final con los recursos para transformar la gestión.", tipo: "final" }
-      : obtenerSituacionAleatoria(ss, estado.direccion),
+      ? { titulo: "¡MISIÓN CUMPLIDA!", desc: "Llegaste al encuentro final con las competencias fortalecidas para transformar la gestión.", tipo: "final" }
+      : obtenerSituacionAleatoria(ss, estado.direccion, estado.casillero),
     cartas:       esFinalizado ? [] : cargarAcciones(ss, estado.herramientas),
     finalizado:   esFinalizado,
     encuentro:    esEncuentro,
@@ -237,16 +281,23 @@ function procesarAccion(estado, accionID, cat, recursoGanado, cantidadRecurso, i
 }
 
 // ─────────────────────────────────────────────
-// PUNTAJE FINAL
+// PUNTAJE FINAL — basado en Competencias de Gestión
 // ─────────────────────────────────────────────
 function calcularPuntajeFinal(estado) {
-  const i = estado.indicadores;
-  const prom = (i.clima + i.desempenio + i.desarrollo + i.recursos) / 4;
+  const ss = SpreadsheetApp.openById(SS_ID);
+  const catalogo = cargarCompetencias(ss);
+  const valores = catalogo.map(c => estado.competencias[c.codigo] || 0);
+  const prom = valores.length ? valores.reduce((a, b) => a + b, 0) / valores.length : 0;
   const recTot = estado.recursos.comunicacion + estado.recursos.liderazgo + estado.recursos.bienestar + estado.recursos.planificacion;
+  const fortalecidas = catalogo
+    .filter(c => (estado.competencias[c.codigo] || 0) > 0)
+    .map(c => c.nombre);
+
   return {
-    promedioIndicadores: prom.toFixed(1),
+    promedioCompetencias:    prom.toFixed(1),
+    competenciasFortalecidas: fortalecidas,
     totalRecursos: recTot,
     insignias: estado.insignias.length,
-    nivel: prom >= 4 ? "Excelente" : prom >= 3 ? "Bueno" : "En desarrollo"
+    nivel: prom >= 4 ? "Excelente" : prom >= 2.5 ? "Bueno" : "En desarrollo"
   };
 }
