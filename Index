@@ -55,17 +55,18 @@ body{font-family:'Crimson Text',Georgia,serif;background:var(--perg);color:var(-
 
 /* Header */
 .hdr-welcome{
-  background:rgba(28,46,74,.97);
-  border-bottom:3px solid var(--gold-br);
+  background:rgba(255,248,230,0.90);
+  border-bottom:3px solid #E8531F;
   padding:10px 28px;
   display:flex;align-items:center;justify-content:space-between;
   flex-shrink:0;position:relative;z-index:2;
+  backdrop-filter:blur(2px);
 }
 .logo-grp{display:flex;align-items:center;gap:12px;}
 .logo-ico{font-size:22px;}
-.game-nm{font-family:'Cinzel',serif;font-size:22px;font-weight:900;letter-spacing:5px;color:var(--perg);line-height:1;}
-.game-sub{font-family:'Cinzel',serif;font-size:7px;letter-spacing:3px;color:var(--perg-dk);text-transform:uppercase;margin-top:2px;}
-.hdr-tag{font-family:'Cinzel',serif;font-size:7px;letter-spacing:2px;color:var(--perg-dk);text-align:right;line-height:1.9;}
+.game-nm{font-family:'Trebuchet MS','Gill Sans MT','Gill Sans',Calibri,Arial,sans-serif;font-size:22px;font-weight:800;letter-spacing:5px;color:#E8531F;line-height:1;}
+.game-sub{font-family:'Trebuchet MS','Gill Sans MT','Gill Sans',Calibri,Arial,sans-serif;font-size:7px;letter-spacing:3px;color:rgba(58,30,8,0.65);text-transform:uppercase;margin-top:2px;}
+.hdr-tag{font-family:'Trebuchet MS','Gill Sans MT','Gill Sans',Calibri,Arial,sans-serif;font-size:7px;letter-spacing:2px;color:rgba(58,30,8,0.60);text-align:right;line-height:1.9;}
 
 /* Área principal: tablero + panel lateral */
 .welcome-body{
@@ -232,7 +233,7 @@ body{font-family:'Crimson Text',Georgia,serif;background:var(--perg);color:var(-
   padding:0 14px;
 }
 .app-hdr-left{display:flex;align-items:center;gap:10px;}
-.app-logo{font-family:'Cinzel',serif;font-size:16px;font-weight:900;letter-spacing:5px;color:var(--perg);}
+.app-logo{font-family:'Trebuchet MS','Gill Sans MT','Gill Sans',Calibri,Arial,sans-serif;font-size:16px;font-weight:800;letter-spacing:5px;color:#E8531F;}
 .app-dir{font-family:'Cinzel',serif;font-size:8px;font-weight:600;letter-spacing:2px;color:var(--perg);padding:3px 9px;border:1px solid rgba(196,144,48,.4);text-transform:uppercase;}
 
 /* Avatar pequeño en header */
@@ -552,7 +553,25 @@ body{font-family:'Crimson Text',Georgia,serif;background:var(--perg);color:var(-
 <div id="screen-welcome">
   <div class="hdr-welcome">
     <div class="logo-grp">
-      <span class="logo-ico">🏛️</span>
+      <svg width="175" height="46" viewBox="0 0 175 46" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;" aria-label="Municipio Bariloche">
+        <circle cx="23" cy="23" r="21" fill="#E8531F"/>
+        <g transform="translate(23,25)" fill="white">
+          <path d="M0,2 C-2.2,-0.8 -2.8,-6.8 0,-13.5 C2.8,-6.8 2.2,-0.8 0,2Z"/>
+          <path d="M0,2 C-2.2,-0.8 -2.8,-6.8 0,-13.5 C2.8,-6.8 2.2,-0.8 0,2Z" transform="rotate(-43)"/>
+          <path d="M0,2 C-2.2,-0.8 -2.8,-6.8 0,-13.5 C2.8,-6.8 2.2,-0.8 0,2Z" transform="rotate(43)"/>
+          <path d="M0,1.5 C-1.5,-0.5 -1.8,-4.5 0,-8.5 C1.8,-4.5 1.5,-0.5 0,1.5Z" transform="rotate(-101)"/>
+          <path d="M0,1.5 C-1.5,-0.5 -1.8,-4.5 0,-8.5 C1.8,-4.5 1.5,-0.5 0,1.5Z" transform="rotate(101)"/>
+          <path d="M-0.7,2 Q-1,4.5 0,5.5 Q1,4.5 0.7,2Z"/>
+          <path d="M0,4 C-0.5,2.5 -3,2.5 -4,4 C-3,5.5 -0.5,5 0,4Z"/>
+          <path d="M0,4 C0.5,2.5 3,2.5 4,4 C3,5.5 0.5,5 0,4Z"/>
+          <circle cx="0" cy="0" r="2.2"/>
+          <circle cx="0" cy="-14" r="1.2"/>
+          <circle cx="-9.9" cy="-9.9" r="0.9"/>
+          <circle cx="9.9"  cy="-9.9" r="0.9"/>
+        </g>
+        <text x="52" y="18" fill="#E8531F" font-family="'Trebuchet MS','Gill Sans MT',Calibri,Arial,sans-serif" font-size="10.5" font-weight="400" letter-spacing="2.2">MUNICIPIO</text>
+        <text x="50" y="38" fill="#E8531F" font-family="'Trebuchet MS','Gill Sans MT',Calibri,Arial,sans-serif" font-size="19" font-weight="700" letter-spacing="0.3">Bariloche</text>
+      </svg>
       <div><div class="game-nm">MISIÓN MUNI</div><div class="game-sub">Academia de Mandos Medios · Bariloche</div></div>
     </div>
     <div class="hdr-tag">Municipalidad de San Carlos de Bariloche<br>Dirección de Recursos Humanos · 2026</div>
