@@ -51,16 +51,16 @@ button{font:inherit}
 .brand-grp{display:flex;align-items:center;gap:10px;}
 .brand-ico{font-size:20px;}
 .brand-logo-img{width:42px;height:42px;flex:none;object-fit:contain;}
-.brand-nm{font-family:'Cinzel',serif;font-size:16px;font-weight:900;letter-spacing:4px;color:var(--navy);}
-.brand-sub{font-family:'Cinzel',serif;font-size:7px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;}
+.brand-nm{font-family:'Cinzel',serif;font-size:16px;font-weight:900;letter-spacing:4px;color:var(--navy);text-shadow:0 0 5px rgba(255,250,235,.85),0 0 9px rgba(255,250,235,.6);}
+.brand-sub{font-family:'Cinzel',serif;font-size:7px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;text-shadow:0 0 5px rgba(255,250,235,.85),0 0 9px rgba(255,250,235,.6);}
 .brand-tag{font-family:'Cinzel',serif;font-size:7px;letter-spacing:1.5px;color:var(--navy-md);text-align:right;line-height:1.8;}
 
 .login-wrap{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;min-height:calc(100vh - 60px);padding:20px;}
-.hero-title-wrap{display:flex;flex-direction:column;align-items:center;gap:8px;pointer-events:none;}
+.hero-title-wrap{display:flex;flex-direction:column;align-items:center;gap:10px;pointer-events:none;}
 .hero-title-row{display:flex;align-items:center;gap:16px;}
-.hero-flower{width:64px;height:auto;flex:none;opacity:.94;}
-.hero-title{font-family:'Cinzel',serif;font-weight:900;font-size:clamp(32px,5.4vw,64px);line-height:1.1;letter-spacing:6px;color:#c0531e;text-align:center;text-shadow:0 2px 0 rgba(120,50,10,.2);}
-.hero-subtitle{font-family:'Cinzel',serif;font-weight:700;font-size:clamp(11px,1.7vw,16px);letter-spacing:5px;color:#c0531e;text-transform:uppercase;text-align:center;}
+.hero-flower{width:56px;height:auto;flex:none;filter:drop-shadow(0 0 5px rgba(255,250,235,.95)) drop-shadow(0 0 9px rgba(255,250,235,.8)) drop-shadow(0 0 3px rgba(255,250,235,1));}
+.hero-title{font-family:'Cinzel',serif;font-weight:900;font-size:clamp(28px,4.6vw,52px);line-height:1.1;letter-spacing:6px;color:#c0531e;text-align:center;text-shadow:0 0 6px rgba(255,250,235,.9),0 0 12px rgba(255,250,235,.7),0 2px 0 rgba(120,50,10,.2);}
+.hero-subtitle{font-family:'Cinzel',serif;font-weight:700;font-size:clamp(11px,1.7vw,16px);letter-spacing:5px;color:#c0531e;text-transform:uppercase;text-align:center;text-shadow:0 0 5px rgba(255,250,235,.95),0 0 9px rgba(255,250,235,.75);}
 .login-card{
   width:100%;max-width:440px;
   background:linear-gradient(170deg,#fbeed3,#f2d9a9);
