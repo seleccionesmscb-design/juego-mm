@@ -940,12 +940,12 @@ function render() {
       `<div class="stat"><div class="stat-row"><span class="stat-lbl">${IND[k]?.icon} ${IND[k]?.lbl||k}</span><span class="stat-val">${v}/5</span></div><div class="bar-bg"><div class="bar-fg ${IND[k]?.bar||'bc2'}" style="width:${v*20}%"></div></div></div>`
     ).join('');
 
-  const tipo = (g.situacion.tipo||'situacion').toLowerCase();
+  const tipo = (g.situacion?.tipo||'situacion').toLowerCase();
   const tipoEl = document.getElementById('sit-tipo');
   tipoEl.className = 'sit-tipo '+tipo;
   tipoEl.innerText = tipo==='crisis'?'⚡ CRISIS':tipo==='final'?'🏆 MISIÓN COMPLETADA':'📋 SITUACIÓN';
-  document.getElementById('sit-title').innerText = g.situacion.titulo;
-  document.getElementById('sit-desc').innerText = g.situacion.desc;
+  document.getElementById('sit-title').innerText = g.situacion?.titulo||'';
+  document.getElementById('sit-desc').innerText = g.situacion?.desc||'';
 
   const rec = e.recursos;
   document.getElementById('r-com').innerText = (rec.comunicacion??rec.personal??0);

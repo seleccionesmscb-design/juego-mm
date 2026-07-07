@@ -153,7 +153,12 @@ function completarCapacitacion(estado, toolID, insigniaID) {
   if (!estado.herramientas.includes(toolID)) estado.herramientas.push(toolID);
   if (insigniaID && !estado.insignias.includes(insigniaID)) estado.insignias.push(insigniaID);
   const ss = SpreadsheetApp.openById(SS_ID);
-  return { estado, cartas: cargarAcciones(ss, estado.herramientas) };
+  return {
+    estado,
+    cartas:    cargarAcciones(ss, estado.herramientas),
+    biblioteca: cargarHerramientas(ss),
+    situacion:  obtenerSituacionAleatoria(ss, estado.direccion)
+  };
 }
 
 // ─────────────────────────────────────────────
@@ -202,9 +207,9 @@ function procesarAccion(estado, accionID, cat, recursoGanado, cantidadRecurso, i
   if (estado.recursos.hasOwnProperty(recursoGanado)) {
     estado.recursos[recursoGanado] += cantidadRecurso;
   } else {
-    if (cat === "Profesional") { 
-      estado.recursos.liderazgo += 150; 
-      estado.recursos.planificacion += 1; 
+    if (cat === "Profesional") {
+      estado.recursos.liderazgo += cantidadRecurso;
+      estado.recursos.planificacion += 1;
     }
     else { 
       estado.recursos.comunicacion += 1;  
@@ -226,6 +231,7 @@ function procesarAccion(estado, accionID, cat, recursoGanado, cantidadRecurso, i
       ? { titulo: "¡MISIÓN CUMPLIDA!", desc: "Llegaste al encuentro final con los recursos para transformar la gestión.", tipo: "final" }
       : obtenerSituacionAleatoria(ss, estado.direccion),
     cartas:       esFinalizado ? [] : cargarAcciones(ss, estado.herramientas),
+    biblioteca:   cargarHerramientas(ss),
     finalizado:   esFinalizado,
     encuentro:    esEncuentro,
     nroEncuentro: estado.encuentro
