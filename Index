@@ -557,10 +557,11 @@ button{font:inherit}
 
 <script>
 const REC = {
-  comunicacion:{lbl:'Comunicación',sub:'Feedback y vínculos',color:'#b5461f'},
-  liderazgo:{lbl:'Liderazgo',sub:'Conducción del equipo',color:'#4a2109'},
-  bienestar:{lbl:'Bienestar',sub:'Clima y motivación',color:'#6b7530'},
-  planificacion:{lbl:'Planificación',sub:'Organización operativa',color:'#a06a1f'}
+  desarrollo:{lbl:'Desarrollo',sub:'Crecimiento del equipo',color:'#4a2109'},
+  clima:{lbl:'Clima',sub:'Vínculos y motivación',color:'#6b7530'},
+  recursos:{lbl:'Recursos',sub:'Insumos y capacidad operativa',color:'#a06a1f'},
+  planificacion:{lbl:'Planificación',sub:'Organización operativa',color:'#8a4d1e'},
+  desempenio:{lbl:'Desempeño',sub:'Resultados del área',color:'#b5461f'}
 };
 const COMP_COLORS = ['#b5461f','#4a2109','#6b7530','#a06a1f','#8a4d1e','#a8410f','#59642a'];
 // Agrupa las 7 competencias de gestión en 4 categorías genéricas para mostrar
@@ -774,7 +775,7 @@ function renderCartas() {
   grid.innerHTML = g.cartas.map(c => {
     const col = catColor(c.cat);
     const ico = catIcon(c.cat);
-    const reward = c.recursoGanado ? `+${c.cantidadRecurso} ${(REC[c.recursoGanado]?.lbl||c.recursoGanado).toUpperCase()}` : '';
+    const reward = (c.recursoGanado && c.cantidadRecurso > 0) ? `+${c.cantidadRecurso} ${(REC[c.recursoGanado]?.lbl||c.recursoGanado).toUpperCase()}` : '';
     const isSel = selectedCard && selectedCard.id===c.id;
 
     if(c.bloqueada) {
@@ -792,18 +793,19 @@ function renderCartas() {
       </div>`;
     }
 
-    return `<div class="mm-card ${isSel?'selected':''}" onclick="seleccionarCarta('${c.id}','${c.cat}','${c.recursoGanado}',${c.cantidadRecurso},'${(c.texto||'').split("'").join("\\'")}')">
+    const puntos = typeof c.valor === 'number' ? `${c.valor} PTS` : '';
+    return `<div class="mm-card ${isSel?'selected':''}" onclick="seleccionarCarta('${c.id}','${c.cat}','${c.recursoGanado}',${c.cantidadRecurso},${c.valor||0},'${(c.texto||'').split("'").join("\\'")}')">
       <div class="mm-frame" style="background:${col.frame};border:1px solid rgba(40,20,8,.5)${isSel?';outline:3px solid var(--gold-br);outline-offset:2px':''}">
         <div class="mm-inner">
           <div class="mm-stud" style="top:7px;left:7px;background:${col.stud}"></div>
           <div class="mm-stud" style="top:7px;right:7px;background:${col.stud}"></div>
           <div class="mm-stud" style="bottom:7px;left:7px;background:${col.stud}"></div>
           <div class="mm-stud" style="bottom:7px;right:7px;background:${col.stud}"></div>
-          <div class="mm-band" style="background:${col.band}">${(c.cat||'').toUpperCase()}</div>
+          <div class="mm-band" style="background:${col.band}">${(c.cat||'').toUpperCase()}${puntos?` · ${puntos}`:''}</div>
           <div class="mm-med" style="background:${col.med}">${ico}</div>
           <div class="mm-title">${c.texto}</div>
           <div class="mm-pips"><div class="mm-pip" style="background:${col.stud}"></div>${c.req?`<div class="mm-pip" style="background:${col.stud}"></div>`:''}</div>
-          <div class="mm-foot" style="color:var(--teal);background:rgba(107,117,48,.16)">${reward}</div>
+          ${reward?`<div class="mm-foot" style="color:var(--teal);background:rgba(107,117,48,.16)">${reward}</div>`:''}
         </div>
       </div>
     </div>`;
@@ -811,8 +813,8 @@ function renderCartas() {
   updateConfirmBar();
 }
 
-function seleccionarCarta(id,cat,recurso,cantidad,texto) {
-  selectedCard = {id,cat,recurso,cantidad,texto};
+function seleccionarCarta(id,cat,recurso,cantidad,valor,texto) {
+  selectedCard = {id,cat,recurso,cantidad,valor,texto};
   renderCartas();
 }
 function cancelarSeleccion() { selectedCard = null; renderCartas(); }
@@ -833,7 +835,7 @@ function confirmarAccion() {
       else render();
     })
     .withFailureHandler(e=>{hideLoader();alert(e.message);})
-    .procesarAccion(g.estado,d.id,d.cat,d.recurso,d.cantidad);
+    .procesarAccion(g.estado,d.id,d.cat,d.recurso,d.cantidad,d.valor);
 }
 
 /* ── CAPACITACIÓN ── */
@@ -990,7 +992,7 @@ function mostrarFinal() {
     document.getElementById('final-score').innerText = p.promedioCompetencias+' / 5';
     document.getElementById('final-nivel').innerText = p.nivel.toUpperCase();
     document.getElementById('final-detail').innerHTML =
-      `Recursos totales: <span>${p.totalRecursos}</span><br>Insignias obtenidas: <span>${p.insignias}</span><br>Competencias fortalecidas: <span>${(p.competenciasFortalecidas||[]).join(', ')||'—'}</span>`;
+      `Puntaje acumulado: <span>${p.puntaje||0}</span><br>Recursos totales: <span>${p.totalRecursos}</span><br>Insignias obtenidas: <span>${p.insignias}</span><br>Competencias fortalecidas: <span>${(p.competenciasFortalecidas||[]).join(', ')||'—'}</span>`;
     document.getElementById('final-screen').style.display='flex';
   }).calcularPuntajeFinal(g.estado);
 }
