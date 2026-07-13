@@ -469,48 +469,31 @@ function obtenerRanking() {
 // ASISTENTE IA
 // ─────────────────────────────────────────────
 function consultarAsistenteIA(pregunta) {
-  const apiKey = PropertiesService.getScriptProperties().getProperty('ANTHROPIC_API_KEY');
-  if (!apiKey) return { respuesta: "No hay clave de API configurada. Pedile al administrador que configure ANTHROPIC_API_KEY en las propiedades del script.", error: true };
+  const apiKey = PropertiesService.getScriptProperties().getProperty('GEMINI_API_KEY');
+  if (!apiKey) return { respuesta: "No hay clave de API configurada. Configurá GEMINI_API_KEY en las propiedades del script (aistudio.google.com para obtenerla gratis).", error: true };
 
-  const systemPrompt = `Sos el asistente de "Misión Muni", un simulador de gestión para mandos medios de la Municipalidad de Bariloche. Respondé consultas sobre las reglas en español, de forma clara y amigable.
-
-Reglas clave:
-- 30 casilleros en 3 Eras de 10 situaciones cada una.
-- Era I: Organización del trabajo. Era II: Gestión del desempeño. Era III: Desarrollo del equipo.
-- En cada turno aparece una situación/crisis y el jugador elige una carta de acción.
-- Las cartas PROFESIONALES se desbloquean completando el módulo de capacitación correspondiente.
-- Completar módulos fortalece las competencias de gestión y otorga insignias.
-- Al terminar cada era hay un encuentro presencial grupal.
-- Gana quien mejor desarrolla sus competencias, no quien más recursos acumula.
-- El legajo define la dirección: Hacienda, Servicios Públicos, Capital Humano u Obras Particulares.
-- El progreso se guarda automáticamente y se puede retomar.
-
-Respondé en español rioplatense (vos/ustedes). Máximo 3 oraciones. Si la pregunta no es sobre las reglas, redirigí amablemente.`;
+  const systemPrompt = "Sos el asistente de 'Misión Muni', un simulador de gestión para mandos medios de la Municipalidad de Bariloche. Respondé consultas sobre las reglas en español, de forma clara y amigable.\n\nReglas clave:\n- 30 casilleros en 3 Eras de 10 situaciones cada una.\n- Era I: Organización del trabajo. Era II: Gestión del desempeño. Era III: Desarrollo del equipo.\n- En cada turno aparece una situación/crisis y el jugador elige una carta de acción.\n- Las cartas PROFESIONALES se desbloquean completando el módulo de capacitación correspondiente.\n- Completar módulos fortalece las competencias de gestión y otorga insignias.\n- Al terminar cada era hay un encuentro presencial grupal.\n- Gana quien mejor desarrolla sus competencias, no quien más recursos acumula.\n- El legajo define la dirección: Hacienda, Servicios Públicos, Capital Humano u Obras Particulares.\n- El progreso se guarda automáticamente y se puede retomar.\n\nRespondé en español rioplatense (vos/ustedes). Máximo 3 oraciones. Si la pregunta no es sobre las reglas, redirigí amablemente.";
 
   const payload = {
-    model: "claude-haiku-4-5-20251001",
-    max_tokens: 300,
-    system: systemPrompt,
-    messages: [{ role: "user", content: String(pregunta).trim() }]
+    contents: [
+      { role: "user", parts: [{ text: systemPrompt + "\n\nPregunta del jugador: " + String(pregunta).trim() }] }
+    ],
+    generationConfig: { maxOutputTokens: 300, temperature: 0.7 }
   };
 
   try {
-    const resp = UrlFetchApp.fetch("https://api.anthropic.com/v1/messages", {
+    const url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + apiKey;
+    const resp = UrlFetchApp.fetch(url, {
       method: "post",
       contentType: "application/json",
-      headers: {
-        "x-api-key": apiKey,
-        "anthropic-version": "2023-06-01"
-      },
       payload: JSON.stringify(payload),
       muteHttpExceptions: true
     });
     const raw = resp.getContentText();
     const json = JSON.parse(raw);
-    if (json.content && json.content[0] && json.content[0].text) {
-      return { respuesta: json.content[0].text, error: false };
+    if (json.candidates && json.candidates[0] && json.candidates[0].content && json.candidates[0].content.parts[0]) {
+      return { respuesta: json.candidates[0].content.parts[0].text, error: false };
     }
-    // Devolver el error real de la API para diagnóstico
     const apiError = json.error ? json.error.message : raw.substring(0, 200);
     return { respuesta: "Error de API: " + apiError, error: true };
   } catch(e) {
