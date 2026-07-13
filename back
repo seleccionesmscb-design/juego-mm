@@ -466,37 +466,92 @@ function obtenerRanking() {
 }
 
 // ─────────────────────────────────────────────
-// ASISTENTE IA
+// ASISTENTE IA — sistema de respuestas por palabras clave (sin API externa)
 // ─────────────────────────────────────────────
 function consultarAsistenteIA(pregunta) {
-  const apiKey = PropertiesService.getScriptProperties().getProperty('GEMINI_API_KEY');
-  if (!apiKey) return { respuesta: "No hay clave de API configurada. Configurá GEMINI_API_KEY en las propiedades del script (aistudio.google.com para obtenerla gratis).", error: true };
+  const q = String(pregunta).toLowerCase()
+    .normalize("NFD").replace(/[̀-ͯ]/g, "")
+    .trim();
 
-  const systemPrompt = "Sos el asistente de 'Misión Muni', un simulador de gestión para mandos medios de la Municipalidad de Bariloche. Respondé consultas sobre las reglas en español, de forma clara y amigable.\n\nReglas clave:\n- 30 casilleros en 3 Eras de 10 situaciones cada una.\n- Era I: Organización del trabajo. Era II: Gestión del desempeño. Era III: Desarrollo del equipo.\n- En cada turno aparece una situación/crisis y el jugador elige una carta de acción.\n- Las cartas PROFESIONALES se desbloquean completando el módulo de capacitación correspondiente.\n- Completar módulos fortalece las competencias de gestión y otorga insignias.\n- Al terminar cada era hay un encuentro presencial grupal.\n- Gana quien mejor desarrolla sus competencias, no quien más recursos acumula.\n- El legajo define la dirección: Hacienda, Servicios Públicos, Capital Humano u Obras Particulares.\n- El progreso se guarda automáticamente y se puede retomar.\n\nRespondé en español rioplatense (vos/ustedes). Máximo 3 oraciones. Si la pregunta no es sobre las reglas, redirigí amablemente.";
-
-  const payload = {
-    contents: [
-      { role: "user", parts: [{ text: systemPrompt + "\n\nPregunta del jugador: " + String(pregunta).trim() }] }
-    ],
-    generationConfig: { maxOutputTokens: 300, temperature: 0.7 }
-  };
-
-  try {
-    const url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=" + apiKey;
-    const resp = UrlFetchApp.fetch(url, {
-      method: "post",
-      contentType: "application/json",
-      payload: JSON.stringify(payload),
-      muteHttpExceptions: true
-    });
-    const raw = resp.getContentText();
-    const json = JSON.parse(raw);
-    if (json.candidates && json.candidates[0] && json.candidates[0].content && json.candidates[0].content.parts[0]) {
-      return { respuesta: json.candidates[0].content.parts[0].text, error: false };
+  const base = [
+    {
+      k: ["como jugar","como se juega","inicio","empezar","comenzar","funciona"],
+      r: "Ingresás con tu legajo, completás tu perfil y avanzás por 30 casilleros divididos en 3 Eras. En cada casillero enfrentás una situación de gestión y elegís una acción. Al terminar las 3 Eras se calcula tu puntaje final y queda guardado en el ranking."
+    },
+    {
+      k: ["era","eras","etapa","etapas"],
+      r: "El juego tiene 3 Eras con 10 casilleros cada una. Era I: Organización del trabajo. Era II: Gestión del desempeño. Era III: Desarrollo del equipo. Al terminar cada Era hay un encuentro presencial grupal."
+    },
+    {
+      k: ["casillero","casilleros","tablero","avanzar","turno"],
+      r: "En cada casillero aparece una situación o desafío de gestión municipal. Elegís la mejor acción entre las disponibles y avanzás al siguiente. Completar los 30 casilleros (3 Eras × 10) termina el juego."
+    },
+    {
+      k: ["accion","acciones","carta","cartas","eleccion","elegir","opcion","decision"],
+      r: "En cada situación elegís una carta de acción. Las cartas PROFESIONALES se desbloquean completando el módulo de capacitación correspondiente. Cada elección impacta en tus recursos y competencias, ¡no hay respuesta perfecta, pero sí mejores opciones!"
+    },
+    {
+      k: ["capacitacion","modulo","modulos","formacion","aprendizaje"],
+      r: "Los módulos de capacitación son actividades opcionales que podés completar durante el juego. Al terminarlos desbloqueás cartas PROFESIONALES de mayor impacto y fortalecés competencias específicas."
+    },
+    {
+      k: ["recurso","recursos","presupuesto","dinero","plata","fondos"],
+      r: "Los recursos representan el presupuesto municipal que administrás. Cada acción puede aumentarlos o reducirlos. Necesitás llegar al final con recursos suficientes; el total acumulado contribuye a tu puntaje."
+    },
+    {
+      k: ["competencia","competencias","habilidad","habilidades","fortaleza","panel"],
+      r: "Las competencias son habilidades de gestión (liderazgo, comunicación, planificación, etc.) que vas desarrollando con cada decisión. Podés ver su progreso en el panel lateral durante el juego. Gana quien mejor las desarrolla, no quien más recursos acumula."
+    },
+    {
+      k: ["insignia","insignias","logro","logros","medalla","medallas","badge"],
+      r: "Las insignias son reconocimientos especiales por acciones sobresalientes. Se obtienen al completar módulos de capacitación o tomar decisiones destacadas. Cada insignia suma puntos extra a tu puntaje final."
+    },
+    {
+      k: ["puntaje","puntos","score","calculo","calcular","como se calcula"],
+      r: "El puntaje final combina: recursos acumulados, cantidad de competencias fortalecidas e insignias obtenidas. Según tu puntaje recibís un nivel: desde 'Agente en Formación' hasta 'Maestro Municipal'."
+    },
+    {
+      k: ["nivel","rango","titulo","clasificacion","maestro","agente"],
+      r: "Al finalizar el juego recibís un nivel según tu puntaje total. Los niveles van desde 'Agente en Formación' (puntaje bajo) hasta 'Maestro Municipal' (puntaje máximo), pasando por varios rangos intermedios."
+    },
+    {
+      k: ["encuentro","encuentros","reunion","reunión","presencial","grupal"],
+      r: "Al terminar cada Era hay un encuentro presencial grupal. Son momentos de reflexión y aprendizaje colectivo donde comparten experiencias de la gestión simulada con el resto del equipo."
+    },
+    {
+      k: ["ranking","tabla","posicion","posiciones","mejores","top"],
+      r: "La tabla de posiciones en la pantalla inicial muestra los 10 mejores puntajes de todos los jugadores. Tu resultado se guarda automáticamente al terminar el juego y aparecerá en el ranking si está entre los 10 primeros."
+    },
+    {
+      k: ["guardar","guardado","partida","retomar","continuar","volver","progreso"],
+      r: "Tu partida se guarda automáticamente en cada casillero. Si cerrás el juego y volvés a ingresar con el mismo legajo, podés retomar exactamente desde donde la dejaste."
+    },
+    {
+      k: ["legajo","direccion","hacienda","servicios","capital humano","obras"],
+      r: "Tu legajo determina tu dirección municipal: Hacienda, Servicios Públicos, Capital Humano u Obras Particulares. Cada dirección tiene sus propias situaciones y desafíos de gestión."
+    },
+    {
+      k: ["ganar","estrategia","consejo","tip","mejorar","mejor puntaje"],
+      r: "Consejos clave: 1) Completá módulos de capacitación para desbloquear cartas PROFESIONALES. 2) Priorizá acciones que fortalezcan competencias. 3) No descuidés los recursos. 4) Leé bien cada situación antes de elegir. 5) Las decisiones equilibradas suelen ser las mejores."
+    },
+    {
+      k: ["municipio","municipal","muni","mision","bariloche"],
+      r: "Misión Muni es un simulador de gestión municipal para mandos medios de la Municipalidad de Bariloche. Tomás el rol de un agente que debe gestionar situaciones reales de la administración pública, desarrollando competencias de liderazgo y gestión."
     }
-    const apiError = json.error ? json.error.message : raw.substring(0, 200);
-    return { respuesta: "Error de API: " + apiError, error: true };
-  } catch(e) {
-    return { respuesta: "Error de conexión: " + e.message, error: true };
+  ];
+
+  let mejorR = null;
+  let mejorN = 0;
+  for (const item of base) {
+    let n = 0;
+    for (const k of item.k) { if (q.includes(k)) n += k.split(" ").length; }
+    if (n > mejorN) { mejorN = n; mejorR = item.r; }
   }
+
+  if (mejorR) return { respuesta: mejorR, error: false };
+
+  return {
+    respuesta: "Podés preguntarme sobre: cómo jugar, las Eras y casilleros, recursos, competencias, insignias, módulos de capacitación, cómo se calcula el puntaje, el ranking, o estrategias para mejorar tu resultado.",
+    error: false
+  };
 }
