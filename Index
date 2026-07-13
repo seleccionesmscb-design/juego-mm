@@ -55,7 +55,9 @@ button{font:inherit}
 .brand-sub{font-family:'Cinzel',serif;font-size:7px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;text-shadow:0 0 5px rgba(255,250,235,.85),0 0 9px rgba(255,250,235,.6);}
 .brand-tag{font-family:'Cinzel',serif;font-size:7px;letter-spacing:1.5px;color:var(--navy-md);text-align:right;line-height:1.8;}
 
-.login-wrap{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;min-height:calc(100vh - 60px);padding:20px;}
+.login-wrap{position:relative;z-index:2;display:flex;flex-direction:row;align-items:flex-start;justify-content:center;gap:32px;min-height:calc(100vh - 60px);padding:32px 24px;flex-wrap:wrap;}
+.login-col-left{display:flex;flex-direction:column;align-items:center;gap:20px;flex:0 0 auto;width:100%;max-width:440px;}
+.login-col-right{flex:0 0 auto;width:100%;max-width:360px;align-self:flex-start;margin-top:0;}
 .hero-title-wrap{display:flex;flex-direction:column;align-items:center;gap:10px;pointer-events:none;}
 .hero-title-row{display:flex;align-items:center;gap:16px;}
 .hero-flower{width:56px;height:auto;flex:none;filter:drop-shadow(0 0 5px rgba(255,250,235,.95)) drop-shadow(0 0 9px rgba(255,250,235,.8)) drop-shadow(0 0 3px rgba(255,250,235,1));}
@@ -303,7 +305,7 @@ button{font:inherit}
 .mbtn.sec{background:transparent;color:var(--navy);}
 .mbtn.sec:hover{background:var(--perg-dk);}
 /* ── RANKING ── */
-.ranking-box{background:linear-gradient(170deg,rgba(251,238,211,.96),rgba(240,214,166,.96));border:1px solid #cf9a54;border-radius:14px;padding:18px 20px;width:100%;max-width:440px;box-shadow:0 10px 28px rgba(70,33,9,.28);}
+.ranking-box{background:linear-gradient(170deg,rgba(251,238,211,.96),rgba(240,214,166,.96));border:1px solid #cf9a54;border-radius:14px;padding:18px 20px;width:100%;box-shadow:0 10px 28px rgba(70,33,9,.28);}
 .ranking-title{font-family:'Cinzel',serif;font-size:12px;font-weight:700;letter-spacing:2.5px;color:var(--navy);margin-bottom:11px;text-align:center;}
 .ranking-row{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px dashed rgba(150,80,35,.2);}
 .ranking-row:last-child{border-bottom:none;}
@@ -328,11 +330,16 @@ button{font:inherit}
 .ia-btn{background:var(--navy);color:var(--perg);border:none;border-radius:8px;padding:8px 13px;font-family:'Cinzel',serif;font-size:11px;font-weight:700;letter-spacing:1px;cursor:pointer;white-space:nowrap;}
 .ia-btn:hover{background:var(--gold-br);}
 .ia-btn:disabled{opacity:.5;cursor:default;}
+
+/* ── BOTÓN REGLAS FLOTANTE ── */
+#btn-reglas-float{position:fixed;bottom:22px;right:22px;z-index:4000;display:flex;align-items:center;gap:8px;background:var(--navy);color:var(--perg);border:2px solid var(--gold-br);border-radius:50px;padding:11px 18px;font-family:'Cinzel',serif;font-size:11px;font-weight:700;letter-spacing:1.5px;cursor:pointer;box-shadow:0 6px 22px rgba(50,18,4,.48);transition:.18s;animation:mmglow 3s infinite;}
+#btn-reglas-float:hover{background:var(--gold-br);border-color:var(--navy);transform:translateY(-2px);}
   </style>
 </head>
 <body>
 <div id="map-bg"></div>
 <div id="loader"><div class="loader-inn"><div class="loader-txt">CARGANDO MISIÓN…</div></div></div>
+<button id="btn-reglas-float" onclick="abrirReglas()">📋 Reglas</button>
 
 <!-- ══════════════════════════════════════
      PANTALLA: LOGIN
@@ -346,6 +353,7 @@ button{font:inherit}
     <div class="brand-tag">Municipalidad de San Carlos de Bariloche<br>Dirección de Recursos Humanos · 2026</div>
   </div>
   <div class="login-wrap">
+    <div class="login-col-left">
     <div class="hero-title-wrap">
       <div class="hero-title-row">
         <img class="hero-flower" src="data:image/png;base64,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" alt="">
@@ -371,10 +379,13 @@ button{font:inherit}
         <button class="link-btn" onclick="abrirReglas()">📋 Ver reglas del juego</button>
       </div>
     </div>
+    </div><!-- end login-col-left -->
+    <div class="login-col-right">
     <div class="ranking-box">
       <div class="ranking-title">🏆 TABLA DE POSICIONES</div>
       <div id="ranking-list"><div class="ranking-empty">Cargando…</div></div>
     </div>
+    </div><!-- end login-col-right -->
   </div>
 </div>
 
@@ -549,6 +560,14 @@ button{font:inherit}
       <div><div class="reglas-eyebrow">MISIÓN MUNI</div><h3>Reglas del juego</h3></div>
       <button class="reglas-close" onclick="cerrarReglas()">✕</button>
     </div>
+    <div class="ia-chat-box" style="margin-top:0;border-top:none;padding-top:0;margin-bottom:16px">
+      <div class="ia-chat-title">🤖 ASISTENTE · Preguntá sobre las reglas</div>
+      <div class="ia-msgs" id="ia-msgs"></div>
+      <div class="ia-inp-row">
+        <input class="ia-inp" id="ia-input" placeholder="Escribí tu duda sobre el juego…" onkeydown="if(event.key==='Enter')preguntarIA()">
+        <button class="ia-btn" id="ia-send" onclick="preguntarIA()">Preguntar</button>
+      </div>
+    </div>
     <p class="reglas-sub">Aprender a gestionar, gestionando.</p>
     <div class="reglas-grid">
       <div class="rule-it"><div class="rule-n">1</div><p>Tu legajo define tu <strong>dirección</strong>. No elegís — ya estás asignado junto a tus compañeros del programa.</p></div>
@@ -558,15 +577,7 @@ button{font:inherit}
       <div class="rule-it"><div class="rule-n">5</div><p>Al terminar cada era llegás a un <strong>encuentro presencial</strong> donde llevás los recursos acumulados para trabajar con otros equipos.</p></div>
       <div class="rule-it"><div class="rule-n">🏆</div><p>Gana quien mejor <strong>desarrolla sus competencias de gestión</strong> y usa estratégicamente los recursos. No gana quien más acumula, sino quien mejor gestiona.</p></div>
     </div>
-    <div class="ia-chat-box">
-      <div class="ia-chat-title">🤖 ASISTENTE · Preguntá sobre las reglas</div>
-      <div class="ia-msgs" id="ia-msgs"></div>
-      <div class="ia-inp-row">
-        <input class="ia-inp" id="ia-input" placeholder="Escribí tu duda aquí…" onkeydown="if(event.key==='Enter')preguntarIA()">
-        <button class="ia-btn" id="ia-send" onclick="preguntarIA()">Preguntar</button>
-      </div>
-    </div>
-    <button class="btn-primary" style="margin-top:16px" onclick="cerrarReglas()">ENTENDIDO, ¡COMENCEMOS!</button>
+    <button class="btn-primary" style="margin-top:24px" onclick="cerrarReglas()">ENTENDIDO, ¡COMENCEMOS!</button>
   </div>
 </div>
 
