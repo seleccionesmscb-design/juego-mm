@@ -796,13 +796,10 @@ body{font-family:'Crimson Text',Georgia,serif;background:var(--perg);color:var(-
   </div>
 
   <div class="panel right-p">
-    <div class="phdr">🧰 HERRAMIENTAS RRHH</div>
-    <div class="pbody">
-      <div class="res-row"><div class="rdot" style="background:var(--teal)"></div><div class="rinfo"><div class="rnm" style="color:var(--teal)">Comunicación</div><div class="rsub">Feedback y vínculos</div></div><div class="rval" id="r-com">0</div></div>
-      <div class="res-row"><div class="rdot" style="background:var(--navy)"></div><div class="rinfo"><div class="rnm" style="color:var(--navy)">Liderazgo</div><div class="rsub">Conducción del equipo</div></div><div class="rval" id="r-lid">0</div></div>
-      <div class="res-row"><div class="rdot" style="background:var(--grn)"></div><div class="rinfo"><div class="rnm" style="color:var(--grn)">Bienestar</div><div class="rsub">Clima y motivación</div></div><div class="rval" id="r-bien">0</div></div>
-      <div class="res-row"><div class="rdot" style="background:#6b4423"></div><div class="rinfo"><div class="rnm" style="color:#6b4423">Planificación</div><div class="rsub">Organización operativa</div></div><div class="rval" id="r-plan">0</div></div>
-    </div>
+    <div class="phdr">🧰 RECURSOS ACUMULADOS</div>
+    <div class="pbody" id="res-panel"></div>
+    <div class="phdr" style="margin-top:2px">🎯 PUNTAJE</div>
+    <div class="pbody"><div style="font-family:'Cinzel',serif;font-size:28px;font-weight:900;color:var(--navy);text-align:center;padding:4px 0" id="puntaje-val">0</div><div style="font-size:10px;color:var(--navy-md);text-align:center">puntos</div></div>
     <div class="phdr" style="margin-top:2px">🎖 INSIGNIAS</div>
     <div class="pbody"><div class="ins-row" id="ins-row"><span style="font-size:11px;font-style:italic;color:var(--navy-md)">Completá módulos para ganar insignias</span></div></div>
   </div>
@@ -864,15 +861,11 @@ body{font-family:'Crimson Text',Georgia,serif;background:var(--perg);color:var(-
 </div>
 
 <script>
-const IND = {
-  clima:{lbl:'CLIMA',icon:'❤️',bar:'bc1'},
-  desempenio:{lbl:'DESEMPEÑO',icon:'🎯',bar:'bc2'},
-  desarrollo:{lbl:'DESARROLLO',icon:'📚',bar:'bc3'},
-  recursos:{lbl:'RECURSOS',icon:'💰',bar:'bc4'}
-};
+// Colores para recursos dinámicos
+const REC_COLORS = ['var(--teal)','var(--navy)','var(--grn)','#6b4423','#884010','#2a4268'];
 const ENC = {
-  2:{titulo:'Encuentro 1 · Era I Completada',desc:'Completaste la Organización del Trabajo (casilleros 1–4). Reunite con los otros equipos para compartir aprendizajes y llevar los recursos obtenidos.'},
-  3:{titulo:'Encuentro 2 · Era II Completada',desc:'Completaste la Gestión del Desempeño (casilleros 5–8). Nueva reunión grupal para evaluar el avance e integrar herramientas de gestión.'}
+  2:{titulo:'Encuentro 1 · Era I Completada',desc:'Completaste la Organización del Trabajo (casilleros 1–10). Reunite con los otros equipos para compartir aprendizajes y llevar los recursos obtenidos.'},
+  3:{titulo:'Encuentro 2 · Era II Completada',desc:'Completaste la Gestión del Desempeño (casilleros 11–20). Nueva reunión grupal para evaluar el avance e integrar herramientas de gestión.'}
 };
 
 let g = null, modalData = null, bibOpen = true;
@@ -946,16 +939,24 @@ function mostrarPresentacion() {
 
   showLoader();
   google.script.run
-    .withSuccessHandler(res => {hideLoader(); g = res; renderInds(res.estado.indicadores);})
+    .withSuccessHandler(res => {
+      hideLoader(); g = res;
+      if(res.retomada) showStatus('✓ Partida retomada desde donde la dejaste','ok');
+      renderCompetencias(res.estado.competencias, res.competenciasCatalogo);
+    })
     .withFailureHandler(e => {hideLoader(); alert('Error: '+e.message);})
     .iniciarPartida(agenteData.legajo, agenteData.direccion, agenteData.equipo, agenteData.nombre);
 }
 
-function renderInds(indicadores) {
-  document.getElementById('ap-inds').innerHTML =
-    Object.entries(indicadores).map(([k,v]) =>
-      `<div class="ind-c"><div class="ind-ico">${IND[k]?.icon||'●'}</div><div class="ind-lbl">${IND[k]?.lbl||k}</div><div class="ind-dots">${dots(v)}</div></div>`
-    ).join('');
+function renderCompetencias(competencias, catalogo) {
+  if(!catalogo || !catalogo.length) {
+    document.getElementById('ap-inds').innerHTML = '<p style="font-size:11px;color:var(--navy-md)">Sin competencias configuradas.</p>';
+    return;
+  }
+  document.getElementById('ap-inds').innerHTML = catalogo.map(c => {
+    const v = (competencias && competencias[c.codigo]) || 0;
+    return `<div class="ind-c"><div class="ind-ico">📊</div><div class="ind-lbl">${c.nombre}</div><div class="ind-dots">${dots(v)}</div></div>`;
+  }).join('');
 }
 
 /* ── INICIAR JUEGO ── */
@@ -981,10 +982,17 @@ function actualizarHdrAvatar() {
 function render() {
   const e = g.estado;
   renderBoard(e.casillero);
-  document.getElementById('ind-panel').innerHTML =
-    Object.entries(e.indicadores).map(([k,v]) =>
-      `<div class="stat"><div class="stat-row"><span class="stat-lbl">${IND[k]?.icon} ${IND[k]?.lbl||k}</span><span class="stat-val">${v}/5</span></div><div class="bar-bg"><div class="bar-fg ${IND[k]?.bar||'bc2'}" style="width:${v*20}%"></div></div></div>`
-    ).join('');
+
+  // Panel de competencias dinámico
+  const catalogo = g.competenciasCatalogo || [];
+  document.getElementById('ind-panel').innerHTML = catalogo.length
+    ? catalogo.map(c => {
+        const v = (e.competencias && e.competencias[c.codigo]) || 0;
+        const bars = ['bc1','bc2','bc3','bc4'];
+        const bi = catalogo.indexOf(c) % bars.length;
+        return `<div class="stat"><div class="stat-row"><span class="stat-lbl">📊 ${c.nombre}</span><span class="stat-val">${v}/5</span></div><div class="bar-bg"><div class="bar-fg ${bars[bi]}" style="width:${v*20}%"></div></div></div>`;
+      }).join('')
+    : '<p style="font-size:11px;color:var(--navy-md)">Sin competencias configuradas.</p>';
 
   const tipo = (g.situacion.tipo||'situacion').toLowerCase();
   const tipoEl = document.getElementById('sit-tipo');
@@ -993,11 +1001,19 @@ function render() {
   document.getElementById('sit-title').innerText = g.situacion.titulo;
   document.getElementById('sit-desc').innerText = g.situacion.desc;
 
-  const rec = e.recursos;
-  document.getElementById('r-com').innerText = (rec.comunicacion??rec.personal??0);
-  document.getElementById('r-lid').innerText = (rec.liderazgo??rec.presupuesto??0);
-  document.getElementById('r-bien').innerText = (rec.bienestar??rec.horasExtras??0);
-  document.getElementById('r-plan').innerText = (rec.planificacion??rec.equipamiento??0);
+  // Recursos dinámicos
+  const rec = e.recursos || {};
+  const recKeys = Object.keys(rec);
+  document.getElementById('res-panel').innerHTML = recKeys.length
+    ? recKeys.map((k,i) => `<div class="res-row">
+        <div class="rdot" style="background:${REC_COLORS[i%REC_COLORS.length]}"></div>
+        <div class="rinfo"><div class="rnm" style="color:${REC_COLORS[i%REC_COLORS.length]}">${k.charAt(0).toUpperCase()+k.slice(1)}</div></div>
+        <div class="rval">${rec[k]||0}</div>
+      </div>`).join('')
+    : '<p style="font-size:11px;color:var(--navy-md);padding:8px">Sin recursos.</p>';
+
+  // Puntaje
+  document.getElementById('puntaje-val').innerText = e.puntaje || 0;
 
   const ins = document.getElementById('ins-row');
   ins.innerHTML = e.insignias.length
@@ -1009,16 +1025,16 @@ function render() {
 
 function renderBoard(cas) {
   const ERAS = [
-    {nm:'ERA I · Organización',cls:'e1',nodes:[1,2,3,4],nc:'n1',lc:'nl1',enc:'ENCUENTRO 1'},
-    {nm:'ERA II · Desempeño',  cls:'e2',nodes:[5,6,7,8],nc:'n2',lc:'nl2',enc:'ENCUENTRO 2'},
-    {nm:'ERA III · Desarrollo',cls:'e3',nodes:[9,10,11,12],nc:'n3',lc:'nl3',enc:null}
+    {nm:'ERA I · Organización', cls:'e1', nodes:Array.from({length:10},(_,i)=>i+1),  nc:'n1',lc:'nl1',enc:'ENCUENTRO 1'},
+    {nm:'ERA II · Desempeño',   cls:'e2', nodes:Array.from({length:10},(_,i)=>i+11), nc:'n2',lc:'nl2',enc:'ENCUENTRO 2'},
+    {nm:'ERA III · Desarrollo', cls:'e3', nodes:Array.from({length:10},(_,i)=>i+21), nc:'n3',lc:'nl3',enc:null}
   ];
   let html = `<div class="sb">INICIO</div>`;
   ERAS.forEach((era,ei) => {
     if(ei>0){html+=`<div class="esep"></div>`;if(ERAS[ei-1].enc)html+=`<div class="enc-b">${ERAS[ei-1].enc}</div><div class="esep"></div>`}
     html += `<div class="era-blk"><div class="era-lbl ${era.cls}">${era.nm}</div><div class="era-nds">`;
     era.nodes.forEach((n,ni)=>{
-      const done=cas>n,active=cas===n;
+      const done=cas>=n,active=cas===n-1;
       html+=`<div class="node ${era.nc} ${done?'done':active?'active':''}">${done?'✓':n}</div>`;
       if(ni<era.nodes.length-1) html+=`<div class="nl ${era.lc}"></div>`;
     });
@@ -1057,9 +1073,39 @@ function abrirHerr(id) {
   document.getElementById('m-cont').innerText = h.contenido;
   document.getElementById('m-cont').style.display = 'block';
   document.getElementById('m-preg').innerText = h.pregunta || '¿Confirmás la lectura del módulo?';
-  document.getElementById('m-inp').value = '';
-  document.getElementById('m-inp').placeholder = 'Escribí tu respuesta…';
+  // Soporte opción múltiple
+  const tieneOpciones = h.opciones && h.opciones.length >= 2;
+  const inp = document.getElementById('m-inp');
+  if(tieneOpciones) {
+    inp.style.display = 'none';
+    let opcionesDiv = document.getElementById('m-opciones');
+    if(!opcionesDiv) {
+      opcionesDiv = document.createElement('div');
+      opcionesDiv.id = 'm-opciones';
+      inp.parentNode.insertBefore(opcionesDiv, inp);
+    }
+    opcionesDiv.style.display = 'block';
+    opcionesDiv.innerHTML = h.opciones.map((op,i)=>
+      `<button class="mbtn sec" style="width:100%;margin-bottom:6px;text-align:left" onclick="seleccionarOpcion('${op.replace(/'/g,"\\'")}')">${String.fromCharCode(65+i)}) ${op}</button>`
+    ).join('');
+    modalData.opcionSeleccionada = null;
+  } else {
+    inp.style.display = 'block';
+    const opcionesDiv = document.getElementById('m-opciones');
+    if(opcionesDiv) opcionesDiv.style.display = 'none';
+    inp.value = '';
+    inp.placeholder = 'Escribí tu respuesta…';
+  }
   document.getElementById('modal').style.display = 'flex';
+}
+function seleccionarOpcion(texto) {
+  modalData.opcionSeleccionada = texto.trim().toLowerCase();
+  const opcionesDiv = document.getElementById('m-opciones');
+  if(opcionesDiv) {
+    Array.from(opcionesDiv.querySelectorAll('button')).forEach(b => b.style.background='');
+    const clicked = Array.from(opcionesDiv.querySelectorAll('button')).find(b=>b.innerText.slice(3)===texto);
+    if(clicked) clicked.style.background='var(--teal)';
+  }
 }
 
 /* ── CARTAS ── */
@@ -1092,7 +1138,8 @@ function renderCartas() {
     const esBasica = (c.cat||'').toLowerCase().includes('básic')||(c.cat||'').toLowerCase().includes('basic');
     const badgeClass = esProfesional ? 'tipo-prof' : esBasica ? 'tipo-bas' : 'tipo-prof';
     const badgeTxt = esProfesional ? '⭐ PROFESIONAL' : esBasica ? 'BÁSICA' : c.cat;
-    const reward = c.recursoGanado ? `+${c.cantidadRecurso} ${c.recursoGanado.toUpperCase()}` : '';
+    const reward = c.recursoGanado && c.cantidadRecurso ? `+${c.cantidadRecurso} ${c.recursoGanado.toUpperCase()}` : '';
+    const puntos = c.valor ? `· +${c.valor} pts` : '';
 
     if(c.bloqueada) {
       const herr = g.biblioteca ? g.biblioteca.find(h=>h.id===c.req) : null;
@@ -1114,7 +1161,7 @@ function renderCartas() {
       </div>`;
     }
 
-    return `<div class="card ${cc}" onclick="clickCarta('${c.id}','${c.cat}',false,'','${c.recursoGanado}',${c.cantidadRecurso},'${c.impactoInd}',${c.valorImpacto})">
+    return `<div class="card ${cc}" onclick="clickCarta('${c.id}','${c.cat}','${c.recursoGanado}',${c.cantidadRecurso||0},${c.valor||0})">
       <div class="card-head">
         <div class="card-head-icon">${ico}</div>
         <div class="card-head-info">
@@ -1126,47 +1173,59 @@ function renderCartas() {
         <div class="card-txt">${c.texto}</div>
       </div>
       <div class="card-foot">
-        <div class="card-reward">${reward}</div>
+        <div class="card-reward">${reward} ${puntos}</div>
         <div class="card-arr">→</div>
       </div>
     </div>`;
   }).join('');
 }
 
-function clickCarta(id,cat,lock,req,recurso,cantidad,impInd,valImp) {
-  if(lock){abrirHerr(req);return;}
-  modalData = {tipo:'accion',data:{id,cat,recurso,cantidad,impInd,valImp}};
+function clickCarta(id, cat, recurso, cantidad, valor) {
+  modalData = {tipo:'accion', data:{id, cat, recurso, cantidad, valor}};
   document.getElementById('m-hdr-ico').innerText = catIcon(cat);
   document.getElementById('m-hdr-titulo').innerText = '¿Confirmás esta acción?';
   document.getElementById('m-hdr-sub').innerText = 'Carta de acción · ' + cat;
   document.getElementById('m-badge').style.display = 'none';
   document.getElementById('m-cont').style.display = 'none';
-  // Preview de la acción
   const preview = document.getElementById('m-accion-preview');
   preview.style.display = 'flex';
   document.getElementById('m-acc-ico').innerText = catIcon(cat);
   document.getElementById('m-acc-cat').innerText = (cat||'').toUpperCase();
-  document.getElementById('m-acc-txt').innerText = `Sumará ${cantidad} punto(s) de ${recurso} y mejorará el indicador ${impInd}.`;
-  document.getElementById('m-acc-efecto').innerText = `+${cantidad} ${(recurso||'').toUpperCase()} → ${impInd} ↑`;
+  const efectoTxt = [];
+  if(cantidad && recurso) efectoTxt.push(`+${cantidad} ${recurso.toUpperCase()}`);
+  if(valor) efectoTxt.push(`+${valor} pts`);
+  document.getElementById('m-acc-txt').innerText = efectoTxt.length ? 'Efecto: ' + efectoTxt.join(' · ') : 'Esta acción no otorga recursos directos.';
+  document.getElementById('m-acc-efecto').innerText = efectoTxt.join(' · ');
   document.getElementById('m-preg').innerText = 'Escribí "si" para confirmar esta decisión.';
   document.getElementById('m-inp').value = 'si';
+  const opcionesDiv = document.getElementById('m-opciones');
+  if(opcionesDiv) opcionesDiv.style.display = 'none';
+  document.getElementById('m-inp').style.display = 'block';
   document.getElementById('modal').style.display = 'flex';
 }
 
 /* ── MODAL CONFIRMAR ── */
 function confirmarModal() {
   if(!modalData) return;
-  const resp = document.getElementById('m-inp').value.trim().toLowerCase();
   if(modalData.tipo==='herr') {
     const h = modalData.data;
-    if(resp===h.respuesta) {
+    // Opción múltiple o respuesta libre
+    let resp;
+    if(h.opciones && h.opciones.length >= 2) {
+      if(!modalData.opcionSeleccionada) { alert('Seleccioná una opción antes de confirmar.'); return; }
+      resp = modalData.opcionSeleccionada;
+    } else {
+      resp = document.getElementById('m-inp').value.trim().toLowerCase();
+    }
+    if(resp===h.respuesta.toLowerCase()) {
       cerrarModal(); showLoader();
-      google.script.run.withSuccessHandler(res=>{const bib=g.biblioteca;g=res;if(!g.biblioteca)g.biblioteca=bib;hideLoader();render();}).withFailureHandler(e=>{hideLoader();alert(e.message);}).completarCapacitacion(g.estado,h.id,h.insigniaID);
+      google.script.run.withSuccessHandler(res=>{const bib=g.biblioteca;const cat=g.competenciasCatalogo;g=res;if(!g.biblioteca)g.biblioteca=bib;if(!g.competenciasCatalogo)g.competenciasCatalogo=cat;hideLoader();render();}).withFailureHandler(e=>{hideLoader();alert(e.message);}).completarCapacitacion(g.estado,h.id,h.insigniaID);
     } else alert('Respuesta incorrecta. Revisá el contenido del módulo e intentá de nuevo.');
   } else if(modalData.tipo==='accion') {
-    if(resp!=='si'){cerrarModal();return;}
+    const respInp = document.getElementById('m-inp').value.trim().toLowerCase();
+    if(respInp!=='si'){cerrarModal();return;}
     const d = modalData.data; cerrarModal(); showLoader();
-    google.script.run.withSuccessHandler(res=>{const bib=g.biblioteca;g=res;if(!g.biblioteca)g.biblioteca=bib;hideLoader();if(res.finalizado)mostrarFinal();else if(res.encuentro)mostrarEncuentro(res.nroEncuentro);else render();}).withFailureHandler(e=>{hideLoader();alert(e.message);}).procesarAccion(g.estado,d.id,d.cat,d.recurso,d.cantidad,d.impInd,d.valImp);
+    google.script.run.withSuccessHandler(res=>{const bib=g.biblioteca;const cat=g.competenciasCatalogo;g=res;if(!g.biblioteca)g.biblioteca=bib;if(!g.competenciasCatalogo)g.competenciasCatalogo=cat;hideLoader();if(res.finalizado)mostrarFinal();else if(res.encuentro)mostrarEncuentro(res.nroEncuentro);else render();}).withFailureHandler(e=>{hideLoader();alert(e.message);}).procesarAccion(g.estado,d.id,d.cat,d.recurso,d.cantidad,d.valor);
   }
 }
 function cerrarModal(){document.getElementById('modal').style.display='none';modalData=null;}
@@ -1188,11 +1247,12 @@ function cerrarReglas() { document.getElementById('modal-reglas').classList.remo
 function mostrarFinal() {
   google.script.run.withSuccessHandler(p=>{
     google.script.run.guardarResultado(g.estado, p);
-    document.getElementById('final-equipo').innerText = (agenteData?.equipo||'').toUpperCase();
-    document.getElementById('final-score').innerText = p.promedioIndicadores+' / 5';
+    document.getElementById('final-equipo').innerText = (agenteData?.equipo||g.estado.nombreEquipo||'').toUpperCase();
+    document.getElementById('final-score').innerText = p.puntaje + ' pts';
     document.getElementById('final-nivel').innerText = p.nivel.toUpperCase();
+    const compList = (p.competenciasFortalecidas||[]).join(', ') || 'Ninguna aún';
     document.getElementById('final-detail').innerHTML =
-      `Recursos totales: <span>${p.totalRecursos}</span><br>Insignias obtenidas: <span>${p.insignias}</span><br>Dirección: <span>${g.estado.direccion}</span>`;
+      `Puntaje total: <span>${p.puntaje}</span><br>Recursos acumulados: <span>${p.totalRecursos}</span><br>Insignias: <span>${p.insignias}</span><br>Competencias fortalecidas: <span>${compList}</span><br>Dirección: <span>${g.estado.direccion}</span>`;
     document.getElementById('final-screen').style.display='flex';
   }).calcularPuntajeFinal(g.estado);
 }
