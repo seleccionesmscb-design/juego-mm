@@ -1,14 +1,30 @@
 /**
  * MISIÓN MUNI — Code.gs (VERSIÓN MEJORADA 2026)
  * Simulador de Gestión para Mandos Medios — Municipalidad de Bariloche
- * 
+ *
  * CAMBIOS REALIZADOS:
  * - Validación de legajo ahora busca en la hoja "Agentes"
  * - validarLegajo() es más flexible (acepta letras, números, guiones)
  * - iniciarPartida() usa los datos reales del agente encontrado
+ * - Base de datos migrada a la planilla "MisionMuni_BaseDatos"
+ * - Se reemplazaron los indicadores genéricos (clima/desempeño/desarrollo)
+ *   por el progreso real de las Competencias de Gestión (hoja
+ *   "Competencias_Gestion"): cada módulo de capacitación fortalece
+ *   directamente la competencia que tiene asignada.
+ * - El tablero ahora recorre 10 situaciones por Era (30 en total) y
+ *   las situaciones se filtran por Era además de por Área.
+ * - Se sacó el nombre de fantasía del equipo (animales); ahora se usa
+ *   la Dirección como identidad del equipo.
+ * - El progreso de cada agente se guarda automáticamente (hoja
+ *   "Progreso", creada sola si no existe) y se retoma donde quedó al
+ *   volver a ingresar el mismo legajo.
+ * - Los módulos de capacitación admiten preguntas de opción múltiple
+ *   además de la respuesta libre (columnas OpcionA..OpcionD, opcionales).
  */
 
-const SS_ID = "1vOVwStSPmihkk9d4WzLKBjju_shRR_jrPDDRcQaSraU";
+const SS_ID = "19Uk0MQT4a0Tarnx1H2qiVPX6YaAMg_FQsrhjla8VHBc";
+const CASILLEROS_POR_ERA = 10;
+const TOTAL_CASILLEROS = CASILLEROS_POR_ERA * 3;
 
 function doGet() {
   return HtmlService.createTemplateFromFile('Index').evaluate()
@@ -35,10 +51,10 @@ function buscarAgente(legajo) {
   const ss = SpreadsheetApp.openById(SS_ID);
   const hoja = ss.getSheetByName("Agentes");
   if (!hoja) return { encontrado: false };
-  
+
   const datos = hoja.getDataRange().getValues().slice(1); // saltar cabecera
   const legajoStr = String(legajo).trim();
-  
+
   for (const fila of datos) {
     if (String(fila[0]).trim() === legajoStr) {
       return {
@@ -81,14 +97,78 @@ function obtenerEquipo(direccion) {
   return equipos[direccion] || [];
 }
 
-function obtenerIndicadoresIniciales(direccion) {
-  const base = {
-    "Hacienda":           { clima: 3, desempenio: 2, desarrollo: 3, recursos: 4 },
-    "Servicios Públicos": { clima: 4, desempenio: 3, desarrollo: 2, recursos: 3 },
-    "Capital Humano":     { clima: 3, desempenio: 3, desarrollo: 4, recursos: 2 },
-    "Obras Particulares": { clima: 2, desempenio: 4, desarrollo: 3, recursos: 3 }
-  };
-  return base[direccion] || { clima: 3, desempenio: 3, desarrollo: 3, recursos: 3 };
+// ─────────────────────────────────────────────
+// COMPETENCIAS DE GESTIÓN (reemplazan a los indicadores)
+// ─────────────────────────────────────────────
+function cargarCompetencias(ss) {
+  const hoja = ss.getSheetByName("Competencias_Gestion");
+  if (!hoja) return [];
+  return hoja.getDataRange().getValues().slice(1)
+    .filter(f => f[0])
+    .map(f => ({
+      codigo:     String(f[0]).trim(),
+      nombre:     f[1],
+      definicion: f[2] || ""
+    }));
+}
+
+function competenciasIniciales(catalogo) {
+  const comp = {};
+  catalogo.forEach(c => { comp[c.codigo] = 0; });
+  return comp;
+}
+
+// ─────────────────────────────────────────────
+// GUARDAR / RETOMAR PROGRESO POR LEGAJO
+// Se guarda el estado completo como JSON en la hoja "Progreso" (se
+// crea sola con sus encabezados la primera vez). No toca la hoja
+// "Partidas" existente para no romper datos manuales previos.
+// ─────────────────────────────────────────────
+function obtenerHojaProgreso(ss) {
+  let hoja = ss.getSheetByName("Progreso");
+  if (!hoja) {
+    hoja = ss.insertSheet("Progreso");
+    hoja.appendRow(["Legajo", "NombreAgente", "Direccion", "Casillero", "Encuentro", "UltimaActividad", "EstadoJSON"]);
+  }
+  return hoja;
+}
+
+function guardarProgreso(estado) {
+  const ss = SpreadsheetApp.openById(SS_ID);
+  const hoja = obtenerHojaProgreso(ss);
+  const legajoStr = String(estado.legajo).trim();
+  const datos = hoja.getDataRange().getValues();
+
+  let filaIdx = -1;
+  for (let i = 1; i < datos.length; i++) {
+    if (String(datos[i][0]).trim() === legajoStr) { filaIdx = i + 1; break; }
+  }
+
+  const fila = [
+    estado.legajo, estado.nombreAgente, estado.direccion,
+    estado.casillero, estado.encuentro, new Date(), JSON.stringify(estado)
+  ];
+
+  if (filaIdx > 0) hoja.getRange(filaIdx, 1, 1, fila.length).setValues([fila]);
+  else hoja.appendRow(fila);
+}
+
+function cargarProgreso(legajo) {
+  const ss = SpreadsheetApp.openById(SS_ID);
+  const hoja = obtenerHojaProgreso(ss);
+  const legajoStr = String(legajo).trim();
+  const datos = hoja.getDataRange().getValues().slice(1);
+
+  for (const fila of datos) {
+    if (String(fila[0]).trim() === legajoStr) {
+      try {
+        return JSON.parse(fila[6]);
+      } catch (e) {
+        return null;
+      }
+    }
+  }
+  return null;
 }
 
 // ─────────────────────────────────────────────
@@ -96,136 +176,207 @@ function obtenerIndicadoresIniciales(direccion) {
 // ─────────────────────────────────────────────
 function iniciarPartida(legajo, direccion, nombreEquipo, nombreLider) {
   const ss = SpreadsheetApp.openById(SS_ID);
-  
+
   // Validación básica
   const val = validarLegajo(legajo);
   if (!val.valido) return { error: val.mensaje };
-  
+
   // Buscar el agente en la base de datos
   const agente = buscarAgente(legajo);
   if (!agente.encontrado) {
     return { error: "Legajo no encontrado. Por favor, verificá que sea correcto." };
   }
-  
-  // Usar los datos reales del agente
-  const estado = {
-    legajo:       String(agente.legajo).trim(),
-    nombreAgente: agente.nombre,
-    nombreEquipo: nombreEquipo,
-    nombreLider:  nombreLider,
-    direccion:    agente.direccion,
-    equipo:       obtenerEquipo(agente.direccion),
-    casillero:    0,
-    recursos:     { comunicacion: 0, liderazgo: 0, bienestar: 0, planificacion: 0 },
-    herramientas: [],
-    insignias:    [],
-    indicadores:  obtenerIndicadoresIniciales(agente.direccion),
-    encuentro:    1
-  };
-  
+
+  const catalogoCompetencias = cargarCompetencias(ss);
+
+  // Si el legajo ya tiene una partida guardada, se retoma donde quedó
+  let estado = cargarProgreso(agente.legajo);
+  let retomada = !!estado;
+
+  if (estado) {
+    // Compatibilidad con partidas guardadas antes de sumar puntaje/4 cartas por situación
+    if (typeof estado.puntaje !== "number") estado.puntaje = 0;
+    if (!estado.situacionActualId) estado.situacionActualId = "";
+    if (!estado.recursos) estado.recursos = {};
+    ["desarrollo", "clima", "recursos", "planificacion", "desempenio"].forEach(k => {
+      if (!estado.recursos.hasOwnProperty(k)) estado.recursos[k] = 0;
+    });
+  }
+
+  if (!estado) {
+    estado = {
+      legajo:       String(agente.legajo).trim(),
+      nombreAgente: agente.nombre,
+      nombreEquipo: nombreEquipo || ("Dirección de " + agente.direccion),
+      nombreLider:  nombreLider,
+      direccion:    agente.direccion,
+      equipo:       obtenerEquipo(agente.direccion),
+      casillero:    0,
+      recursos:     { desarrollo: 0, clima: 0, recursos: 0, planificacion: 0, desempenio: 0 },
+      herramientas: [],
+      insignias:    [],
+      competencias: competenciasIniciales(catalogoCompetencias),
+      puntaje:      0,
+      situacionActualId: "",
+      encuentro:    1
+    };
+    guardarProgreso(estado);
+  }
+
+  const situacion = obtenerSituacionAleatoria(ss, estado.direccion, estado.casillero);
+  estado.situacionActualId = situacion.id;
+  guardarProgreso(estado);
+
   return {
-    estado:     estado,
-    situacion:  obtenerSituacionAleatoria(ss, estado.direccion),
-    cartas:     cargarAcciones(ss, []),
-    biblioteca: cargarHerramientas(ss)
+    estado:              estado,
+    retomada:            retomada,
+    situacion:           situacion,
+    cartas:               cargarAcciones(ss, estado.herramientas, situacion.id),
+    biblioteca:           cargarHerramientas(ss),
+    competenciasCatalogo: catalogoCompetencias
   };
 }
 
 // ─────────────────────────────────────────────
 // HERRAMIENTAS / MICROLEARNING
+// Columnas: ID | Nombre | Contenido | Área | InsigniaID | Pregunta |
+//           RespuestaCorrecta | Competencia | VideoURL* | InfografiaURL* |
+//           OpcionA* | OpcionB* | OpcionC* | OpcionD*
+// (*) Opcionales: si la hoja todavía no tiene esas columnas quedan
+// vacías. Sin VideoURL/InfografiaURL la tarjeta muestra solo texto.
+// Sin OpcionA..D la pregunta se responde con texto libre (como antes);
+// si hay al menos 2 opciones cargadas, se muestra como opción múltiple
+// y RespuestaCorrecta debe coincidir con el texto de la opción correcta.
 // ─────────────────────────────────────────────
 function cargarHerramientas(ss) {
   const hoja = ss.getSheetByName("Herramientas");
   if (!hoja) return [];
-  return hoja.getDataRange().getValues().slice(1).map(f => ({
-    id:         String(f[0]).trim(),
-    nombre:     f[1],
-    contenido:  f[2],
-    area:       f[3],
-    insigniaID: f[4],
-    pregunta:   f[5] || "¿Confirmás la lectura del módulo?",
-    respuesta:  String(f[6] || "si").trim().toLowerCase(),
-    duracion:   f[7] || "5 min"
-  }));
-}
-
-function completarCapacitacion(estado, toolID, insigniaID) {
-  if (!estado.herramientas.includes(toolID)) estado.herramientas.push(toolID);
-  if (insigniaID && !estado.insignias.includes(insigniaID)) estado.insignias.push(insigniaID);
-  const ss = SpreadsheetApp.openById(SS_ID);
-  return { estado, cartas: cargarAcciones(ss, estado.herramientas) };
-}
-
-// ─────────────────────────────────────────────
-// ACCIONES / CARTAS
-// ─────────────────────────────────────────────
-function cargarAcciones(ss, herramientasUsuario) {
-  const hoja = ss.getSheetByName("Acciones");
-  if (!hoja) return [];
   return hoja.getDataRange().getValues().slice(1).map(f => {
-    const req = String(f[3] || "").trim();
+    const opciones = [f[10], f[11], f[12], f[13]]
+      .map(o => (o || "").toString().trim())
+      .filter(o => o !== "");
     return {
-      id:              String(f[0]),
-      cat:             f[1],
-      texto:           f[2],
-      microlearning:   f[8] || "",
-      req:             req,
-      recursoGanado:   f[4] || "comunicacion",
-      cantidadRecurso: Number(f[5]) || 1,
-      impactoInd:      f[6] || "desempenio",
-      valorImpacto:    Number(f[7]) || 1,
-      bloqueada:       req !== "" ? !herramientasUsuario.includes(req) : false
+      id:            String(f[0]).trim(),
+      nombre:        f[1],
+      contenido:     f[2],
+      area:          f[3],
+      insigniaID:    f[4],
+      pregunta:      f[5] || "¿Confirmás la lectura del módulo?",
+      respuesta:     String(f[6] || "si").trim().toLowerCase(),
+      competencia:   f[7] || "",
+      videoUrl:      f[8] || "",
+      infografiaUrl: f[9] || "",
+      opciones:      opciones
     };
   });
 }
 
+function completarCapacitacion(estado, toolID, insigniaID) {
+  const ss = SpreadsheetApp.openById(SS_ID);
+
+  if (!estado.herramientas.includes(toolID)) estado.herramientas.push(toolID);
+  if (insigniaID && !estado.insignias.includes(insigniaID)) estado.insignias.push(insigniaID);
+
+  // La capacitación fortalece directamente la competencia asignada a la herramienta
+  const herramienta = cargarHerramientas(ss).find(h => h.id === toolID);
+  if (herramienta && herramienta.competencia) {
+    const cod = herramienta.competencia;
+    if (!estado.competencias.hasOwnProperty(cod)) estado.competencias[cod] = 0;
+    estado.competencias[cod] = Math.min(5, estado.competencias[cod] + 1);
+  }
+
+  guardarProgreso(estado);
+  return { estado, cartas: cargarAcciones(ss, estado.herramientas, estado.situacionActualId) };
+}
+
 // ─────────────────────────────────────────────
-// SITUACIONES
+// ACCIONES / CARTAS
+// Cada situación tiene 4 cartas: 2 genéricas sin capacitación (Situación_ID
+// vacío, ValorImpacto 0) + 2 propias de esa situación (fácil 5 / compleja 10).
+// Por eso cargarAcciones ahora exige situacionId y filtra: solo entran las
+// cartas genéricas (sin Situación_ID) y las que coincidan con la situación
+// actual. Sin este filtro se mostrarían las cartas de las 35 situaciones
+// juntas en cada pantalla.
 // ─────────────────────────────────────────────
-function obtenerSituacionAleatoria(ss, area) {
+function cargarAcciones(ss, herramientasUsuario, situacionId) {
+  const hoja = ss.getSheetByName("Acciones");
+  if (!hoja) return [];
+  const sitId = String(situacionId || "").trim();
+  return hoja.getDataRange().getValues().slice(1)
+    .filter(f => f[0])
+    .filter(f => {
+      const propia = String(f[8] || "").trim();
+      return propia === "" || propia === sitId;
+    })
+    .map(f => {
+      const req = String(f[3] || "").trim();
+      return {
+        id:              String(f[0]),
+        cat:             f[1],
+        texto:           f[2],
+        situacionId:     f[8] || "",
+        req:             req,
+        recursoGanado:   f[4] || "desarrollo",
+        cantidadRecurso: Number(f[5]) || 0,
+        valor:           Number(f[7]) || 0,
+        bloqueada:       req !== "" ? !herramientasUsuario.includes(req) : false
+      };
+    });
+}
+
+// ─────────────────────────────────────────────
+// SITUACIONES — ahora filtran también por Era (10 por Era)
+// ─────────────────────────────────────────────
+function eraDeCasillero(casillero) {
+  const n = casillero + 1; // próxima situación a resolver
+  if (n <= CASILLEROS_POR_ERA) return "ERA I";
+  if (n <= CASILLEROS_POR_ERA * 2) return "ERA II";
+  return "ERA III";
+}
+
+function obtenerSituacionAleatoria(ss, area, casillero) {
   const hoja = ss.getSheetByName("Situaciones");
   if (!hoja) return { titulo: "Sin datos", desc: "Verificá la hoja 'Situaciones'.", tipo: "situacion" };
+  // Columnas: ID(0) | Título(1) | Descripción(2) | Área(3) | ERA(4) | Trayecto(5) | Tipo(6)
   const datos = hoja.getDataRange().getValues().slice(1);
-  let filtrados = datos.filter(f => f[3] && f[3].toString().toLowerCase() === area.toLowerCase());
+  const era = eraDeCasillero(casillero || 0);
+
+  let filtrados = datos.filter(f => (f[4] || "").toString().toUpperCase() === era);
+  const porAreaYEra = filtrados.filter(f => f[3] && f[3].toString().toLowerCase() === (area || "").toLowerCase());
+  if (porAreaYEra.length) filtrados = porAreaYEra;
   if (!filtrados.length) filtrados = datos;
+
   const e = filtrados[Math.floor(Math.random() * filtrados.length)];
-  return { titulo: e[1], desc: e[2], tipo: e[4] || "situacion" };
+  return { id: String(e[0]).trim(), titulo: e[1], desc: e[2], era: e[4] || era, trayecto: e[5] || "", tipo: (e[6] || "situacion").toString().toLowerCase() };
 }
 
 // ─────────────────────────────────────────────
 // PROCESAR ACCIÓN
 // ─────────────────────────────────────────────
-function procesarAccion(estado, accionID, cat, recursoGanado, cantidadRecurso, impactoInd, valorImpacto) {
+function procesarAccion(estado, accionID, cat, recursoGanado, cantidadRecurso, valorImpacto) {
   const ss = SpreadsheetApp.openById(SS_ID);
   estado.casillero += 1;
+  estado.puntaje = (estado.puntaje || 0) + (Number(valorImpacto) || 0);
 
-  if (estado.recursos.hasOwnProperty(recursoGanado)) {
-    estado.recursos[recursoGanado] += cantidadRecurso;
-  } else {
-    if (cat === "Profesional") { 
-      estado.recursos.liderazgo += 150; 
-      estado.recursos.planificacion += 1; 
-    }
-    else { 
-      estado.recursos.comunicacion += 1;  
-      estado.recursos.bienestar += 1; 
-    }
+  if (recursoGanado && estado.recursos.hasOwnProperty(recursoGanado)) {
+    estado.recursos[recursoGanado] += (Number(cantidadRecurso) || 0);
   }
 
-  if (estado.indicadores.hasOwnProperty(impactoInd)) {
-    estado.indicadores[impactoInd] = Math.min(5, Math.max(1, estado.indicadores[impactoInd] + valorImpacto));
-  }
-
-  const esFinalizado = estado.casillero >= 12;
-  const esEncuentro  = !esFinalizado && estado.casillero % 4 === 0;
+  const esFinalizado = estado.casillero >= TOTAL_CASILLEROS;
+  const esEncuentro  = !esFinalizado && estado.casillero % CASILLEROS_POR_ERA === 0;
   if (esEncuentro) estado.encuentro += 1;
+
+  const situacion = esFinalizado
+    ? { id: "", titulo: "¡MISIÓN CUMPLIDA!", desc: "Llegaste al encuentro final con las competencias fortalecidas para transformar la gestión.", tipo: "final" }
+    : obtenerSituacionAleatoria(ss, estado.direccion, estado.casillero);
+  estado.situacionActualId = situacion.id || "";
+
+  guardarProgreso(estado);
 
   return {
     estado,
-    situacion:    esFinalizado
-      ? { titulo: "¡MISIÓN CUMPLIDA!", desc: "Llegaste al encuentro final con los recursos para transformar la gestión.", tipo: "final" }
-      : obtenerSituacionAleatoria(ss, estado.direccion),
-    cartas:       esFinalizado ? [] : cargarAcciones(ss, estado.herramientas),
+    situacion:    situacion,
+    cartas:       esFinalizado ? [] : cargarAcciones(ss, estado.herramientas, situacion.id),
     finalizado:   esFinalizado,
     encuentro:    esEncuentro,
     nroEncuentro: estado.encuentro
@@ -233,16 +384,24 @@ function procesarAccion(estado, accionID, cat, recursoGanado, cantidadRecurso, i
 }
 
 // ─────────────────────────────────────────────
-// PUNTAJE FINAL
+// PUNTAJE FINAL — basado en Competencias de Gestión
 // ─────────────────────────────────────────────
 function calcularPuntajeFinal(estado) {
-  const i = estado.indicadores;
-  const prom = (i.clima + i.desempenio + i.desarrollo + i.recursos) / 4;
-  const recTot = estado.recursos.comunicacion + estado.recursos.liderazgo + estado.recursos.bienestar + estado.recursos.planificacion;
+  const ss = SpreadsheetApp.openById(SS_ID);
+  const catalogo = cargarCompetencias(ss);
+  const valores = catalogo.map(c => estado.competencias[c.codigo] || 0);
+  const prom = valores.length ? valores.reduce((a, b) => a + b, 0) / valores.length : 0;
+  const recTot = Object.values(estado.recursos || {}).reduce((a, b) => a + (Number(b) || 0), 0);
+  const fortalecidas = catalogo
+    .filter(c => (estado.competencias[c.codigo] || 0) > 0)
+    .map(c => c.nombre);
+
   return {
-    promedioIndicadores: prom.toFixed(1),
+    promedioCompetencias:    prom.toFixed(1),
+    competenciasFortalecidas: fortalecidas,
     totalRecursos: recTot,
+    puntaje: estado.puntaje || 0,
     insignias: estado.insignias.length,
-    nivel: prom >= 4 ? "Excelente" : prom >= 3 ? "Bueno" : "En desarrollo"
+    nivel: prom >= 4 ? "Excelente" : prom >= 2.5 ? "Bueno" : "En desarrollo"
   };
 }
