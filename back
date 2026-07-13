@@ -22,7 +22,7 @@
  *   además de la respuesta libre (columnas OpcionA..OpcionD, opcionales).
  */
 
-const SS_ID = "19Uk0MQT4a0Tarnx1H2qiVPX6YaAMg_FQsrhjla8VHBc";
+const SS_ID = "1HvkujAU6iyGCOGml1PevE9lKT8hKv6a11jVetUXp_og";
 const CASILLEROS_POR_ERA = 10;
 const TOTAL_CASILLEROS = CASILLEROS_POR_ERA * 3;
 
@@ -107,15 +107,22 @@ function obtenerEquipo(direccion) {
 // COMPETENCIAS DE GESTIÓN (reemplazan a los indicadores)
 // ─────────────────────────────────────────────
 function cargarCompetencias(ss) {
-  const hoja = ss.getSheetByName("Competencias_Gestion");
-  if (!hoja) return [];
-  return hoja.getDataRange().getValues().slice(1)
-    .filter(f => f[0])
-    .map(f => ({
-      codigo:     String(f[0]).trim(),
-      nombre:     f[1],
-      definicion: f[2] || ""
-    }));
+  const DEFAULTS = [
+    { codigo: "Liderazgo",                              nombre: "Liderazgo" },
+    { codigo: "Toma de Decisiones",                     nombre: "Toma de Decisiones" },
+    { codigo: "Planificación y Gestión de Resultados",  nombre: "Planificación y Gestión de Resultados" },
+    { codigo: "Desarrollo de las Personas",             nombre: "Desarrollo de las Personas" },
+    { codigo: "Visión Estratégica",                     nombre: "Visión Estratégica" }
+  ];
+  const hoja = ss.getSheetByName("Situaciones y respuestas");
+  if (!hoja) return DEFAULTS;
+  const mapa = {};
+  hoja.getDataRange().getValues().slice(1).forEach(function(f) {
+    const nombre = String(f[5] || "").trim();
+    if (nombre && !mapa[nombre]) mapa[nombre] = { codigo: nombre, nombre: nombre };
+  });
+  const res = Object.values(mapa);
+  return res.length ? res : DEFAULTS;
 }
 
 function competenciasIniciales(catalogo) {
@@ -255,26 +262,34 @@ function iniciarPartida(legajo, direccion, nombreEquipo, nombreLider) {
 // y RespuestaCorrecta debe coincidir con el texto de la opción correcta.
 // ─────────────────────────────────────────────
 function cargarHerramientas(ss) {
-  const hoja = ss.getSheetByName("Herramientas");
+  const hoja = ss.getSheetByName("Herramientas (contenido)");
   if (!hoja) return [];
-  return hoja.getDataRange().getValues().slice(1).map(f => {
-    const opciones = [f[10], f[11], f[12], f[13]]
-      .map(o => (o || "").toString().trim())
-      .filter(o => o !== "");
-    return {
-      id:            String(f[0]).trim(),
-      nombre:        f[1],
-      contenido:     f[2],
-      area:          f[3],
-      insigniaID:    f[4],
-      pregunta:      f[5] || "¿Confirmás la lectura del módulo?",
-      respuesta:     String(f[6] || "si").trim().toLowerCase(),
-      competencia:   f[7] || "",
-      videoUrl:      f[8] || "",
-      infografiaUrl: f[9] || "",
-      opciones:      opciones
-    };
-  });
+  return hoja.getDataRange().getValues().slice(1)
+    .filter(function(f){ return String(f[0]).trim() !== ""; })
+    .map(function(f) {
+      const nombre = String(f[0]).trim();
+      const opciones = [f[7], f[8], f[9], f[10]]
+        .map(function(o){ return (o || "").toString().trim(); })
+        .filter(function(o){ return o !== ""; });
+      return {
+        id:            nombre,
+        nombre:        nombre,
+        nivel:         String(f[1] || "").trim(),
+        area:          String(f[2] || "").trim(),
+        competencia:   String(f[3] || "").trim(),
+        contenido:     String(f[4] || "").trim(),
+        pregunta:      String(f[5] || "").trim() || "¿Confirmás la lectura del módulo?",
+        respuesta:     String(f[6] || "si").trim().toLowerCase(),
+        opcionA:       String(f[7] || "").trim(),
+        opcionB:       String(f[8] || "").trim(),
+        opcionC:       String(f[9] || "").trim(),
+        opcionD:       String(f[10] || "").trim(),
+        videoUrl:      String(f[11] || "").trim(),
+        infografiaUrl: String(f[12] || "").trim(),
+        insigniaID:    String(f[13] || "").trim(),
+        opciones:      opciones
+      };
+    });
 }
 
 function completarCapacitacion(estado, toolID, insigniaID) {
@@ -283,10 +298,14 @@ function completarCapacitacion(estado, toolID, insigniaID) {
   if (!estado.herramientas.includes(toolID)) estado.herramientas.push(toolID);
   if (insigniaID && !estado.insignias.includes(insigniaID)) estado.insignias.push(insigniaID);
 
-  // La capacitación fortalece directamente la competencia asignada a la herramienta
-  const herramienta = cargarHerramientas(ss).find(h => h.id === toolID);
-  if (herramienta && herramienta.competencia) {
-    const cod = herramienta.competencia;
+  // Fortalecer la competencia: primero busca en la herramienta; si no coincide
+  // con el catálogo, usa la competencia de la situación actual.
+  const herramienta = cargarHerramientas(ss).find(function(h){ return h.id === toolID; });
+  const competenciaHerr = herramienta ? herramienta.competencia : "";
+  const competenciaConocida = estado.competencias.hasOwnProperty(competenciaHerr);
+  const cod = competenciaConocida ? competenciaHerr
+            : (estado.situacionActualId ? estado.situacionActualId.split("||")[2] : "");
+  if (cod) {
     if (!estado.competencias.hasOwnProperty(cod)) estado.competencias[cod] = 0;
     estado.competencias[cod] = Math.min(5, estado.competencias[cod] + 1);
   }
@@ -296,64 +315,98 @@ function completarCapacitacion(estado, toolID, insigniaID) {
 }
 
 // ─────────────────────────────────────────────
+// SELECCIÓN DE SITUACIONES
+// ─────────────────────────────────────────────
+function eraDeCasillero(casillero) {
+  const n = casillero + 1;
+  if (n <= CASILLEROS_POR_ERA) return "ERA I";
+  if (n <= CASILLEROS_POR_ERA * 2) return "ERA II";
+  return "ERA III";
+}
+
+function filaMatchEra(eraStr, tag) {
+  const s = eraStr.toUpperCase();
+  if (tag === "ERA I")   return s.indexOf("I ORGAN") > -1 || s === "ERA I";
+  if (tag === "ERA II")  return s.indexOf("II GESTI") > -1 || s === "ERA II";
+  return s.indexOf("III DESAR") > -1 || s === "ERA III";
+}
+
+function obtenerSituacionAleatoria(ss, area, casillero) {
+  const hoja = ss.getSheetByName("Situaciones y respuestas");
+  if (!hoja) return { id: "", titulo: "Sin datos", desc: "Verificá la hoja 'Situaciones y respuestas'.", tipo: "situacion" };
+
+  const tag  = eraDeCasillero(casillero || 0);
+  const rows = hoja.getDataRange().getValues().slice(1).filter(function(f){ return f[0] && f[3]; });
+
+  const mapa = {};
+  rows.forEach(function(f) {
+    const eraStr = String(f[0]).trim();
+    if (!filaMatchEra(eraStr, tag)) return;
+    const areaRow = String(f[2]).trim();
+    const nombre  = String(f[3]).trim();
+    const key = eraStr + "||" + areaRow + "||" + nombre;
+    if (!mapa[key]) {
+      mapa[key] = {
+        id:          key,
+        titulo:      nombre,
+        desc:        String(f[4]).trim(),
+        competencia: String(f[5]).trim(),
+        era:         eraStr,
+        area:        areaRow,
+        trayecto:    String(f[1]).trim(),
+        tipo:        "situacion"
+      };
+    }
+  });
+
+  let candidatos = Object.values(mapa);
+  if (!candidatos.length) return { id: "", titulo: "Sin situaciones", desc: "No hay situaciones cargadas para esta Era.", tipo: "situacion" };
+
+  const porArea = candidatos.filter(function(s){ return s.area.toLowerCase() === (area || "").toLowerCase(); });
+  if (porArea.length) candidatos = porArea;
+
+  return candidatos[Math.floor(Math.random() * candidatos.length)];
+}
+
+// ─────────────────────────────────────────────
 // ACCIONES / CARTAS
-// Cada situación tiene 4 cartas: 2 genéricas sin capacitación (Situación_ID
-// vacío, ValorImpacto 0) + 2 propias de esa situación (fácil 5 / compleja 10).
+// ─────────────────────────────────────────────
 // Por eso cargarAcciones ahora exige situacionId y filtra: solo entran las
 // cartas genéricas (sin Situación_ID) y las que coincidan con la situación
 // actual. Sin este filtro se mostrarían las cartas de las 35 situaciones
 // juntas en cada pantalla.
 // ─────────────────────────────────────────────
 function cargarAcciones(ss, herramientasUsuario, situacionId) {
-  const hoja = ss.getSheetByName("Acciones");
+  if (!situacionId) return [];
+  const partes = situacionId.split("||");
+  if (partes.length < 3) return [];
+  const eraStr  = partes[0];
+  const areaStr = partes[1];
+  const nombre  = partes[2];
+
+  const hoja = ss.getSheetByName("Situaciones y respuestas");
   if (!hoja) return [];
-  const sitId = String(situacionId || "").trim();
-  return hoja.getDataRange().getValues().slice(1)
-    .filter(f => f[0])
-    .filter(f => {
-      const propia = String(f[8] || "").trim();
-      return propia === "" || propia === sitId;
-    })
-    .map(f => {
-      const req = String(f[3] || "").trim();
-      return {
-        id:              String(f[0]),
-        cat:             f[1],
-        texto:           f[2],
-        situacionId:     f[8] || "",
-        req:             req,
-        recursoGanado:   f[4] || "desarrollo",
-        cantidadRecurso: Number(f[5]) || 0,
-        valor:           Number(f[7]) || 0,
-        bloqueada:       req !== "" ? !herramientasUsuario.includes(req) : false
-      };
-    });
-}
 
-// ─────────────────────────────────────────────
-// SITUACIONES — ahora filtran también por Era (10 por Era)
-// ─────────────────────────────────────────────
-function eraDeCasillero(casillero) {
-  const n = casillero + 1; // próxima situación a resolver
-  if (n <= CASILLEROS_POR_ERA) return "ERA I";
-  if (n <= CASILLEROS_POR_ERA * 2) return "ERA II";
-  return "ERA III";
-}
+  const rows = hoja.getDataRange().getValues().slice(1).filter(function(f) {
+    return String(f[0]).trim() === eraStr &&
+           String(f[2]).trim() === areaStr &&
+           String(f[3]).trim() === nombre;
+  });
 
-function obtenerSituacionAleatoria(ss, area, casillero) {
-  const hoja = ss.getSheetByName("Situaciones");
-  if (!hoja) return { titulo: "Sin datos", desc: "Verificá la hoja 'Situaciones'.", tipo: "situacion" };
-  // Columnas: ID(0) | Título(1) | Descripción(2) | Área(3) | ERA(4) | Trayecto(5) | Tipo(6)
-  const datos = hoja.getDataRange().getValues().slice(1);
-  const era = eraDeCasillero(casillero || 0);
-
-  let filtrados = datos.filter(f => (f[4] || "").toString().toUpperCase() === era);
-  const porAreaYEra = filtrados.filter(f => f[3] && f[3].toString().toLowerCase() === (area || "").toLowerCase());
-  if (porAreaYEra.length) filtrados = porAreaYEra;
-  if (!filtrados.length) filtrados = datos;
-
-  const e = filtrados[Math.floor(Math.random() * filtrados.length)];
-  return { id: String(e[0]).trim(), titulo: e[1], desc: e[2], era: e[4] || era, trayecto: e[5] || "", tipo: (e[6] || "situacion").toString().toLowerCase() };
+  return rows.map(function(f) {
+    const tipo  = String(f[7]).trim();
+    const herr  = String(f[10] || "").trim();
+    const req   = (tipo === "Herramienta fácil" || tipo === "Herramienta compleja") ? herr : "";
+    return {
+      id:               situacionId + "_C" + f[6],
+      texto:            String(f[8]).trim(),
+      puntaje:          Number(f[9]) || 0,
+      req:              req,
+      herramientaNombre: herr,
+      tipo:             tipo,
+      bloqueada:        req !== "" && !(herramientasUsuario || []).includes(req)
+    };
+  });
 }
 
 // ─────────────────────────────────────────────
@@ -573,29 +626,30 @@ function verificarAdminPin(pin) {
 
 function obtenerTodasHerramientas() {
   const ss = SpreadsheetApp.openById(SS_ID);
-  const hoja = ss.getSheetByName('Herramientas');
+  const hoja = ss.getSheetByName('Herramientas (contenido)');
   if (!hoja) return [];
-  const datos = hoja.getDataRange().getValues();
-  const headers = datos[0];
-  return datos.slice(1)
-    .filter(f => String(f[0]).trim() !== '')
-    .map((f, i) => ({
-      _fila:         i + 2,
-      id:            String(f[0]).trim(),
-      nombre:        f[1]  || '',
-      contenido:     f[2]  || '',
-      area:          f[3]  || '',
-      insigniaID:    f[4]  || '',
-      pregunta:      f[5]  || '',
-      respuesta:     f[6]  || '',
-      competencia:   f[7]  || '',
-      videoUrl:      f[8]  || '',
-      infografiaUrl: f[9]  || '',
-      opcionA:       f[10] || '',
-      opcionB:       f[11] || '',
-      opcionC:       f[12] || '',
-      opcionD:       f[13] || ''
-    }));
+  return hoja.getDataRange().getValues().slice(1)
+    .filter(function(f){ return String(f[0]).trim() !== ''; })
+    .map(function(f, i) {
+      return {
+        _fila:        i + 2,
+        id:           String(f[0]).trim(),
+        nombre:       String(f[0]).trim(),
+        nivel:        f[1]  || '',
+        area:         f[2]  || '',
+        competencia:  f[3]  || '',
+        contenido:    f[4]  || '',
+        pregunta:     f[5]  || '',
+        respuesta:    f[6]  || '',
+        opcionA:      f[7]  || '',
+        opcionB:      f[8]  || '',
+        opcionC:      f[9]  || '',
+        opcionD:      f[10] || '',
+        videoUrl:     f[11] || '',
+        infografiaUrl:f[12] || '',
+        insigniaID:   f[13] || ''
+      };
+    });
 }
 
 function obtenerCompetenciasCatalogo() {
@@ -609,27 +663,28 @@ function obtenerCompetenciasCatalogo() {
 
 function guardarHerramienta(datos) {
   const ss = SpreadsheetApp.openById(SS_ID);
-  let hoja = ss.getSheetByName('Herramientas');
+  let hoja = ss.getSheetByName('Herramientas (contenido)');
   if (!hoja) {
-    hoja = ss.insertSheet('Herramientas');
-    hoja.appendRow(['ID','Nombre','Contenido','Area','InsigniaID','Pregunta','Respuesta','Competencia','VideoUrl','InfografiaUrl','OpcionA','OpcionB','OpcionC','OpcionD']);
+    hoja = ss.insertSheet('Herramientas (contenido)');
+    hoja.appendRow(['Herramienta','Nivel','Área','Competencia','Contenido a estudiar','Pregunta de comprobación','Respuesta correcta','OpcionA','OpcionB','OpcionC','OpcionD','VideoUrl','InfografiaUrl','InsigniaID']);
   }
 
+  const nombre = String(datos.nombre || datos.id || '').trim();
   const fila = [
-    String(datos.id).trim(),
-    datos.nombre        || '',
-    datos.contenido     || '',
+    nombre,
+    datos.nivel         || '',
     datos.area          || '',
-    datos.insigniaID    || '',
+    datos.competencia   || '',
+    datos.contenido     || '',
     datos.pregunta      || '',
     datos.respuesta     || '',
-    datos.competencia   || '',
-    datos.videoUrl      || '',
-    datos.infografiaUrl || '',
     datos.opcionA       || '',
     datos.opcionB       || '',
     datos.opcionC       || '',
-    datos.opcionD       || ''
+    datos.opcionD       || '',
+    datos.videoUrl      || '',
+    datos.infografiaUrl || '',
+    datos.insigniaID    || ''
   ];
 
   if (datos._fila && datos._fila >= 2) {
@@ -648,9 +703,70 @@ function eliminarHerramienta(fila) {
   return { ok: true };
 }
 
+function obtenerTodasSituaciones() {
+  const ss = SpreadsheetApp.openById(SS_ID);
+  const hoja = ss.getSheetByName('Situaciones y respuestas');
+  if (!hoja) return [];
+  return hoja.getDataRange().getValues().slice(1)
+    .filter(function(f){ return f[0] && f[3]; })
+    .map(function(f, i) {
+      return {
+        _fila:        i + 2,
+        era:          String(f[0]).trim(),
+        trayecto:     String(f[1]).trim(),
+        area:         String(f[2]).trim(),
+        situacion:    String(f[3]).trim(),
+        descripcion:  String(f[4]).trim(),
+        competencia:  String(f[5]).trim(),
+        nroCarta:     String(f[6]).trim(),
+        tipoRespuesta:String(f[7]).trim(),
+        textoRespuesta:String(f[8]).trim(),
+        puntaje:      String(f[9]).trim(),
+        herramienta:  String(f[10] || '').trim()
+      };
+    });
+}
+
+function guardarSituacion(datos) {
+  const ss = SpreadsheetApp.openById(SS_ID);
+  let hoja = ss.getSheetByName('Situaciones y respuestas');
+  if (!hoja) {
+    hoja = ss.insertSheet('Situaciones y respuestas');
+    hoja.appendRow(['ERA','Trayecto','Área municipal','Situación','Descripción de la situación','Competencia que fortalece','N° de carta','Tipo de respuesta','Texto de la respuesta','Puntaje','Herramienta que hay que estudiar']);
+  }
+  const fila = [
+    datos.era          || '',
+    datos.trayecto     || '',
+    datos.area         || '',
+    datos.situacion    || '',
+    datos.descripcion  || '',
+    datos.competencia  || '',
+    datos.nroCarta     || '',
+    datos.tipoRespuesta|| '',
+    datos.textoRespuesta|| '',
+    datos.puntaje      || 0,
+    datos.herramienta  || ''
+  ];
+  if (datos._fila && datos._fila >= 2) {
+    hoja.getRange(datos._fila, 1, 1, fila.length).setValues([fila]);
+  } else {
+    hoja.appendRow(fila);
+  }
+  return { ok: true };
+}
+
+function eliminarSituacion(fila) {
+  const ss = SpreadsheetApp.openById(SS_ID);
+  const hoja = ss.getSheetByName('Situaciones y respuestas');
+  if (!hoja || fila < 2) return { ok: false };
+  hoja.deleteRow(Number(fila));
+  return { ok: true };
+}
+
 function obtenerDatosAdmin() {
   return {
     herramientas: obtenerTodasHerramientas(),
+    situaciones:  obtenerTodasSituaciones(),
     competencias: obtenerCompetenciasCatalogo()
   };
 }

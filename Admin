@@ -12,166 +12,126 @@
   --gold-br: #b8860b;
   --green:   #2e7d50;
   --red:     #8b2020;
+  --blue:    #1a4a7a;
   --border:  rgba(230,189,133,.18);
   --card:    rgba(255,255,255,.04);
   --text:    #ddd;
   --sub:     #999;
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family: system-ui,-apple-system,sans-serif;
 }
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-body { background: var(--navy); color: var(--text); min-height: 100vh; }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--navy);color:var(--text);min-height:100vh;}
 
-/* ── LOGIN ── */
-#login-wrap {
-  display: flex; align-items: center; justify-content: center;
-  min-height: 100vh;
-}
-.login-box {
-  background: var(--navy2); border: 1px solid var(--border);
-  border-radius: 16px; padding: 40px 36px; width: 360px; text-align: center;
-}
-.login-logo { font-size: 40px; margin-bottom: 8px; }
-.login-title { font-size: 20px; font-weight: 700; color: var(--gold); margin-bottom: 4px; }
-.login-sub { font-size: 13px; color: var(--sub); margin-bottom: 28px; }
-.inp {
-  width: 100%; background: rgba(255,255,255,.06); border: 1px solid var(--border);
-  border-radius: 8px; padding: 12px 14px; color: #fff; font-size: 15px;
-  margin-bottom: 12px; outline: none;
-}
-.inp:focus { border-color: var(--gold-br); }
-.btn {
-  width: 100%; padding: 13px; border: none; border-radius: 8px;
-  font-size: 15px; font-weight: 600; cursor: pointer; transition: .15s;
-}
-.btn-gold { background: var(--gold-br); color: #fff; }
-.btn-gold:hover { background: #9a700a; }
-.btn-ghost {
-  background: transparent; border: 1px solid var(--border);
-  color: var(--gold); font-size: 13px; padding: 9px;
-  margin-top: 8px;
-}
-.btn-ghost:hover { background: var(--card); }
-.err-msg { color: #e57373; font-size: 13px; margin-top: 8px; display: none; }
+/* LOGIN */
+#login-wrap{display:flex;align-items:center;justify-content:center;min-height:100vh;}
+.login-box{background:var(--navy2);border:1px solid var(--border);border-radius:16px;padding:40px 36px;width:360px;text-align:center;}
+.login-logo{font-size:40px;margin-bottom:8px;}
+.login-title{font-size:20px;font-weight:700;color:var(--gold);margin-bottom:4px;}
+.login-sub{font-size:13px;color:var(--sub);margin-bottom:28px;}
+.inp{width:100%;background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:8px;padding:12px 14px;color:#fff;font-size:15px;margin-bottom:12px;outline:none;}
+.inp:focus{border-color:var(--gold-br);}
+.btn{padding:13px;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;transition:.15s;width:100%;}
+.btn-gold{background:var(--gold-br);color:#fff;}
+.btn-gold:hover{background:#9a700a;}
+.btn-ghost{background:transparent;border:1px solid var(--border);color:var(--text);}
+.btn-ghost:hover{background:var(--card);}
+.err-msg{color:#e57373;font-size:13px;margin-top:8px;display:none;}
 
-/* ── APP ── */
-#app { display: none; }
-.topbar {
-  background: var(--navy2); border-bottom: 1px solid var(--border);
-  padding: 14px 28px; display: flex; align-items: center; gap: 16px;
-}
-.topbar-title { font-size: 16px; font-weight: 700; color: var(--gold); flex: 1; }
-.topbar-btn {
-  background: transparent; border: 1px solid var(--border);
-  color: var(--gold); border-radius: 8px; padding: 7px 14px;
-  font-size: 13px; cursor: pointer;
-}
-.topbar-btn:hover { background: var(--card); }
-.topbar-btn.new { background: var(--green); border-color: var(--green); color: #fff; }
-.topbar-btn.new:hover { background: #256642; }
+/* APP */
+#app{display:none;}
+.topbar{background:var(--navy2);border-bottom:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+.topbar-title{font-size:15px;font-weight:700;color:var(--gold);flex:1;min-width:200px;}
+.topbar-btn{background:transparent;border:1px solid var(--border);color:var(--gold);border-radius:8px;padding:7px 14px;font-size:13px;cursor:pointer;white-space:nowrap;}
+.topbar-btn:hover{background:var(--card);}
+.topbar-btn.new{background:var(--green);border-color:var(--green);color:#fff;}
+.topbar-btn.new:hover{background:#256642;}
 
-.content { max-width: 1000px; margin: 0 auto; padding: 28px 24px; }
+/* TABS */
+.tabs{display:flex;gap:0;border-bottom:1px solid var(--border);padding:0 24px;background:var(--navy2);}
+.tab-btn{padding:12px 20px;background:transparent;border:none;border-bottom:2px solid transparent;color:var(--sub);font-size:14px;font-weight:600;cursor:pointer;transition:.15s;}
+.tab-btn.active{color:var(--gold);border-bottom-color:var(--gold-br);}
+.tab-btn:hover:not(.active){color:var(--text);}
 
-/* ── MÓDULO LIST ── */
-.mod-grid { display: grid; gap: 12px; }
-.mod-card {
-  background: var(--card); border: 1px solid var(--border);
-  border-radius: 12px; padding: 16px 20px;
-  display: flex; align-items: center; gap: 16px;
-}
-.mod-card:hover { border-color: rgba(230,189,133,.35); }
-.mod-icon { font-size: 28px; min-width: 40px; text-align: center; }
-.mod-info { flex: 1; }
-.mod-name { font-size: 15px; font-weight: 600; color: #eee; margin-bottom: 3px; }
-.mod-meta { font-size: 12px; color: var(--sub); }
-.mod-badge {
-  font-size: 11px; background: rgba(184,134,11,.2); color: var(--gold);
-  border-radius: 20px; padding: 3px 10px; white-space: nowrap;
-}
-.mod-actions { display: flex; gap: 8px; }
-.act-btn {
-  border: 1px solid var(--border); border-radius: 8px;
-  padding: 6px 14px; font-size: 12px; cursor: pointer; background: transparent;
-  transition: .12s;
-}
-.act-edit { color: var(--gold); }
-.act-edit:hover { background: rgba(184,134,11,.15); }
-.act-del { color: #e57373; border-color: rgba(229,115,115,.3); }
-.act-del:hover { background: rgba(229,115,115,.12); }
+.content{max-width:1100px;margin:0 auto;padding:24px 20px 60px;}
 
-.empty-state { text-align: center; padding: 60px 20px; color: var(--sub); font-size: 15px; }
+/* CARDS LIST */
+.mod-grid{display:grid;gap:10px;}
+.mod-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 18px;display:flex;align-items:center;gap:14px;transition:.12s;}
+.mod-card:hover{border-color:rgba(230,189,133,.35);}
+.mod-icon{font-size:26px;min-width:38px;text-align:center;}
+.mod-info{flex:1;min-width:0;}
+.mod-name{font-size:14px;font-weight:600;color:#eee;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.mod-meta{font-size:12px;color:var(--sub);}
+.mod-badge{font-size:11px;background:rgba(184,134,11,.2);color:var(--gold);border-radius:20px;padding:3px 10px;white-space:nowrap;}
+.mod-badge.blue{background:rgba(26,74,122,.4);color:#7ab3e8;}
+.mod-actions{display:flex;gap:8px;flex-shrink:0;}
+.act-btn{border:1px solid var(--border);border-radius:8px;padding:6px 12px;font-size:12px;cursor:pointer;background:transparent;transition:.12s;white-space:nowrap;}
+.act-edit{color:var(--gold);}
+.act-edit:hover{background:rgba(184,134,11,.15);}
+.act-del{color:#e57373;border-color:rgba(229,115,115,.3);}
+.act-del:hover{background:rgba(229,115,115,.12);}
 
-/* ── FORM ── */
-#form-panel { display: none; }
-.form-card {
-  background: var(--card); border: 1px solid var(--border);
-  border-radius: 16px; padding: 28px 28px 36px;
-}
-.form-title { font-size: 18px; font-weight: 700; color: var(--gold); margin-bottom: 24px; }
-.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-.form-group { display: flex; flex-direction: column; gap: 6px; }
-.form-group.full { grid-column: 1 / -1; }
-.form-lbl { font-size: 12px; font-weight: 600; color: var(--sub); text-transform: uppercase; letter-spacing: .5px; }
-.form-inp, .form-sel, .form-ta {
-  background: rgba(255,255,255,.06); border: 1px solid var(--border);
-  border-radius: 8px; padding: 10px 12px; color: #fff; font-size: 14px;
-  outline: none; width: 100%;
-}
-.form-inp:focus, .form-sel:focus, .form-ta:focus { border-color: var(--gold-br); }
-.form-ta { min-height: 120px; resize: vertical; font-family: inherit; }
-.form-sel option { background: var(--navy2); }
-.form-hint { font-size: 11px; color: var(--sub); margin-top: 2px; }
+.empty-state{text-align:center;padding:60px 20px;color:var(--sub);font-size:15px;}
+.spin{display:none;border:3px solid rgba(255,255,255,.1);border-top-color:var(--gold);border-radius:50%;width:36px;height:36px;animation:spin .7s linear infinite;margin:60px auto;}
+@keyframes spin{to{transform:rotate(360deg);}}
 
-.opciones-wrap { display: none; }
-.opciones-wrap.visible { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+/* FORM */
+#form-panel{display:none;}
+.form-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px 24px 32px;}
+.form-title{font-size:17px;font-weight:700;color:var(--gold);margin-bottom:20px;}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.form-group{display:flex;flex-direction:column;gap:5px;}
+.form-group.full{grid-column:1/-1;}
+.form-lbl{font-size:11px;font-weight:600;color:var(--sub);text-transform:uppercase;letter-spacing:.5px;}
+.form-inp,.form-sel,.form-ta{background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:8px;padding:10px 12px;color:#fff;font-size:14px;outline:none;width:100%;}
+.form-inp:focus,.form-sel:focus,.form-ta:focus{border-color:var(--gold-br);}
+.form-ta{min-height:110px;resize:vertical;font-family:inherit;}
+.form-sel option{background:var(--navy2);}
+.form-hint{font-size:11px;color:var(--sub);}
+.opciones-wrap{display:none;}
+.opciones-wrap.visible{display:block;}
+.form-actions{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap;}
+.btn-save{background:var(--green);color:#fff;flex:1;padding:12px 20px;}
+.btn-save:hover{background:#256642;}
+.btn-cancel{background:transparent;border:1px solid var(--border);color:var(--text);padding:12px 18px;}
 
-.form-actions { display: flex; gap: 12px; margin-top: 24px; flex-wrap: wrap; }
-.btn-save { background: var(--green); color: #fff; padding: 13px 28px; flex: 1; }
-.btn-save:hover { background: #256642; }
-.btn-cancel { background: transparent; border: 1px solid var(--border); color: var(--text); padding: 13px 20px; }
-.btn-cancel:hover { background: var(--card); }
+/* SIT GROUP */
+.sit-group{margin-bottom:8px;border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+.sit-header{background:rgba(255,255,255,.03);padding:12px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;}
+.sit-header:hover{background:rgba(255,255,255,.06);}
+.sit-hname{flex:1;font-size:14px;font-weight:600;color:#eee;}
+.sit-hmeta{font-size:12px;color:var(--sub);}
+.sit-hbadge{font-size:11px;border-radius:20px;padding:2px 10px;background:rgba(26,74,122,.4);color:#7ab3e8;}
+.sit-hbadge.II{background:rgba(42,82,11,.4);color:#a8c06e;}
+.sit-hbadge.III{background:rgba(100,30,60,.4);color:#c89ab4;}
+.sit-cartas{display:none;}
+.sit-cartas.open{display:block;}
+.carta-row{padding:10px 16px 10px 48px;border-top:1px solid var(--border);display:flex;align-items:flex-start;gap:12px;}
+.carta-num{font-size:18px;min-width:28px;}
+.carta-info{flex:1;min-width:0;}
+.carta-tipo{font-size:11px;font-weight:600;color:var(--sub);text-transform:uppercase;margin-bottom:2px;}
+.carta-texto{font-size:13px;color:#ddd;}
+.carta-herr{font-size:12px;color:var(--gold);margin-top:2px;}
+.carta-actions{display:flex;gap:6px;flex-shrink:0;}
 
-/* ── TOAST ── */
-.toast {
-  position: fixed; bottom: 24px; right: 24px; z-index: 9999;
-  background: var(--green); color: #fff; border-radius: 10px;
-  padding: 14px 22px; font-size: 14px; font-weight: 600;
-  transform: translateY(80px); opacity: 0; transition: .25s ease;
-  pointer-events: none;
-}
-.toast.show { transform: translateY(0); opacity: 1; }
-.toast.err { background: var(--red); }
+/* TOAST + CONFIRM */
+.toast{position:fixed;bottom:24px;right:24px;z-index:9999;background:var(--green);color:#fff;border-radius:10px;padding:14px 22px;font-size:14px;font-weight:600;transform:translateY(80px);opacity:0;transition:.25s ease;pointer-events:none;}
+.toast.show{transform:translateY(0);opacity:1;}
+.toast.err{background:var(--red);}
+#confirm-modal{display:none;position:fixed;inset:0;z-index:5000;background:rgba(0,0,0,.7);align-items:center;justify-content:center;}
+#confirm-modal.open{display:flex;}
+.confirm-box{background:var(--navy2);border:1px solid var(--border);border-radius:16px;padding:32px 28px;width:340px;text-align:center;}
+.confirm-title{font-size:17px;font-weight:700;color:#eee;margin-bottom:10px;}
+.confirm-sub{font-size:14px;color:var(--sub);margin-bottom:24px;}
+.confirm-actions{display:flex;gap:12px;}
+.btn-confirm-del{background:var(--red);color:#fff;flex:1;padding:12px;}
+.btn-confirm-del:hover{background:#6b1818;}
+.btn-confirm-cancel{background:transparent;border:1px solid var(--border);color:var(--text);flex:1;padding:12px;}
 
-/* ── LOADER ── */
-.spin {
-  display: none; border: 3px solid rgba(255,255,255,.1);
-  border-top-color: var(--gold); border-radius: 50%;
-  width: 36px; height: 36px; animation: spin .7s linear infinite;
-  margin: 60px auto;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-
-/* ── CONFIRM MODAL ── */
-#confirm-modal {
-  display: none; position: fixed; inset: 0; z-index: 5000;
-  background: rgba(0,0,0,.7); align-items: center; justify-content: center;
-}
-#confirm-modal.open { display: flex; }
-.confirm-box {
-  background: var(--navy2); border: 1px solid var(--border);
-  border-radius: 16px; padding: 32px 28px; width: 340px; text-align: center;
-}
-.confirm-title { font-size: 17px; font-weight: 700; color: #eee; margin-bottom: 10px; }
-.confirm-sub { font-size: 14px; color: var(--sub); margin-bottom: 24px; }
-.confirm-actions { display: flex; gap: 12px; }
-.btn-confirm-del { background: var(--red); color: #fff; flex: 1; padding: 12px; }
-.btn-confirm-del:hover { background: #6b1818; }
-.btn-confirm-cancel { background: transparent; border: 1px solid var(--border); color: var(--text); flex: 1; padding: 12px; }
-
-@media (max-width: 640px) {
-  .form-grid { grid-template-columns: 1fr; }
-  .form-group.full { grid-column: 1; }
-  .opciones-wrap.visible { grid-template-columns: 1fr; }
-  .mod-card { flex-wrap: wrap; }
+@media(max-width:640px){
+  .form-grid{grid-template-columns:1fr;}
+  .form-group.full{grid-column:1;}
+  .mod-card{flex-wrap:wrap;}
 }
 </style>
 </head>
@@ -186,145 +146,219 @@ body { background: var(--navy); color: var(--text); min-height: 100vh; }
     <input class="inp" id="pin-inp" type="password" placeholder="PIN de acceso"
       onkeydown="if(event.key==='Enter')login()">
     <button class="btn btn-gold" onclick="login()">INGRESAR</button>
-    <div class="err-msg" id="login-err">PIN incorrecto. Intentá de nuevo.</div>
+    <div class="err-msg" id="login-err">PIN incorrecto.</div>
   </div>
 </div>
 
 <!-- APP -->
 <div id="app">
   <div class="topbar">
-    <span class="topbar-title">🏛️ Misión Muni · Módulos de capacitación</span>
+    <span class="topbar-title">🏛️ Misión Muni · Panel de contenido</span>
     <button class="topbar-btn" onclick="recargar()">↺ Actualizar</button>
-    <button class="topbar-btn new" onclick="nuevoModulo()">+ Nuevo módulo</button>
+    <button class="topbar-btn new" id="btn-nuevo" onclick="nuevo()">+ Nuevo</button>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" id="tab-herr" onclick="cambiarTab('herr')">📚 Herramientas</button>
+    <button class="tab-btn" id="tab-sit"  onclick="cambiarTab('sit')">⚡ Situaciones</button>
   </div>
 
   <div class="content">
-    <!-- LISTA -->
-    <div id="list-panel">
-      <div class="spin" id="spin-list"></div>
-      <div class="mod-grid" id="mod-list"></div>
+    <div class="spin" id="spin-list"></div>
+
+    <!-- ── HERRAMIENTAS ── -->
+    <div id="panel-herr">
+      <div class="mod-grid" id="herr-list"></div>
     </div>
 
-    <!-- FORMULARIO -->
+    <!-- ── SITUACIONES ── -->
+    <div id="panel-sit" style="display:none">
+      <div id="sit-list"></div>
+    </div>
+
+    <!-- ── FORM HERRAMIENTA ── -->
     <div id="form-panel">
       <div class="form-card">
-        <div class="form-title" id="form-title">Nuevo módulo</div>
+        <div class="form-title" id="form-title">Nueva herramienta</div>
         <input type="hidden" id="f-fila">
-
         <div class="form-grid">
-          <div class="form-group">
-            <label class="form-lbl">ID del módulo *</label>
-            <input class="form-inp" id="f-id" placeholder="ej: MOD_PLANIF_01">
-            <span class="form-hint">Identificador único. No usar espacios ni acentos.</span>
+          <div class="form-group full">
+            <label class="form-lbl">Nombre de la herramienta *</label>
+            <input class="form-inp" id="f-nombre" placeholder="ej: Delegación Efectiva">
+            <span class="form-hint">El nombre ES el identificador — debe coincidir exactamente con el de la hoja Situaciones.</span>
           </div>
           <div class="form-group">
-            <label class="form-lbl">Nombre del módulo *</label>
-            <input class="form-inp" id="f-nombre" placeholder="ej: Planificación del trabajo">
+            <label class="form-lbl">Nivel</label>
+            <select class="form-sel" id="f-nivel">
+              <option value="Fácil">Fácil</option>
+              <option value="Compleja">Compleja</option>
+            </select>
           </div>
           <div class="form-group">
-            <label class="form-lbl">Área temática</label>
-            <input class="form-inp" id="f-area" placeholder="ej: Organización, Gestión, etc.">
+            <label class="form-lbl">Área</label>
+            <input class="form-inp" id="f-area" placeholder="ej: Hacienda">
           </div>
-          <div class="form-group">
+          <div class="form-group full">
             <label class="form-lbl">Competencia que fortalece</label>
             <select class="form-sel" id="f-competencia">
               <option value="">— ninguna —</option>
             </select>
           </div>
           <div class="form-group full">
-            <label class="form-lbl">Contenido / texto del módulo *</label>
-            <textarea class="form-ta" id="f-contenido" placeholder="Escribí el contenido del módulo. Podés usar párrafos separados por líneas en blanco."></textarea>
-            <span class="form-hint">Este texto se muestra al jugador al estudiar el módulo.</span>
+            <label class="form-lbl">Contenido a estudiar *</label>
+            <textarea class="form-ta" id="f-contenido" placeholder="Escribí el contenido del módulo de aprendizaje…"></textarea>
           </div>
           <div class="form-group">
             <label class="form-lbl">URL de video (opcional)</label>
             <input class="form-inp" id="f-video" placeholder="https://youtube.com/...">
-            <span class="form-hint">YouTube o link directo a video.</span>
           </div>
           <div class="form-group">
             <label class="form-lbl">URL de infografía (opcional)</label>
-            <input class="form-inp" id="f-infografia" placeholder="https://... (imagen o Canva)">
+            <input class="form-inp" id="f-infografia" placeholder="https://...">
           </div>
           <div class="form-group full">
-            <label class="form-lbl">Pregunta del cuestionario *</label>
-            <input class="form-inp" id="f-pregunta" placeholder="ej: ¿Cuál es el primer paso para planificar?">
+            <label class="form-lbl">Pregunta de comprobación *</label>
+            <input class="form-inp" id="f-pregunta" placeholder="ej: ¿Cuáles son los 3 pasos del método SBI?">
           </div>
           <div class="form-group full">
             <label class="form-lbl">Tipo de respuesta</label>
-            <select class="form-sel" id="f-tipo" onchange="toggleTipoRespuesta()">
-              <option value="libre">Respuesta libre (el jugador escribe)</option>
+            <select class="form-sel" id="f-tipo" onchange="toggleTipo()">
+              <option value="libre">Respuesta libre</option>
               <option value="multiple">Opción múltiple</option>
             </select>
           </div>
-
-          <!-- OPCIONES MULTIPLE CHOICE -->
           <div class="form-group full opciones-wrap" id="opciones-wrap">
-            <div class="form-grid" style="margin-top:0">
-              <div class="form-group">
-                <label class="form-lbl">Opción A</label>
-                <input class="form-inp" id="f-opA" placeholder="Primera opción">
-              </div>
-              <div class="form-group">
-                <label class="form-lbl">Opción B</label>
-                <input class="form-inp" id="f-opB" placeholder="Segunda opción">
-              </div>
-              <div class="form-group">
-                <label class="form-lbl">Opción C</label>
-                <input class="form-inp" id="f-opC" placeholder="Tercera opción (opcional)">
-              </div>
-              <div class="form-group">
-                <label class="form-lbl">Opción D</label>
-                <input class="form-inp" id="f-opD" placeholder="Cuarta opción (opcional)">
-              </div>
+            <div class="form-grid">
+              <div class="form-group"><label class="form-lbl">Opción A</label><input class="form-inp" id="f-opA"></div>
+              <div class="form-group"><label class="form-lbl">Opción B</label><input class="form-inp" id="f-opB"></div>
+              <div class="form-group"><label class="form-lbl">Opción C (opcional)</label><input class="form-inp" id="f-opC"></div>
+              <div class="form-group"><label class="form-lbl">Opción D (opcional)</label><input class="form-inp" id="f-opD"></div>
             </div>
-            <div class="form-group" style="margin-top:4px">
-              <label class="form-lbl">Respuesta correcta (copiá exactamente la opción)</label>
-              <input class="form-inp" id="f-respuesta-multi" placeholder="Pegá aquí el texto exacto de la opción correcta">
+            <div class="form-group" style="margin-top:8px">
+              <label class="form-lbl">Respuesta correcta (texto exacto de la opción)</label>
+              <input class="form-inp" id="f-respuesta-multi">
             </div>
           </div>
-
-          <!-- RESPUESTA LIBRE -->
-          <div class="form-group full" id="respuesta-libre-wrap">
+          <div class="form-group full" id="libre-wrap">
             <label class="form-lbl">Respuesta correcta *</label>
-            <input class="form-inp" id="f-respuesta-libre" placeholder="ej: si">
-            <span class="form-hint">El jugador debe escribir exactamente esto (en minúsculas). Recomendado: "si" para confirmar lectura.</span>
+            <input class="form-inp" id="f-respuesta-libre" placeholder="ej: situacion, comportamiento, impacto">
+            <span class="form-hint">El jugador debe escribir exactamente esto (minúsculas). Para confirmar lectura usá "si".</span>
           </div>
-
           <div class="form-group">
             <label class="form-lbl">ID de insignia (opcional)</label>
-            <input class="form-inp" id="f-insignia" placeholder="ej: INS_PLANIF">
-            <span class="form-hint">ID de la insignia que se otorga al completar.</span>
+            <input class="form-inp" id="f-insignia" placeholder="ej: INS_FEEDBACK">
           </div>
         </div>
-
         <div class="form-actions">
-          <button class="btn btn-save" onclick="guardarModulo()">💾 GUARDAR MÓDULO</button>
+          <button class="btn btn-save" onclick="guardarHerr()">💾 GUARDAR</button>
           <button class="btn btn-cancel btn-ghost" onclick="cancelarForm()">Cancelar</button>
         </div>
       </div>
     </div>
+
+    <!-- ── FORM SITUACIÓN (carta individual) ── -->
+    <div id="form-sit-panel" style="display:none">
+      <div class="form-card">
+        <div class="form-title" id="sit-form-title">Editar carta</div>
+        <input type="hidden" id="sf-fila">
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-lbl">ERA *</label>
+            <select class="form-sel" id="sf-era">
+              <option value="ERA I ORGANIZACION DEL TRABAJO">ERA I · Organización del Trabajo</option>
+              <option value="ERA II GESTION DEL DESEMPEÑO">ERA II · Gestión del Desempeño</option>
+              <option value="ERA III DESARROLLO DEL EQUIPO">ERA III · Desarrollo del Equipo</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-lbl">Trayecto</label>
+            <select class="form-sel" id="sf-trayecto">
+              <option value="Operativo">Operativo</option>
+              <option value="Estratégico">Estratégico</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-lbl">Área municipal *</label>
+            <select class="form-sel" id="sf-area">
+              <option value="Hacienda">Hacienda</option>
+              <option value="Servicios Públicos">Servicios Públicos</option>
+              <option value="Capital Humano">Capital Humano</option>
+              <option value="Obras Particulares">Obras Particulares</option>
+              <option value="Direcciones">Direcciones</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-lbl">Competencia que fortalece</label>
+            <select class="form-sel" id="sf-competencia">
+              <option value="">— ninguna —</option>
+            </select>
+          </div>
+          <div class="form-group full">
+            <label class="form-lbl">Nombre de la situación *</label>
+            <input class="form-inp" id="sf-sit" placeholder="ej: Sobrecarga de tareas">
+          </div>
+          <div class="form-group full">
+            <label class="form-lbl">Descripción de la situación *</label>
+            <textarea class="form-ta" id="sf-desc" style="min-height:80px"></textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-lbl">N° de carta (1-4)</label>
+            <input class="form-inp" id="sf-nro" type="number" min="1" max="4">
+          </div>
+          <div class="form-group">
+            <label class="form-lbl">Tipo de respuesta</label>
+            <select class="form-sel" id="sf-tipo">
+              <option value="Sin capacitación (neutro)">Sin capacitación (neutro)</option>
+              <option value="Herramienta fácil">Herramienta fácil</option>
+              <option value="Herramienta compleja">Herramienta compleja</option>
+            </select>
+          </div>
+          <div class="form-group full">
+            <label class="form-lbl">Texto de la acción/respuesta *</label>
+            <textarea class="form-ta" id="sf-texto" style="min-height:80px"></textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-lbl">Puntaje</label>
+            <select class="form-sel" id="sf-puntaje">
+              <option value="0">0 — sin herramienta</option>
+              <option value="5">5 — herramienta fácil</option>
+              <option value="10">10 — herramienta compleja</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-lbl">Herramienta requerida (cartas 3-4)</label>
+            <select class="form-sel" id="sf-herr">
+              <option value="">— ninguna —</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-save" onclick="guardarSit()">💾 GUARDAR CARTA</button>
+          <button class="btn btn-cancel btn-ghost" onclick="cancelarSitForm()">Cancelar</button>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>
 
-<!-- CONFIRM DELETE -->
+<!-- CONFIRM -->
 <div id="confirm-modal">
   <div class="confirm-box">
-    <div class="confirm-title">¿Eliminar módulo?</div>
-    <div class="confirm-sub" id="confirm-nombre"></div>
+    <div class="confirm-title">¿Eliminar?</div>
+    <div class="confirm-sub" id="confirm-sub"></div>
     <div class="confirm-actions">
       <button class="btn btn-confirm-del" onclick="confirmarEliminar()">SÍ, ELIMINAR</button>
       <button class="btn btn-confirm-cancel btn-ghost" onclick="cancelarEliminar()">Cancelar</button>
     </div>
   </div>
 </div>
-
 <div class="toast" id="toast"></div>
 
 <script>
-let modulos = [];
-let competencias = [];
-let filaAEliminar = null;
-let nombreAEliminar = '';
+let herramientas = [], situaciones = [], competencias = [];
+let tabActual = 'herr';
+let pendingDelete = null;
 
 // ── AUTH ──
 function login() {
@@ -332,7 +366,7 @@ function login() {
   if (!pin) return;
   document.getElementById('login-err').style.display = 'none';
   google.script.run
-    .withSuccessHandler(ok => {
+    .withSuccessHandler(function(ok) {
       if (ok) {
         document.getElementById('login-wrap').style.display = 'none';
         document.getElementById('app').style.display = 'block';
@@ -340,135 +374,180 @@ function login() {
       } else {
         document.getElementById('login-err').style.display = 'block';
         document.getElementById('pin-inp').value = '';
-        document.getElementById('pin-inp').focus();
       }
     })
-    .withFailureHandler(() => showToast('Error de conexión', true))
+    .withFailureHandler(function(){ toast('Error de conexión', true); })
     .verificarAdminPin(pin);
 }
 
 // ── CARGA ──
 function cargarTodo() {
-  mostrarSpin(true);
+  spin(true);
   google.script.run
-    .withSuccessHandler(data => {
-      competencias = data.competencias || [];
-      modulos = data.herramientas || [];
-      llenarSelectCompetencias();
-      renderLista();
-      mostrarSpin(false);
+    .withSuccessHandler(function(d) {
+      herramientas = d.herramientas || [];
+      situaciones  = d.situaciones  || [];
+      competencias = d.competencias || [];
+      llenarSelects();
+      renderTab();
+      spin(false);
     })
-    .withFailureHandler(e => { mostrarSpin(false); showToast('Error al cargar: ' + e.message, true); })
+    .withFailureHandler(function(e){ spin(false); toast('Error: '+e.message, true); })
     .obtenerDatosAdmin();
 }
+function recargar() { ocultarForms(); cargarTodo(); }
 
-function recargar() { mostrarPanel('list'); cargarTodo(); }
+// ── TABS ──
+function cambiarTab(t) {
+  tabActual = t;
+  ['herr','sit'].forEach(function(x){
+    document.getElementById('tab-'+x).classList.toggle('active', x===t);
+    document.getElementById('panel-'+x).style.display = x===t ? 'block' : 'none';
+  });
+  ocultarForms();
+  document.getElementById('btn-nuevo').textContent = t==='herr' ? '+ Nueva herramienta' : '+ Nueva situación (carta)';
+}
 
-// ── RENDER LISTA ──
-function renderLista() {
-  const el = document.getElementById('mod-list');
-  if (!modulos.length) {
-    el.innerHTML = '<div class="empty-state">No hay módulos cargados.<br>Creá el primero con el botón "+ Nuevo módulo".</div>';
+function nuevo() {
+  if (tabActual === 'herr') nuevaHerr();
+  else nuevaSit();
+}
+
+// ── RENDER HERRAMIENTAS ──
+function renderHerr() {
+  const el = document.getElementById('herr-list');
+  if (!herramientas.length) {
+    el.innerHTML = '<div class="empty-state">No hay herramientas cargadas. Creá la primera con "+ Nueva herramienta".</div>';
     return;
   }
-  el.innerHTML = modulos.map(m => {
-    const icon = iconPorArea(m.area);
-    const comp = competencias.find(c => c.id === m.competencia);
-    const compNombre = comp ? comp.nombre : (m.competencia || '—');
-    const tieneMulti = m.opcionA || m.opcionB;
-    return `<div class="mod-card">
-      <div class="mod-icon">${icon}</div>
-      <div class="mod-info">
-        <div class="mod-name">${esc(m.nombre) || '<sin nombre>'}</div>
-        <div class="mod-meta">
-          <span>${esc(m.area) || 'Sin área'}</span> ·
-          <span>Competencia: ${esc(compNombre)}</span> ·
-          <span>${tieneMulti ? 'Opción múltiple' : 'Respuesta libre'}</span>
-        </div>
-      </div>
-      <span class="mod-badge">${esc(m.id)}</span>
-      <div class="mod-actions">
-        <button class="act-btn act-edit" onclick="editarModulo('${esc(m.id)}')">✏️ Editar</button>
-        <button class="act-btn act-del" onclick="pedirEliminar(${m._fila}, '${esc(m.nombre)}')">🗑️ Eliminar</button>
-      </div>
-    </div>`;
+  el.innerHTML = herramientas.map(function(h) {
+    const ic = iconHerr(h.nivel);
+    return '<div class="mod-card">' +
+      '<div class="mod-icon">'+ic+'</div>' +
+      '<div class="mod-info">' +
+        '<div class="mod-name">'+esc(h.nombre)+'</div>' +
+        '<div class="mod-meta">'+esc(h.area||'—')+' · '+esc(h.competencia||'—')+'</div>' +
+      '</div>' +
+      '<span class="mod-badge">'+esc(h.nivel||'')+'</span>' +
+      '<div class="mod-actions">' +
+        '<button class="act-btn act-edit" onclick="editarHerr('+h._fila+')">✏️ Editar</button>' +
+        '<button class="act-btn act-del" onclick="pedirEliminar(\'herr\','+h._fila+',\''+esc(h.nombre)+'\')">🗑️</button>' +
+      '</div>' +
+    '</div>';
   }).join('');
 }
-
-function iconPorArea(area) {
-  const a = (area || '').toLowerCase();
-  if (a.includes('planif') || a.includes('organ')) return '📋';
-  if (a.includes('lider') || a.includes('equipo')) return '👥';
-  if (a.includes('comunic')) return '💬';
-  if (a.includes('desempeño') || a.includes('gestion')) return '📈';
-  if (a.includes('conflicto')) return '🤝';
-  return '📚';
+function iconHerr(nivel) {
+  return (nivel||'').toLowerCase().indexOf('comp') > -1 ? '🔧' : '📖';
 }
 
-// ── FORMULARIO ──
-function nuevoModulo() {
-  limpiarForm();
-  document.getElementById('form-title').innerText = 'Nuevo módulo';
-  mostrarPanel('form');
-}
-
-function editarModulo(id) {
-  const m = modulos.find(x => x.id === id);
-  if (!m) return;
-  limpiarForm();
-  document.getElementById('form-title').innerText = 'Editar módulo';
-  document.getElementById('f-fila').value = m._fila;
-  document.getElementById('f-id').value = m.id;
-  document.getElementById('f-nombre').value = m.nombre;
-  document.getElementById('f-area').value = m.area;
-  document.getElementById('f-competencia').value = m.competencia;
-  document.getElementById('f-contenido').value = m.contenido;
-  document.getElementById('f-video').value = m.videoUrl;
-  document.getElementById('f-infografia').value = m.infografiaUrl;
-  document.getElementById('f-pregunta').value = m.pregunta;
-  document.getElementById('f-insignia').value = m.insigniaID;
-
-  const tieneMulti = m.opcionA || m.opcionB;
-  if (tieneMulti) {
-    document.getElementById('f-tipo').value = 'multiple';
-    document.getElementById('f-opA').value = m.opcionA;
-    document.getElementById('f-opB').value = m.opcionB;
-    document.getElementById('f-opC').value = m.opcionC;
-    document.getElementById('f-opD').value = m.opcionD;
-    document.getElementById('f-respuesta-multi').value = m.respuesta;
-  } else {
-    document.getElementById('f-tipo').value = 'libre';
-    document.getElementById('f-respuesta-libre').value = m.respuesta;
+// ── RENDER SITUACIONES ──
+function renderSit() {
+  const el = document.getElementById('sit-list');
+  if (!situaciones.length) {
+    el.innerHTML = '<div class="empty-state">No hay situaciones cargadas. Agregá una con "+ Nueva situación (carta)".</div>';
+    return;
   }
-  toggleTipoRespuesta();
-  mostrarPanel('form');
-}
-
-function limpiarForm() {
-  ['f-fila','f-id','f-nombre','f-area','f-contenido','f-video','f-infografia',
-   'f-pregunta','f-insignia','f-opA','f-opB','f-opC','f-opD',
-   'f-respuesta-multi','f-respuesta-libre'].forEach(id => {
-    document.getElementById(id).value = '';
+  // Agrupar por ERA||AREA||SIT
+  const grupos = {};
+  situaciones.forEach(function(s) {
+    const k = s.era+'||'+s.area+'||'+s.situacion;
+    if (!grupos[k]) grupos[k] = { era: s.era, area: s.area, situacion: s.situacion, desc: s.descripcion, comp: s.competencia, cartas: [] };
+    grupos[k].cartas.push(s);
   });
-  document.getElementById('f-competencia').value = '';
-  document.getElementById('f-tipo').value = 'libre';
-  toggleTipoRespuesta();
+  const keys = Object.keys(grupos).sort();
+  el.innerHTML = keys.map(function(k) {
+    const g = grupos[k];
+    const eraNum = g.era.indexOf('I ORGAN') > -1 ? 'I' : g.era.indexOf('II GESTI') > -1 ? 'II' : 'III';
+    const cartasHTML = g.cartas.sort(function(a,b){ return a.nroCarta - b.nroCarta; }).map(function(c) {
+      const ics = ['','1️⃣','2️⃣','3️⃣','4️⃣'];
+      return '<div class="carta-row">' +
+        '<div class="carta-num">'+(ics[c.nroCarta]||c.nroCarta)+'</div>' +
+        '<div class="carta-info">' +
+          '<div class="carta-tipo">'+esc(c.tipoRespuesta)+(c.puntaje?' · '+c.puntaje+' pts':'')+'</div>' +
+          '<div class="carta-texto">'+esc(c.textoRespuesta)+'</div>' +
+          (c.herramienta ? '<div class="carta-herr">🔧 '+esc(c.herramienta)+'</div>' : '') +
+        '</div>' +
+        '<div class="carta-actions">' +
+          '<button class="act-btn act-edit" onclick="editarSit('+c._fila+')">✏️</button>' +
+          '<button class="act-btn act-del" onclick="pedirEliminar(\'sit\','+c._fila+',\'carta '+c.nroCarta+' de '+esc(c.situacion)+'\')">🗑️</button>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+    return '<div class="sit-group">' +
+      '<div class="sit-header" onclick="toggleSit(this)">' +
+        '<span class="sit-hbadge '+eraNum+'">ERA '+eraNum+'</span>' +
+        '<span class="sit-hname">'+esc(g.situacion)+'</span>' +
+        '<span class="sit-hmeta">'+esc(g.area)+' · '+esc(g.comp)+'</span>' +
+        '<span style="color:var(--sub);font-size:12px">▼</span>' +
+      '</div>' +
+      '<div class="sit-cartas">'+cartasHTML+'</div>' +
+    '</div>';
+  }).join('');
+}
+function toggleSit(hdr) {
+  const c = hdr.nextElementSibling;
+  c.classList.toggle('open');
+  hdr.querySelector('span:last-child').textContent = c.classList.contains('open') ? '▲' : '▼';
 }
 
-function toggleTipoRespuesta() {
-  const tipo = document.getElementById('f-tipo').value;
-  document.getElementById('opciones-wrap').classList.toggle('visible', tipo === 'multiple');
-  document.getElementById('respuesta-libre-wrap').style.display = tipo === 'libre' ? 'block' : 'none';
+function renderTab() {
+  if (tabActual === 'herr') renderHerr();
+  else renderSit();
 }
 
-function cancelarForm() { mostrarPanel('list'); }
-
-function guardarModulo() {
+// ── FORM HERRAMIENTA ──
+function nuevaHerr() {
+  limpiarFormHerr();
+  document.getElementById('form-title').textContent = 'Nueva herramienta';
+  mostrarFormHerr();
+}
+function editarHerr(fila) {
+  const h = herramientas.find(function(x){ return x._fila===fila; });
+  if (!h) return;
+  limpiarFormHerr();
+  document.getElementById('form-title').textContent = 'Editar herramienta';
+  document.getElementById('f-fila').value = h._fila;
+  document.getElementById('f-nombre').value = h.nombre;
+  document.getElementById('f-nivel').value = h.nivel||'Fácil';
+  document.getElementById('f-area').value = h.area;
+  document.getElementById('f-competencia').value = h.competencia;
+  document.getElementById('f-contenido').value = h.contenido;
+  document.getElementById('f-video').value = h.videoUrl;
+  document.getElementById('f-infografia').value = h.infografiaUrl;
+  document.getElementById('f-pregunta').value = h.pregunta;
+  document.getElementById('f-insignia').value = h.insigniaID;
+  const multi = h.opcionA || h.opcionB;
+  document.getElementById('f-tipo').value = multi ? 'multiple' : 'libre';
+  if (multi) {
+    document.getElementById('f-opA').value = h.opcionA;
+    document.getElementById('f-opB').value = h.opcionB;
+    document.getElementById('f-opC').value = h.opcionC;
+    document.getElementById('f-opD').value = h.opcionD;
+    document.getElementById('f-respuesta-multi').value = h.respuesta;
+  } else {
+    document.getElementById('f-respuesta-libre').value = h.respuesta;
+  }
+  toggleTipo();
+  mostrarFormHerr();
+}
+function limpiarFormHerr() {
+  ['f-fila','f-nombre','f-area','f-contenido','f-video','f-infografia','f-pregunta','f-insignia','f-opA','f-opB','f-opC','f-opD','f-respuesta-multi','f-respuesta-libre'].forEach(function(id){ document.getElementById(id).value=''; });
+  document.getElementById('f-competencia').value='';
+  document.getElementById('f-nivel').value='Fácil';
+  document.getElementById('f-tipo').value='libre';
+  toggleTipo();
+}
+function toggleTipo() {
+  const t = document.getElementById('f-tipo').value;
+  document.getElementById('opciones-wrap').classList.toggle('visible', t==='multiple');
+  document.getElementById('libre-wrap').style.display = t==='libre' ? '' : 'none';
+}
+function guardarHerr() {
   const tipo = document.getElementById('f-tipo').value;
-  const datos = {
-    _fila:        parseInt(document.getElementById('f-fila').value) || 0,
-    id:           document.getElementById('f-id').value.trim(),
+  const d = {
+    _fila:        parseInt(document.getElementById('f-fila').value)||0,
     nombre:       document.getElementById('f-nombre').value.trim(),
+    nivel:        document.getElementById('f-nivel').value,
     area:         document.getElementById('f-area').value.trim(),
     competencia:  document.getElementById('f-competencia').value,
     contenido:    document.getElementById('f-contenido').value.trim(),
@@ -476,81 +555,149 @@ function guardarModulo() {
     infografiaUrl:document.getElementById('f-infografia').value.trim(),
     pregunta:     document.getElementById('f-pregunta').value.trim(),
     insigniaID:   document.getElementById('f-insignia').value.trim(),
-    respuesta:    tipo === 'multiple'
-                    ? document.getElementById('f-respuesta-multi').value.trim().toLowerCase()
-                    : document.getElementById('f-respuesta-libre').value.trim().toLowerCase(),
-    opcionA:      tipo === 'multiple' ? document.getElementById('f-opA').value.trim() : '',
-    opcionB:      tipo === 'multiple' ? document.getElementById('f-opB').value.trim() : '',
-    opcionC:      tipo === 'multiple' ? document.getElementById('f-opC').value.trim() : '',
-    opcionD:      tipo === 'multiple' ? document.getElementById('f-opD').value.trim() : ''
+    respuesta:    tipo==='multiple' ? document.getElementById('f-respuesta-multi').value.trim().toLowerCase()
+                                    : document.getElementById('f-respuesta-libre').value.trim().toLowerCase(),
+    opcionA: tipo==='multiple' ? document.getElementById('f-opA').value.trim() : '',
+    opcionB: tipo==='multiple' ? document.getElementById('f-opB').value.trim() : '',
+    opcionC: tipo==='multiple' ? document.getElementById('f-opC').value.trim() : '',
+    opcionD: tipo==='multiple' ? document.getElementById('f-opD').value.trim() : ''
   };
-
-  if (!datos.id)       return showToast('El ID es obligatorio', true);
-  if (!datos.nombre)   return showToast('El nombre es obligatorio', true);
-  if (!datos.contenido)return showToast('El contenido es obligatorio', true);
-  if (!datos.pregunta) return showToast('La pregunta es obligatoria', true);
-  if (!datos.respuesta)return showToast('La respuesta correcta es obligatoria', true);
-
+  if (!d.nombre)    return toast('El nombre es obligatorio', true);
+  if (!d.contenido) return toast('El contenido es obligatorio', true);
+  if (!d.pregunta)  return toast('La pregunta es obligatoria', true);
+  if (!d.respuesta) return toast('La respuesta correcta es obligatoria', true);
   google.script.run
-    .withSuccessHandler(() => {
-      showToast('Módulo guardado correctamente ✓');
-      mostrarPanel('list');
-      recargar();
-    })
-    .withFailureHandler(e => showToast('Error al guardar: ' + e.message, true))
-    .guardarHerramienta(datos);
+    .withSuccessHandler(function(){ toast('Herramienta guardada ✓'); ocultarForms(); recargar(); })
+    .withFailureHandler(function(e){ toast('Error: '+e.message, true); })
+    .guardarHerramienta(d);
 }
+
+// ── FORM SITUACIÓN ──
+function nuevaSit() {
+  limpiarFormSit();
+  document.getElementById('sit-form-title').textContent = 'Nueva carta de situación';
+  mostrarFormSit();
+}
+function editarSit(fila) {
+  const s = situaciones.find(function(x){ return x._fila===fila; });
+  if (!s) return;
+  limpiarFormSit();
+  document.getElementById('sit-form-title').textContent = 'Editar carta';
+  document.getElementById('sf-fila').value = s._fila;
+  document.getElementById('sf-era').value = s.era;
+  document.getElementById('sf-trayecto').value = s.trayecto||'Operativo';
+  document.getElementById('sf-area').value = s.area;
+  document.getElementById('sf-competencia').value = s.competencia;
+  document.getElementById('sf-sit').value = s.situacion;
+  document.getElementById('sf-desc').value = s.descripcion;
+  document.getElementById('sf-nro').value = s.nroCarta;
+  document.getElementById('sf-tipo').value = s.tipoRespuesta;
+  document.getElementById('sf-texto').value = s.textoRespuesta;
+  document.getElementById('sf-puntaje').value = s.puntaje;
+  document.getElementById('sf-herr').value = s.herramienta;
+  mostrarFormSit();
+}
+function limpiarFormSit() {
+  ['sf-fila','sf-sit','sf-desc','sf-nro','sf-texto'].forEach(function(id){ document.getElementById(id).value=''; });
+  document.getElementById('sf-era').value = 'ERA I ORGANIZACION DEL TRABAJO';
+  document.getElementById('sf-trayecto').value = 'Operativo';
+  document.getElementById('sf-area').value = 'Hacienda';
+  document.getElementById('sf-competencia').value = '';
+  document.getElementById('sf-tipo').value = 'Sin capacitación (neutro)';
+  document.getElementById('sf-puntaje').value = '0';
+  document.getElementById('sf-herr').value = '';
+}
+function guardarSit() {
+  const d = {
+    _fila:         parseInt(document.getElementById('sf-fila').value)||0,
+    era:           document.getElementById('sf-era').value,
+    trayecto:      document.getElementById('sf-trayecto').value,
+    area:          document.getElementById('sf-area').value,
+    competencia:   document.getElementById('sf-competencia').value,
+    situacion:     document.getElementById('sf-sit').value.trim(),
+    descripcion:   document.getElementById('sf-desc').value.trim(),
+    nroCarta:      document.getElementById('sf-nro').value,
+    tipoRespuesta: document.getElementById('sf-tipo').value,
+    textoRespuesta:document.getElementById('sf-texto').value.trim(),
+    puntaje:       parseInt(document.getElementById('sf-puntaje').value)||0,
+    herramienta:   document.getElementById('sf-herr').value
+  };
+  if (!d.situacion)     return toast('El nombre de la situación es obligatorio', true);
+  if (!d.textoRespuesta) return toast('El texto de la acción es obligatorio', true);
+  if (!d.nroCarta)      return toast('El número de carta es obligatorio', true);
+  google.script.run
+    .withSuccessHandler(function(){ toast('Carta guardada ✓'); ocultarForms(); recargar(); })
+    .withFailureHandler(function(e){ toast('Error: '+e.message, true); })
+    .guardarSituacion(d);
+}
+
+// ── PANELS ──
+function mostrarFormHerr() {
+  document.getElementById('panel-herr').style.display='none';
+  document.getElementById('panel-sit').style.display='none';
+  document.getElementById('form-panel').style.display='block';
+  document.getElementById('form-sit-panel').style.display='none';
+}
+function mostrarFormSit() {
+  document.getElementById('panel-herr').style.display='none';
+  document.getElementById('panel-sit').style.display='none';
+  document.getElementById('form-panel').style.display='none';
+  document.getElementById('form-sit-panel').style.display='block';
+}
+function ocultarForms() {
+  document.getElementById('form-panel').style.display='none';
+  document.getElementById('form-sit-panel').style.display='none';
+  document.getElementById('panel-'+tabActual).style.display='block';
+}
+function cancelarForm()    { ocultarForms(); }
+function cancelarSitForm() { ocultarForms(); }
 
 // ── ELIMINAR ──
-function pedirEliminar(fila, nombre) {
-  filaAEliminar = fila;
-  nombreAEliminar = nombre;
-  document.getElementById('confirm-nombre').innerText = '¿Querés eliminar "' + nombre + '"? Esta acción no se puede deshacer.';
+function pedirEliminar(tipo, fila, nombre) {
+  pendingDelete = { tipo, fila };
+  document.getElementById('confirm-sub').textContent = '¿Eliminar "'+nombre+'"? Esta acción no se puede deshacer.';
   document.getElementById('confirm-modal').classList.add('open');
 }
-function cancelarEliminar() {
-  filaAEliminar = null;
-  document.getElementById('confirm-modal').classList.remove('open');
-}
+function cancelarEliminar() { pendingDelete=null; document.getElementById('confirm-modal').classList.remove('open'); }
 function confirmarEliminar() {
-  if (!filaAEliminar) return;
+  if (!pendingDelete) return;
   document.getElementById('confirm-modal').classList.remove('open');
+  const fn = pendingDelete.tipo==='herr' ? 'eliminarHerramienta' : 'eliminarSituacion';
+  const fila = pendingDelete.fila;
+  pendingDelete = null;
   google.script.run
-    .withSuccessHandler(() => { showToast('Módulo eliminado'); recargar(); })
-    .withFailureHandler(e => showToast('Error: ' + e.message, true))
-    .eliminarHerramienta(filaAEliminar);
-  filaAEliminar = null;
+    .withSuccessHandler(function(){ toast('Eliminado'); recargar(); })
+    .withFailureHandler(function(e){ toast('Error: '+e.message, true); })
+    [fn](fila);
 }
 
 // ── HELPERS ──
-function llenarSelectCompetencias() {
-  const sel = document.getElementById('f-competencia');
-  const current = sel.value;
-  sel.innerHTML = '<option value="">— ninguna —</option>' +
-    competencias.map(c => `<option value="${esc(c.id)}">${esc(c.nombre)}</option>`).join('');
-  sel.value = current;
+function llenarSelects() {
+  const comps = ['f-competencia','sf-competencia'];
+  comps.forEach(function(id){
+    const sel = document.getElementById(id);
+    const cur = sel.value;
+    sel.innerHTML = '<option value="">— ninguna —</option>' +
+      competencias.map(function(c){ return '<option value="'+esc(c.codigo)+'">'+esc(c.nombre)+'</option>'; }).join('');
+    sel.value = cur;
+  });
+  const herrSel = document.getElementById('sf-herr');
+  const curH = herrSel.value;
+  herrSel.innerHTML = '<option value="">— ninguna —</option>' +
+    herramientas.map(function(h){ return '<option value="'+esc(h.nombre)+'">'+esc(h.nombre)+'</option>'; }).join('');
+  herrSel.value = curH;
 }
-
-function mostrarPanel(p) {
-  document.getElementById('list-panel').style.display = p === 'list' ? 'block' : 'none';
-  document.getElementById('form-panel').style.display = p === 'form' ? 'block' : 'none';
-}
-
-function mostrarSpin(on) {
+function spin(on) {
   document.getElementById('spin-list').style.display = on ? 'block' : 'none';
-  document.getElementById('mod-list').style.display = on ? 'none' : 'grid';
+  if (on) { document.getElementById('panel-herr').style.display='none'; document.getElementById('panel-sit').style.display='none'; }
+  else document.getElementById('panel-'+tabActual).style.display='block';
 }
-
-function showToast(msg, err) {
+function toast(msg, err) {
   const t = document.getElementById('toast');
-  t.innerText = msg;
-  t.className = 'toast' + (err ? ' err' : '') + ' show';
-  setTimeout(() => { t.className = 'toast' + (err ? ' err' : ''); }, 3200);
+  t.textContent=msg; t.className='toast'+(err?' err':'')+' show';
+  setTimeout(function(){ t.className='toast'+(err?' err':''); }, 3200);
 }
-
-function esc(s) {
-  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 </script>
 </body>
 </html>
