@@ -505,12 +505,15 @@ Respondé en español rioplatense (vos/ustedes). Máximo 3 oraciones. Si la preg
       payload: JSON.stringify(payload),
       muteHttpExceptions: true
     });
-    const json = JSON.parse(resp.getContentText());
+    const raw = resp.getContentText();
+    const json = JSON.parse(raw);
     if (json.content && json.content[0] && json.content[0].text) {
       return { respuesta: json.content[0].text, error: false };
     }
-    return { respuesta: "No pude generar una respuesta. Intentá de nuevo.", error: true };
+    // Devolver el error real de la API para diagnóstico
+    const apiError = json.error ? json.error.message : raw.substring(0, 200);
+    return { respuesta: "Error de API: " + apiError, error: true };
   } catch(e) {
-    return { respuesta: "Error al conectar con el asistente: " + e.message, error: true };
+    return { respuesta: "Error de conexión: " + e.message, error: true };
   }
 }
