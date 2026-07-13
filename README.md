@@ -327,7 +327,17 @@ Acciones a llevar a cabo ahora.
 Quisiera mejorar el juego, poniendo la siguiente foto como fondo de pantalla. ChatGPT Image 5 may 2026, 17_00_50.png
 cambiar la base de datos a
 https://docs.google.com/spreadsheets/d/19Uk0MQT4a0Tarnx1H2qiVPX6YaAMg_FQsrhjla8VHBc/edit?usp=sharing
-
-
+se pego la actualizacion de codigo al 13/07 y las modificaciones a realizar son las siguiente: 
+1. Ranking en la primera pantalla
+Se agregó un panel flotante en el lado derecho de la pantalla de bienvenida con la tabla de los top 10 jugadores: posición (🥇🥈🥉), nombre, equipo, puntaje y nivel.
+El ranking se carga automáticamente al abrir el juego.
+Cuando un jugador termina la partida, su resultado se guarda automáticamente en una hoja "Ranking" del spreadsheet. Si ya jugó antes, actualiza su puntaje.
+2. Reglas con asistente IA
+Las reglas ahora son accesibles desde el dashboard del juego (botón 📋 REGLAS en el header superior).
+Dentro del modal de reglas se agregó una sección de chat con asistente IA (Claude Haiku): el jugador escribe su duda, presiona PREGUNTAR (o Enter) y recibe una respuesta en español sobre las reglas del juego.
+Para activar el asistente IA, necesitás agregar tu clave ANTHROPIC_API_KEY en las Propiedades del script de Google Apps Script (Proyecto → Propiedades → Propiedades del script).
+3. Panel de competencias siempre visible
+El panel de Módulos de Capacitación ahora aparece abierto por defecto cuando empieza el juego (no hay que hacer clic para verlo).
+Se corrigió el bug donde la información de módulos desaparecía después de la primera acción (el estado de la biblioteca se preserva correctamente en cada actualización).
 
 
