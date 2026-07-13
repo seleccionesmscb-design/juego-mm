@@ -302,6 +302,32 @@ button{font:inherit}
 .mbtn.prim:hover{background:var(--gold-br);color:var(--navy);border-color:var(--gold-br);}
 .mbtn.sec{background:transparent;color:var(--navy);}
 .mbtn.sec:hover{background:var(--perg-dk);}
+/* ── RANKING ── */
+.ranking-box{background:linear-gradient(170deg,rgba(251,238,211,.96),rgba(240,214,166,.96));border:1px solid #cf9a54;border-radius:14px;padding:18px 20px;width:100%;max-width:440px;box-shadow:0 10px 28px rgba(70,33,9,.28);}
+.ranking-title{font-family:'Cinzel',serif;font-size:12px;font-weight:700;letter-spacing:2.5px;color:var(--navy);margin-bottom:11px;text-align:center;}
+.ranking-row{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px dashed rgba(150,80,35,.2);}
+.ranking-row:last-child{border-bottom:none;}
+.ranking-medal{font-size:14px;width:20px;text-align:center;flex:none;}
+.ranking-pos{font-family:'Cinzel',serif;font-size:10px;font-weight:700;color:var(--gold);width:16px;text-align:center;flex:none;}
+.ranking-name{flex:1;font-family:'Spectral',Georgia,serif;font-size:12px;font-weight:600;color:#301a0a;line-height:1.2;}
+.ranking-dir{font-size:9.5px;color:var(--gold);font-style:italic;}
+.ranking-score{font-family:'Cinzel',serif;font-size:12px;font-weight:700;color:var(--gold-br);text-align:right;}
+.ranking-nivel{font-size:9px;color:var(--gold);}
+.ranking-empty{font-size:12px;font-style:italic;color:var(--gold);text-align:center;padding:8px 0;}
+
+/* ── AI CHAT ── */
+.ia-chat-box{margin-top:18px;border-top:1px dashed rgba(150,80,35,.3);padding-top:16px;}
+.ia-chat-title{font-family:'Cinzel',serif;font-size:10px;font-weight:700;letter-spacing:2px;color:var(--gold-br);margin-bottom:9px;}
+.ia-msgs{max-height:150px;overflow-y:auto;margin-bottom:9px;display:flex;flex-direction:column;gap:6px;}
+.ia-msg{font-family:'Spectral',Georgia,serif;font-size:13px;line-height:1.45;padding:7px 11px;border-radius:8px;max-width:90%;}
+.ia-msg.user{background:rgba(74,33,9,.1);color:#301a0a;align-self:flex-end;}
+.ia-msg.bot{background:rgba(240,214,166,.75);border:1px solid #d7a866;color:#4a2109;align-self:flex-start;}
+.ia-inp-row{display:flex;gap:7px;}
+.ia-inp{flex:1;padding:8px 11px;font-family:'Spectral',Georgia,serif;font-size:13px;color:#301a0a;background:#fffaf0;border:1.5px solid #cf9a54;border-radius:8px;outline:none;}
+.ia-inp:focus{border-color:var(--gold-br);}
+.ia-btn{background:var(--navy);color:var(--perg);border:none;border-radius:8px;padding:8px 13px;font-family:'Cinzel',serif;font-size:11px;font-weight:700;letter-spacing:1px;cursor:pointer;white-space:nowrap;}
+.ia-btn:hover{background:var(--gold-br);}
+.ia-btn:disabled{opacity:.5;cursor:default;}
   </style>
 </head>
 <body>
@@ -344,6 +370,10 @@ button{font:inherit}
       <div class="card-footer">
         <button class="link-btn" onclick="abrirReglas()">📋 Ver reglas del juego</button>
       </div>
+    </div>
+    <div class="ranking-box">
+      <div class="ranking-title">🏆 TABLA DE POSICIONES</div>
+      <div id="ranking-list"><div class="ranking-empty">Cargando…</div></div>
     </div>
   </div>
 </div>
@@ -528,7 +558,15 @@ button{font:inherit}
       <div class="rule-it"><div class="rule-n">5</div><p>Al terminar cada era llegás a un <strong>encuentro presencial</strong> donde llevás los recursos acumulados para trabajar con otros equipos.</p></div>
       <div class="rule-it"><div class="rule-n">🏆</div><p>Gana quien mejor <strong>desarrolla sus competencias de gestión</strong> y usa estratégicamente los recursos. No gana quien más acumula, sino quien mejor gestiona.</p></div>
     </div>
-    <button class="btn-primary" style="margin-top:24px" onclick="cerrarReglas()">ENTENDIDO, ¡COMENCEMOS!</button>
+    <div class="ia-chat-box">
+      <div class="ia-chat-title">🤖 ASISTENTE · Preguntá sobre las reglas</div>
+      <div class="ia-msgs" id="ia-msgs"></div>
+      <div class="ia-inp-row">
+        <input class="ia-inp" id="ia-input" placeholder="Escribí tu duda aquí…" onkeydown="if(event.key==='Enter')preguntarIA()">
+        <button class="ia-btn" id="ia-send" onclick="preguntarIA()">Preguntar</button>
+      </div>
+    </div>
+    <button class="btn-primary" style="margin-top:16px" onclick="cerrarReglas()">ENTENDIDO, ¡COMENCEMOS!</button>
   </div>
 </div>
 
@@ -829,7 +867,12 @@ function confirmarAccion() {
   const d = selectedCard; selectedCard = null; showLoader();
   google.script.run
     .withSuccessHandler(res=>{
-      g=res; hideLoader();
+      const bib=g.biblioteca, cat=g.competenciasCatalogo, grp=g.gruposCompetencia;
+      g=res;
+      if(!g.biblioteca) g.biblioteca=bib;
+      if(!g.competenciasCatalogo) g.competenciasCatalogo=cat;
+      if(!g.gruposCompetencia) g.gruposCompetencia=grp;
+      hideLoader();
       if(res.finalizado) mostrarFinal();
       else if(res.encuentro) mostrarEncuentro(res.nroEncuentro);
       else render();
@@ -994,12 +1037,57 @@ function mostrarFinal() {
     document.getElementById('final-detail').innerHTML =
       `Puntaje acumulado: <span>${p.puntaje||0}</span><br>Recursos totales: <span>${p.totalRecursos}</span><br>Insignias obtenidas: <span>${p.insignias}</span><br>Competencias fortalecidas: <span>${(p.competenciasFortalecidas||[]).join(', ')||'—'}</span>`;
     document.getElementById('final-screen').style.display='flex';
+    google.script.run.guardarResultado(g.estado, p);
   }).calcularPuntajeFinal(g.estado);
+}
+
+/* ── RANKING ── */
+function cargarRanking() {
+  google.script.run
+    .withSuccessHandler(function(ranking) {
+      const el = document.getElementById('ranking-list');
+      if(!el) return;
+      if(!ranking || !ranking.length) { el.innerHTML = '<div class="ranking-empty">Sin partidas completadas aún. ¡Sé el primero!</div>'; return; }
+      const medals = ['🥇','🥈','🥉'];
+      el.innerHTML = ranking.map(function(r,i) {
+        const medal = i < 3 ? '<span class="ranking-medal">'+medals[i]+'</span><span class="ranking-pos"></span>' : '<span class="ranking-medal"></span><span class="ranking-pos">'+(i+1)+'°</span>';
+        return '<div class="ranking-row">'+medal+'<div class="ranking-name">'+(r.nombre||r.legajo)+'<br><span class="ranking-dir">'+(r.equipo||r.direccion||'')+'</span></div><div class="ranking-score">'+(r.puntaje||0)+'<br><span class="ranking-nivel">'+(r.nivel||'')+'</span></div></div>';
+      }).join('');
+    })
+    .withFailureHandler(function(){})
+    .obtenerRanking();
+}
+
+/* ── ASISTENTE IA ── */
+function preguntarIA() {
+  const inp = document.getElementById('ia-input');
+  const pregunta = inp ? inp.value.trim() : '';
+  if(!pregunta) return;
+  const msgs = document.getElementById('ia-msgs');
+  if(msgs) { msgs.innerHTML += '<div class="ia-msg user">'+pregunta+'</div>'; msgs.scrollTop = msgs.scrollHeight; }
+  if(inp) inp.value = '';
+  const btn = document.getElementById('ia-send');
+  if(btn) btn.disabled = true;
+  if(msgs) { msgs.innerHTML += '<div class="ia-msg bot" id="ia-thinking">Pensando…</div>'; msgs.scrollTop = msgs.scrollHeight; }
+  google.script.run
+    .withSuccessHandler(function(res) {
+      const t = document.getElementById('ia-thinking'); if(t) t.remove();
+      if(msgs) { msgs.innerHTML += '<div class="ia-msg bot">'+(res.respuesta||'No pude responder.')+'</div>'; msgs.scrollTop = msgs.scrollHeight; }
+      if(btn) btn.disabled = false;
+    })
+    .withFailureHandler(function() {
+      const t = document.getElementById('ia-thinking'); if(t) t.remove();
+      if(msgs) msgs.innerHTML += '<div class="ia-msg bot">Error al conectar. Intentá de nuevo.</div>';
+      if(btn) btn.disabled = false;
+    })
+    .consultarAsistenteIA(pregunta);
 }
 
 /* ── UTILS ── */
 function showLoader(){document.getElementById('loader').style.display='flex';}
 function hideLoader(){document.getElementById('loader').style.display='none';}
+
+cargarRanking();
 </script>
 </body>
 </html>

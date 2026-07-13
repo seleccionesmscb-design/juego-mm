@@ -405,3 +405,112 @@ function calcularPuntajeFinal(estado) {
     nivel: prom >= 4 ? "Excelente" : prom >= 2.5 ? "Bueno" : "En desarrollo"
   };
 }
+
+// ─────────────────────────────────────────────
+// RANKING
+// ─────────────────────────────────────────────
+function obtenerHojaRanking(ss) {
+  let hoja = ss.getSheetByName("Ranking");
+  if (!hoja) {
+    hoja = ss.insertSheet("Ranking");
+    hoja.appendRow(["Legajo","NombreAgente","Equipo","Direccion","Puntaje","Nivel","TotalRecursos","Insignias","Fecha"]);
+  }
+  return hoja;
+}
+
+function guardarResultado(estado, puntaje) {
+  const ss = SpreadsheetApp.openById(SS_ID);
+  const hoja = obtenerHojaRanking(ss);
+  const legajoStr = String(estado.legajo).trim();
+  const datos = hoja.getDataRange().getValues();
+
+  let filaIdx = -1;
+  for (let i = 1; i < datos.length; i++) {
+    if (String(datos[i][0]).trim() === legajoStr) { filaIdx = i + 1; break; }
+  }
+
+  const fila = [
+    estado.legajo,
+    estado.nombreAgente,
+    estado.nombreEquipo || ("Dirección de " + estado.direccion),
+    estado.direccion,
+    puntaje.puntaje || 0,
+    puntaje.nivel || "",
+    puntaje.totalRecursos || 0,
+    puntaje.insignias || 0,
+    new Date()
+  ];
+
+  if (filaIdx > 0) hoja.getRange(filaIdx, 1, 1, fila.length).setValues([fila]);
+  else hoja.appendRow(fila);
+}
+
+function obtenerRanking() {
+  const ss = SpreadsheetApp.openById(SS_ID);
+  const hoja = obtenerHojaRanking(ss);
+  const datos = hoja.getDataRange().getValues().slice(1)
+    .filter(f => f[0])
+    .map(f => ({
+      legajo:    String(f[0]).trim(),
+      nombre:    f[1] || "",
+      equipo:    f[2] || "",
+      direccion: f[3] || "",
+      puntaje:   Number(f[4]) || 0,
+      nivel:     f[5] || "",
+      recursos:  Number(f[6]) || 0,
+      insignias: Number(f[7]) || 0
+    }));
+
+  datos.sort((a, b) => b.puntaje - a.puntaje);
+  return datos.slice(0, 10);
+}
+
+// ─────────────────────────────────────────────
+// ASISTENTE IA
+// ─────────────────────────────────────────────
+function consultarAsistenteIA(pregunta) {
+  const apiKey = PropertiesService.getScriptProperties().getProperty('ANTHROPIC_API_KEY');
+  if (!apiKey) return { respuesta: "No hay clave de API configurada. Pedile al administrador que configure ANTHROPIC_API_KEY en las propiedades del script.", error: true };
+
+  const systemPrompt = `Sos el asistente de "Misión Muni", un simulador de gestión para mandos medios de la Municipalidad de Bariloche. Respondé consultas sobre las reglas en español, de forma clara y amigable.
+
+Reglas clave:
+- 30 casilleros en 3 Eras de 10 situaciones cada una.
+- Era I: Organización del trabajo. Era II: Gestión del desempeño. Era III: Desarrollo del equipo.
+- En cada turno aparece una situación/crisis y el jugador elige una carta de acción.
+- Las cartas PROFESIONALES se desbloquean completando el módulo de capacitación correspondiente.
+- Completar módulos fortalece las competencias de gestión y otorga insignias.
+- Al terminar cada era hay un encuentro presencial grupal.
+- Gana quien mejor desarrolla sus competencias, no quien más recursos acumula.
+- El legajo define la dirección: Hacienda, Servicios Públicos, Capital Humano u Obras Particulares.
+- El progreso se guarda automáticamente y se puede retomar.
+
+Respondé en español rioplatense (vos/ustedes). Máximo 3 oraciones. Si la pregunta no es sobre las reglas, redirigí amablemente.`;
+
+  const payload = {
+    model: "claude-haiku-4-5-20251001",
+    max_tokens: 300,
+    system: systemPrompt,
+    messages: [{ role: "user", content: String(pregunta).trim() }]
+  };
+
+  try {
+    const resp = UrlFetchApp.fetch("https://api.anthropic.com/v1/messages", {
+      method: "post",
+      contentType: "application/json",
+      headers: {
+        "x-api-key": apiKey,
+        "anthropic-version": "2023-06-01"
+      },
+      payload: JSON.stringify(payload),
+      muteHttpExceptions: true
+    });
+    const json = JSON.parse(resp.getContentText());
+    if (json.content && json.content[0] && json.content[0].text) {
+      return { respuesta: json.content[0].text, error: false };
+    }
+    return { respuesta: "No pude generar una respuesta. Intentá de nuevo.", error: true };
+  } catch(e) {
+    return { respuesta: "Error al conectar con el asistente: " + e.message, error: true };
+  }
+}
