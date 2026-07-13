@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Misión Muni · Admin</title>
+<style>
+:root {
+  --navy:    #0f1b2d;
+  --navy2:   #162035;
+  --gold:    #e6bd85;
+  --gold-br: #b8860b;
+  --green:   #2e7d50;
+  --red:     #8b2020;
+  --border:  rgba(230,189,133,.18);
+  --card:    rgba(255,255,255,.04);
+  --text:    #ddd;
+  --sub:     #999;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--navy); color: var(--text); min-height: 100vh; }
+
+/* ── LOGIN ── */
+#login-wrap {
+  display: flex; align-items: center; justify-content: center;
+  min-height: 100vh;
+}
+.login-box {
+  background: var(--navy2); border: 1px solid var(--border);
+  border-radius: 16px; padding: 40px 36px; width: 360px; text-align: center;
+}
+.login-logo { font-size: 40px; margin-bottom: 8px; }
+.login-title { font-size: 20px; font-weight: 700; color: var(--gold); margin-bottom: 4px; }
+.login-sub { font-size: 13px; color: var(--sub); margin-bottom: 28px; }
+.inp {
+  width: 100%; background: rgba(255,255,255,.06); border: 1px solid var(--border);
+  border-radius: 8px; padding: 12px 14px; color: #fff; font-size: 15px;
+  margin-bottom: 12px; outline: none;
+}
+.inp:focus { border-color: var(--gold-br); }
+.btn {
+  width: 100%; padding: 13px; border: none; border-radius: 8px;
+  font-size: 15px; font-weight: 600; cursor: pointer; transition: .15s;
+}
+.btn-gold { background: var(--gold-br); color: #fff; }
+.btn-gold:hover { background: #9a700a; }
+.btn-ghost {
+  background: transparent; border: 1px solid var(--border);
+  color: var(--gold); font-size: 13px; padding: 9px;
+  margin-top: 8px;
+}
+.btn-ghost:hover { background: var(--card); }
+.err-msg { color: #e57373; font-size: 13px; margin-top: 8px; display: none; }
+
+/* ── APP ── */
+#app { display: none; }
+.topbar {
+  background: var(--navy2); border-bottom: 1px solid var(--border);
+  padding: 14px 28px; display: flex; align-items: center; gap: 16px;
+}
+.topbar-title { font-size: 16px; font-weight: 700; color: var(--gold); flex: 1; }
+.topbar-btn {
+  background: transparent; border: 1px solid var(--border);
+  color: var(--gold); border-radius: 8px; padding: 7px 14px;
+  font-size: 13px; cursor: pointer;
+}
+.topbar-btn:hover { background: var(--card); }
+.topbar-btn.new { background: var(--green); border-color: var(--green); color: #fff; }
+.topbar-btn.new:hover { background: #256642; }
+
+.content { max-width: 1000px; margin: 0 auto; padding: 28px 24px; }
+
+/* ── MÓDULO LIST ── */
+.mod-grid { display: grid; gap: 12px; }
+.mod-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 12px; padding: 16px 20px;
+  display: flex; align-items: center; gap: 16px;
+}
+.mod-card:hover { border-color: rgba(230,189,133,.35); }
+.mod-icon { font-size: 28px; min-width: 40px; text-align: center; }
+.mod-info { flex: 1; }
+.mod-name { font-size: 15px; font-weight: 600; color: #eee; margin-bottom: 3px; }
+.mod-meta { font-size: 12px; color: var(--sub); }
+.mod-badge {
+  font-size: 11px; background: rgba(184,134,11,.2); color: var(--gold);
+  border-radius: 20px; padding: 3px 10px; white-space: nowrap;
+}
+.mod-actions { display: flex; gap: 8px; }
+.act-btn {
+  border: 1px solid var(--border); border-radius: 8px;
+  padding: 6px 14px; font-size: 12px; cursor: pointer; background: transparent;
+  transition: .12s;
+}
+.act-edit { color: var(--gold); }
+.act-edit:hover { background: rgba(184,134,11,.15); }
+.act-del { color: #e57373; border-color: rgba(229,115,115,.3); }
+.act-del:hover { background: rgba(229,115,115,.12); }
+
+.empty-state { text-align: center; padding: 60px 20px; color: var(--sub); font-size: 15px; }
+
+/* ── FORM ── */
+#form-panel { display: none; }
+.form-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 16px; padding: 28px 28px 36px;
+}
+.form-title { font-size: 18px; font-weight: 700; color: var(--gold); margin-bottom: 24px; }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.form-group { display: flex; flex-direction: column; gap: 6px; }
+.form-group.full { grid-column: 1 / -1; }
+.form-lbl { font-size: 12px; font-weight: 600; color: var(--sub); text-transform: uppercase; letter-spacing: .5px; }
+.form-inp, .form-sel, .form-ta {
+  background: rgba(255,255,255,.06); border: 1px solid var(--border);
+  border-radius: 8px; padding: 10px 12px; color: #fff; font-size: 14px;
+  outline: none; width: 100%;
+}
+.form-inp:focus, .form-sel:focus, .form-ta:focus { border-color: var(--gold-br); }
+.form-ta { min-height: 120px; resize: vertical; font-family: inherit; }
+.form-sel option { background: var(--navy2); }
+.form-hint { font-size: 11px; color: var(--sub); margin-top: 2px; }
+
+.opciones-wrap { display: none; }
+.opciones-wrap.visible { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+.form-actions { display: flex; gap: 12px; margin-top: 24px; flex-wrap: wrap; }
+.btn-save { background: var(--green); color: #fff; padding: 13px 28px; flex: 1; }
+.btn-save:hover { background: #256642; }
+.btn-cancel { background: transparent; border: 1px solid var(--border); color: var(--text); padding: 13px 20px; }
+.btn-cancel:hover { background: var(--card); }
+
+/* ── TOAST ── */
+.toast {
+  position: fixed; bottom: 24px; right: 24px; z-index: 9999;
+  background: var(--green); color: #fff; border-radius: 10px;
+  padding: 14px 22px; font-size: 14px; font-weight: 600;
+  transform: translateY(80px); opacity: 0; transition: .25s ease;
+  pointer-events: none;
+}
+.toast.show { transform: translateY(0); opacity: 1; }
+.toast.err { background: var(--red); }
+
+/* ── LOADER ── */
+.spin {
+  display: none; border: 3px solid rgba(255,255,255,.1);
+  border-top-color: var(--gold); border-radius: 50%;
+  width: 36px; height: 36px; animation: spin .7s linear infinite;
+  margin: 60px auto;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── CONFIRM MODAL ── */
+#confirm-modal {
+  display: none; position: fixed; inset: 0; z-index: 5000;
+  background: rgba(0,0,0,.7); align-items: center; justify-content: center;
+}
+#confirm-modal.open { display: flex; }
+.confirm-box {
+  background: var(--navy2); border: 1px solid var(--border);
+  border-radius: 16px; padding: 32px 28px; width: 340px; text-align: center;
+}
+.confirm-title { font-size: 17px; font-weight: 700; color: #eee; margin-bottom: 10px; }
+.confirm-sub { font-size: 14px; color: var(--sub); margin-bottom: 24px; }
+.confirm-actions { display: flex; gap: 12px; }
+.btn-confirm-del { background: var(--red); color: #fff; flex: 1; padding: 12px; }
+.btn-confirm-del:hover { background: #6b1818; }
+.btn-confirm-cancel { background: transparent; border: 1px solid var(--border); color: var(--text); flex: 1; padding: 12px; }
+
+@media (max-width: 640px) {
+  .form-grid { grid-template-columns: 1fr; }
+  .form-group.full { grid-column: 1; }
+  .opciones-wrap.visible { grid-template-columns: 1fr; }
+  .mod-card { flex-wrap: wrap; }
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-wrap">
+  <div class="login-box">
+    <div class="login-logo">🏛️</div>
+    <div class="login-title">Panel de Administración</div>
+    <div class="login-sub">Misión Muni · Gestión de contenido</div>
+    <input class="inp" id="pin-inp" type="password" placeholder="PIN de acceso"
+      onkeydown="if(event.key==='Enter')login()">
+    <button class="btn btn-gold" onclick="login()">INGRESAR</button>
+    <div class="err-msg" id="login-err">PIN incorrecto. Intentá de nuevo.</div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <div class="topbar">
+    <span class="topbar-title">🏛️ Misión Muni · Módulos de capacitación</span>
+    <button class="topbar-btn" onclick="recargar()">↺ Actualizar</button>
+    <button class="topbar-btn new" onclick="nuevoModulo()">+ Nuevo módulo</button>
+  </div>
+
+  <div class="content">
+    <!-- LISTA -->
+    <div id="list-panel">
+      <div class="spin" id="spin-list"></div>
+      <div class="mod-grid" id="mod-list"></div>
+    </div>
+
+    <!-- FORMULARIO -->
+    <div id="form-panel">
+      <div class="form-card">
+        <div class="form-title" id="form-title">Nuevo módulo</div>
+        <input type="hidden" id="f-fila">
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-lbl">ID del módulo *</label>
+            <input class="form-inp" id="f-id" placeholder="ej: MOD_PLANIF_01">
+            <span class="form-hint">Identificador único. No usar espacios ni acentos.</span>
+          </div>
+          <div class="form-group">
+            <label class="form-lbl">Nombre del módulo *</label>
+            <input class="form-inp" id="f-nombre" placeholder="ej: Planificación del trabajo">
+          </div>
+          <div class="form-group">
+            <label class="form-lbl">Área temática</label>
+            <input class="form-inp" id="f-area" placeholder="ej: Organización, Gestión, etc.">
+          </div>
+          <div class="form-group">
+            <label class="form-lbl">Competencia que fortalece</label>
+            <select class="form-sel" id="f-competencia">
+              <option value="">— ninguna —</option>
+            </select>
+          </div>
+          <div class="form-group full">
+            <label class="form-lbl">Contenido / texto del módulo *</label>
+            <textarea class="form-ta" id="f-contenido" placeholder="Escribí el contenido del módulo. Podés usar párrafos separados por líneas en blanco."></textarea>
+            <span class="form-hint">Este texto se muestra al jugador al estudiar el módulo.</span>
+          </div>
+          <div class="form-group">
+            <label class="form-lbl">URL de video (opcional)</label>
+            <input class="form-inp" id="f-video" placeholder="https://youtube.com/...">
+            <span class="form-hint">YouTube o link directo a video.</span>
+          </div>
+          <div class="form-group">
+            <label class="form-lbl">URL de infografía (opcional)</label>
+            <input class="form-inp" id="f-infografia" placeholder="https://... (imagen o Canva)">
+          </div>
+          <div class="form-group full">
+            <label class="form-lbl">Pregunta del cuestionario *</label>
+            <input class="form-inp" id="f-pregunta" placeholder="ej: ¿Cuál es el primer paso para planificar?">
+          </div>
+          <div class="form-group full">
+            <label class="form-lbl">Tipo de respuesta</label>
+            <select class="form-sel" id="f-tipo" onchange="toggleTipoRespuesta()">
+              <option value="libre">Respuesta libre (el jugador escribe)</option>
+              <option value="multiple">Opción múltiple</option>
+            </select>
+          </div>
+
+          <!-- OPCIONES MULTIPLE CHOICE -->
+          <div class="form-group full opciones-wrap" id="opciones-wrap">
+            <div class="form-grid" style="margin-top:0">
+              <div class="form-group">
+                <label class="form-lbl">Opción A</label>
+                <input class="form-inp" id="f-opA" placeholder="Primera opción">
+              </div>
+              <div class="form-group">
+                <label class="form-lbl">Opción B</label>
+                <input class="form-inp" id="f-opB" placeholder="Segunda opción">
+              </div>
+              <div class="form-group">
+                <label class="form-lbl">Opción C</label>
+                <input class="form-inp" id="f-opC" placeholder="Tercera opción (opcional)">
+              </div>
+              <div class="form-group">
+                <label class="form-lbl">Opción D</label>
+                <input class="form-inp" id="f-opD" placeholder="Cuarta opción (opcional)">
+              </div>
+            </div>
+            <div class="form-group" style="margin-top:4px">
+              <label class="form-lbl">Respuesta correcta (copiá exactamente la opción)</label>
+              <input class="form-inp" id="f-respuesta-multi" placeholder="Pegá aquí el texto exacto de la opción correcta">
+            </div>
+          </div>
+
+          <!-- RESPUESTA LIBRE -->
+          <div class="form-group full" id="respuesta-libre-wrap">
+            <label class="form-lbl">Respuesta correcta *</label>
+            <input class="form-inp" id="f-respuesta-libre" placeholder="ej: si">
+            <span class="form-hint">El jugador debe escribir exactamente esto (en minúsculas). Recomendado: "si" para confirmar lectura.</span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-lbl">ID de insignia (opcional)</label>
+            <input class="form-inp" id="f-insignia" placeholder="ej: INS_PLANIF">
+            <span class="form-hint">ID de la insignia que se otorga al completar.</span>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button class="btn btn-save" onclick="guardarModulo()">💾 GUARDAR MÓDULO</button>
+          <button class="btn btn-cancel btn-ghost" onclick="cancelarForm()">Cancelar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CONFIRM DELETE -->
+<div id="confirm-modal">
+  <div class="confirm-box">
+    <div class="confirm-title">¿Eliminar módulo?</div>
+    <div class="confirm-sub" id="confirm-nombre"></div>
+    <div class="confirm-actions">
+      <button class="btn btn-confirm-del" onclick="confirmarEliminar()">SÍ, ELIMINAR</button>
+      <button class="btn btn-confirm-cancel btn-ghost" onclick="cancelarEliminar()">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+let modulos = [];
+let competencias = [];
+let filaAEliminar = null;
+let nombreAEliminar = '';
+
+// ── AUTH ──
+function login() {
+  const pin = document.getElementById('pin-inp').value.trim();
+  if (!pin) return;
+  document.getElementById('login-err').style.display = 'none';
+  google.script.run
+    .withSuccessHandler(ok => {
+      if (ok) {
+        document.getElementById('login-wrap').style.display = 'none';
+        document.getElementById('app').style.display = 'block';
+        cargarTodo();
+      } else {
+        document.getElementById('login-err').style.display = 'block';
+        document.getElementById('pin-inp').value = '';
+        document.getElementById('pin-inp').focus();
+      }
+    })
+    .withFailureHandler(() => showToast('Error de conexión', true))
+    .verificarAdminPin(pin);
+}
+
+// ── CARGA ──
+function cargarTodo() {
+  mostrarSpin(true);
+  google.script.run
+    .withSuccessHandler(data => {
+      competencias = data.competencias || [];
+      modulos = data.herramientas || [];
+      llenarSelectCompetencias();
+      renderLista();
+      mostrarSpin(false);
+    })
+    .withFailureHandler(e => { mostrarSpin(false); showToast('Error al cargar: ' + e.message, true); })
+    .obtenerDatosAdmin();
+}
+
+function recargar() { mostrarPanel('list'); cargarTodo(); }
+
+// ── RENDER LISTA ──
+function renderLista() {
+  const el = document.getElementById('mod-list');
+  if (!modulos.length) {
+    el.innerHTML = '<div class="empty-state">No hay módulos cargados.<br>Creá el primero con el botón "+ Nuevo módulo".</div>';
+    return;
+  }
+  el.innerHTML = modulos.map(m => {
+    const icon = iconPorArea(m.area);
+    const comp = competencias.find(c => c.id === m.competencia);
+    const compNombre = comp ? comp.nombre : (m.competencia || '—');
+    const tieneMulti = m.opcionA || m.opcionB;
+    return `<div class="mod-card">
+      <div class="mod-icon">${icon}</div>
+      <div class="mod-info">
+        <div class="mod-name">${esc(m.nombre) || '<sin nombre>'}</div>
+        <div class="mod-meta">
+          <span>${esc(m.area) || 'Sin área'}</span> ·
+          <span>Competencia: ${esc(compNombre)}</span> ·
+          <span>${tieneMulti ? 'Opción múltiple' : 'Respuesta libre'}</span>
+        </div>
+      </div>
+      <span class="mod-badge">${esc(m.id)}</span>
+      <div class="mod-actions">
+        <button class="act-btn act-edit" onclick="editarModulo('${esc(m.id)}')">✏️ Editar</button>
+        <button class="act-btn act-del" onclick="pedirEliminar(${m._fila}, '${esc(m.nombre)}')">🗑️ Eliminar</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function iconPorArea(area) {
+  const a = (area || '').toLowerCase();
+  if (a.includes('planif') || a.includes('organ')) return '📋';
+  if (a.includes('lider') || a.includes('equipo')) return '👥';
+  if (a.includes('comunic')) return '💬';
+  if (a.includes('desempeño') || a.includes('gestion')) return '📈';
+  if (a.includes('conflicto')) return '🤝';
+  return '📚';
+}
+
+// ── FORMULARIO ──
+function nuevoModulo() {
+  limpiarForm();
+  document.getElementById('form-title').innerText = 'Nuevo módulo';
+  mostrarPanel('form');
+}
+
+function editarModulo(id) {
+  const m = modulos.find(x => x.id === id);
+  if (!m) return;
+  limpiarForm();
+  document.getElementById('form-title').innerText = 'Editar módulo';
+  document.getElementById('f-fila').value = m._fila;
+  document.getElementById('f-id').value = m.id;
+  document.getElementById('f-nombre').value = m.nombre;
+  document.getElementById('f-area').value = m.area;
+  document.getElementById('f-competencia').value = m.competencia;
+  document.getElementById('f-contenido').value = m.contenido;
+  document.getElementById('f-video').value = m.videoUrl;
+  document.getElementById('f-infografia').value = m.infografiaUrl;
+  document.getElementById('f-pregunta').value = m.pregunta;
+  document.getElementById('f-insignia').value = m.insigniaID;
+
+  const tieneMulti = m.opcionA || m.opcionB;
+  if (tieneMulti) {
+    document.getElementById('f-tipo').value = 'multiple';
+    document.getElementById('f-opA').value = m.opcionA;
+    document.getElementById('f-opB').value = m.opcionB;
+    document.getElementById('f-opC').value = m.opcionC;
+    document.getElementById('f-opD').value = m.opcionD;
+    document.getElementById('f-respuesta-multi').value = m.respuesta;
+  } else {
+    document.getElementById('f-tipo').value = 'libre';
+    document.getElementById('f-respuesta-libre').value = m.respuesta;
+  }
+  toggleTipoRespuesta();
+  mostrarPanel('form');
+}
+
+function limpiarForm() {
+  ['f-fila','f-id','f-nombre','f-area','f-contenido','f-video','f-infografia',
+   'f-pregunta','f-insignia','f-opA','f-opB','f-opC','f-opD',
+   'f-respuesta-multi','f-respuesta-libre'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  document.getElementById('f-competencia').value = '';
+  document.getElementById('f-tipo').value = 'libre';
+  toggleTipoRespuesta();
+}
+
+function toggleTipoRespuesta() {
+  const tipo = document.getElementById('f-tipo').value;
+  document.getElementById('opciones-wrap').classList.toggle('visible', tipo === 'multiple');
+  document.getElementById('respuesta-libre-wrap').style.display = tipo === 'libre' ? 'block' : 'none';
+}
+
+function cancelarForm() { mostrarPanel('list'); }
+
+function guardarModulo() {
+  const tipo = document.getElementById('f-tipo').value;
+  const datos = {
+    _fila:        parseInt(document.getElementById('f-fila').value) || 0,
+    id:           document.getElementById('f-id').value.trim(),
+    nombre:       document.getElementById('f-nombre').value.trim(),
+    area:         document.getElementById('f-area').value.trim(),
+    competencia:  document.getElementById('f-competencia').value,
+    contenido:    document.getElementById('f-contenido').value.trim(),
+    videoUrl:     document.getElementById('f-video').value.trim(),
+    infografiaUrl:document.getElementById('f-infografia').value.trim(),
+    pregunta:     document.getElementById('f-pregunta').value.trim(),
+    insigniaID:   document.getElementById('f-insignia').value.trim(),
+    respuesta:    tipo === 'multiple'
+                    ? document.getElementById('f-respuesta-multi').value.trim().toLowerCase()
+                    : document.getElementById('f-respuesta-libre').value.trim().toLowerCase(),
+    opcionA:      tipo === 'multiple' ? document.getElementById('f-opA').value.trim() : '',
+    opcionB:      tipo === 'multiple' ? document.getElementById('f-opB').value.trim() : '',
+    opcionC:      tipo === 'multiple' ? document.getElementById('f-opC').value.trim() : '',
+    opcionD:      tipo === 'multiple' ? document.getElementById('f-opD').value.trim() : ''
+  };
+
+  if (!datos.id)       return showToast('El ID es obligatorio', true);
+  if (!datos.nombre)   return showToast('El nombre es obligatorio', true);
+  if (!datos.contenido)return showToast('El contenido es obligatorio', true);
+  if (!datos.pregunta) return showToast('La pregunta es obligatoria', true);
+  if (!datos.respuesta)return showToast('La respuesta correcta es obligatoria', true);
+
+  google.script.run
+    .withSuccessHandler(() => {
+      showToast('Módulo guardado correctamente ✓');
+      mostrarPanel('list');
+      recargar();
+    })
+    .withFailureHandler(e => showToast('Error al guardar: ' + e.message, true))
+    .guardarHerramienta(datos);
+}
+
+// ── ELIMINAR ──
+function pedirEliminar(fila, nombre) {
+  filaAEliminar = fila;
+  nombreAEliminar = nombre;
+  document.getElementById('confirm-nombre').innerText = '¿Querés eliminar "' + nombre + '"? Esta acción no se puede deshacer.';
+  document.getElementById('confirm-modal').classList.add('open');
+}
+function cancelarEliminar() {
+  filaAEliminar = null;
+  document.getElementById('confirm-modal').classList.remove('open');
+}
+function confirmarEliminar() {
+  if (!filaAEliminar) return;
+  document.getElementById('confirm-modal').classList.remove('open');
+  google.script.run
+    .withSuccessHandler(() => { showToast('Módulo eliminado'); recargar(); })
+    .withFailureHandler(e => showToast('Error: ' + e.message, true))
+    .eliminarHerramienta(filaAEliminar);
+  filaAEliminar = null;
+}
+
+// ── HELPERS ──
+function llenarSelectCompetencias() {
+  const sel = document.getElementById('f-competencia');
+  const current = sel.value;
+  sel.innerHTML = '<option value="">— ninguna —</option>' +
+    competencias.map(c => `<option value="${esc(c.id)}">${esc(c.nombre)}</option>`).join('');
+  sel.value = current;
+}
+
+function mostrarPanel(p) {
+  document.getElementById('list-panel').style.display = p === 'list' ? 'block' : 'none';
+  document.getElementById('form-panel').style.display = p === 'form' ? 'block' : 'none';
+}
+
+function mostrarSpin(on) {
+  document.getElementById('spin-list').style.display = on ? 'block' : 'none';
+  document.getElementById('mod-list').style.display = on ? 'none' : 'grid';
+}
+
+function showToast(msg, err) {
+  const t = document.getElementById('toast');
+  t.innerText = msg;
+  t.className = 'toast' + (err ? ' err' : '') + ' show';
+  setTimeout(() => { t.className = 'toast' + (err ? ' err' : ''); }, 3200);
+}
+
+function esc(s) {
+  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+</script>
+</body>
+</html>

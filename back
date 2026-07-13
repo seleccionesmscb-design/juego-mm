@@ -26,7 +26,13 @@ const SS_ID = "19Uk0MQT4a0Tarnx1H2qiVPX6YaAMg_FQsrhjla8VHBc";
 const CASILLEROS_POR_ERA = 10;
 const TOTAL_CASILLEROS = CASILLEROS_POR_ERA * 3;
 
-function doGet() {
+function doGet(e) {
+  if (e && e.parameter && e.parameter.admin === '1') {
+    return HtmlService.createTemplateFromFile('Admin').evaluate()
+      .setTitle('Misión Muni · Admin')
+      .addMetaTag('viewport', 'width=device-width, initial-scale=1')
+      .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+  }
   return HtmlService.createTemplateFromFile('Index').evaluate()
     .setTitle('Misión Muni')
     .addMetaTag('viewport', 'width=device-width, initial-scale=1');
@@ -553,5 +559,98 @@ function consultarAsistenteIA(pregunta) {
   return {
     respuesta: "Podés preguntarme sobre: cómo jugar, las Eras y casilleros, recursos, competencias, insignias, módulos de capacitación, cómo se calcula el puntaje, el ranking, o estrategias para mejorar tu resultado.",
     error: false
+  };
+}
+
+// ─────────────────────────────────────────────
+// PANEL ADMIN — CRUD DE MÓDULOS
+// ─────────────────────────────────────────────
+
+function verificarAdminPin(pin) {
+  const correcto = PropertiesService.getScriptProperties().getProperty('ADMIN_PIN') || 'muni2026';
+  return String(pin).trim() === correcto;
+}
+
+function obtenerTodasHerramientas() {
+  const ss = SpreadsheetApp.openById(SS_ID);
+  const hoja = ss.getSheetByName('Herramientas');
+  if (!hoja) return [];
+  const datos = hoja.getDataRange().getValues();
+  const headers = datos[0];
+  return datos.slice(1)
+    .filter(f => String(f[0]).trim() !== '')
+    .map((f, i) => ({
+      _fila:         i + 2,
+      id:            String(f[0]).trim(),
+      nombre:        f[1]  || '',
+      contenido:     f[2]  || '',
+      area:          f[3]  || '',
+      insigniaID:    f[4]  || '',
+      pregunta:      f[5]  || '',
+      respuesta:     f[6]  || '',
+      competencia:   f[7]  || '',
+      videoUrl:      f[8]  || '',
+      infografiaUrl: f[9]  || '',
+      opcionA:       f[10] || '',
+      opcionB:       f[11] || '',
+      opcionC:       f[12] || '',
+      opcionD:       f[13] || ''
+    }));
+}
+
+function obtenerCompetenciasCatalogo() {
+  const ss = SpreadsheetApp.openById(SS_ID);
+  const hoja = ss.getSheetByName('Competencias_Gestion');
+  if (!hoja) return [];
+  return hoja.getDataRange().getValues().slice(1)
+    .filter(f => f[0])
+    .map(f => ({ id: String(f[0]).trim(), nombre: f[1] || '' }));
+}
+
+function guardarHerramienta(datos) {
+  const ss = SpreadsheetApp.openById(SS_ID);
+  let hoja = ss.getSheetByName('Herramientas');
+  if (!hoja) {
+    hoja = ss.insertSheet('Herramientas');
+    hoja.appendRow(['ID','Nombre','Contenido','Area','InsigniaID','Pregunta','Respuesta','Competencia','VideoUrl','InfografiaUrl','OpcionA','OpcionB','OpcionC','OpcionD']);
+  }
+
+  const fila = [
+    String(datos.id).trim(),
+    datos.nombre        || '',
+    datos.contenido     || '',
+    datos.area          || '',
+    datos.insigniaID    || '',
+    datos.pregunta      || '',
+    datos.respuesta     || '',
+    datos.competencia   || '',
+    datos.videoUrl      || '',
+    datos.infografiaUrl || '',
+    datos.opcionA       || '',
+    datos.opcionB       || '',
+    datos.opcionC       || '',
+    datos.opcionD       || ''
+  ];
+
+  if (datos._fila && datos._fila >= 2) {
+    hoja.getRange(datos._fila, 1, 1, fila.length).setValues([fila]);
+  } else {
+    hoja.appendRow(fila);
+  }
+  return { ok: true };
+}
+
+function eliminarHerramienta(fila) {
+  const ss = SpreadsheetApp.openById(SS_ID);
+  const hoja = ss.getSheetByName('Herramientas');
+  if (!hoja || fila < 2) return { ok: false };
+  hoja.deleteRow(Number(fila));
+  return { ok: true };
+}
+
+function obtenerDatosAdmin() {
+  return {
+    herramientas: obtenerTodasHerramientas(),
+    competencias: obtenerCompetenciasCatalogo()
   };
 }
