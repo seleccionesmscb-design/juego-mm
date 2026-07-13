@@ -540,6 +540,32 @@ body{font-family:'Crimson Text',Georgia,serif;background:var(--perg);color:var(-
 .final-detail span{color:var(--navy);font-weight:700;}
 
 ::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-track{background:var(--perg);}::-webkit-scrollbar-thumb{background:rgba(28,46,74,.3);}
+
+/* ── RANKING PANEL ── */
+.ranking-panel{position:absolute;right:24px;top:50%;transform:translateY(-50%);width:230px;background:rgba(237,224,186,0.97);border:2px solid rgba(28,46,74,.3);border-top:4px solid var(--gold-br);z-index:10;max-height:72vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 4px 20px rgba(28,46,74,.2);}
+.ranking-hdr{background:var(--navy);padding:9px 14px;font-family:'Cinzel',serif;font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--perg);}
+.ranking-list{overflow-y:auto;flex:1;}
+.rk-item{display:flex;align-items:center;gap:8px;padding:7px 12px;border-bottom:1px solid rgba(28,46,74,.1);}
+.rk-pos{font-family:'Cinzel',serif;font-size:12px;font-weight:700;color:var(--gold-br);min-width:18px;text-align:center;}
+.rk-info{flex:1;min-width:0;}
+.rk-nm{font-family:'Cinzel',serif;font-size:9px;font-weight:700;color:var(--navy);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.rk-eq{font-size:9px;color:var(--navy-md);}
+.rk-score-col{text-align:right;}
+.rk-score{font-family:'Cinzel',serif;font-size:14px;font-weight:900;color:var(--navy);}
+.rk-nivel{font-size:8px;color:var(--teal);font-family:'Cinzel',serif;letter-spacing:.5px;}
+.rk-empty{padding:16px;text-align:center;font-size:11px;color:var(--navy-md);font-style:italic;line-height:1.6;}
+.rk-loading{padding:14px;text-align:center;font-size:11px;color:var(--navy-md);}
+
+/* ── ASISTENTE IA (en modal reglas) ── */
+.ai-section{margin-top:14px;border-top:1px solid rgba(28,46,74,.15);padding-top:12px;}
+.ai-lbl{font-family:'Cinzel',serif;font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:8px;}
+.ai-resp{display:none;background:rgba(28,46,74,.05);border:1px solid rgba(28,46,74,.15);padding:10px 12px;font-size:13px;line-height:1.7;color:var(--navy-md);margin-bottom:9px;max-height:110px;overflow-y:auto;}
+.ai-row{display:flex;gap:7px;}
+.ai-inp{flex:1;padding:8px 11px;border:2px solid rgba(28,46,74,.25);background:var(--perg);font-size:12px;color:var(--navy);outline:none;font-family:inherit;transition:.15s;}
+.ai-inp:focus{border-color:var(--gold-br);}
+.ai-btn{padding:8px 14px;background:var(--navy);color:var(--perg);border:none;font-family:'Cinzel',serif;font-size:9px;font-weight:700;letter-spacing:1px;cursor:pointer;transition:.18s;white-space:nowrap;}
+.ai-btn:hover{background:var(--gold-br);color:var(--navy);}
+.ai-spinner{font-size:11px;color:var(--navy-md);font-style:italic;margin-top:6px;display:none;}
   </style>
 </head>
 <body>
@@ -663,6 +689,12 @@ body{font-family:'Crimson Text',Georgia,serif;background:var(--perg);color:var(-
         <button class="btn-reglas" onclick="abrirReglas()">📋 Ver reglas del juego</button>
       </div>
     </div>
+
+    <!-- Ranking lateral derecho -->
+    <div class="ranking-panel" id="ranking-panel">
+      <div class="ranking-hdr">🏆 TABLA DE PUNTAJES</div>
+      <div class="ranking-list" id="ranking-list"><div class="rk-loading">Cargando ranking…</div></div>
+    </div>
   </div>
 </div>
 
@@ -677,6 +709,17 @@ body{font-family:'Crimson Text',Georgia,serif;background:var(--perg);color:var(-
     <div class="rule-it"><div class="rule-n">5</div><p>Al terminar cada era llegás a un <strong>encuentro presencial</strong> donde llevás los recursos acumulados para trabajar con otros equipos.</p></div>
     <div class="rules-hr"></div>
     <div class="rule-it"><div class="rule-n">🏆</div><p>Gana quien mejor <strong>equilibra indicadores</strong> y usa estratégicamente los recursos. No gana quien más acumula, sino quien mejor gestiona.</p></div>
+
+    <div class="ai-section">
+      <div class="ai-lbl">🤖 Consultá al Asistente IA sobre las reglas</div>
+      <div class="ai-resp" id="ai-resp"></div>
+      <div class="ai-row">
+        <input class="ai-inp" id="ai-inp" placeholder="Ej: ¿Qué pasa al terminar una Era?" onkeydown="if(event.key==='Enter')preguntarIA()">
+        <button class="ai-btn" onclick="preguntarIA()">PREGUNTAR</button>
+      </div>
+      <div class="ai-spinner" id="ai-spinner">Consultando asistente…</div>
+    </div>
+
     <button class="btn-cerrar-reglas" onclick="cerrarReglas()">✕ CERRAR</button>
   </div>
 </div>
@@ -716,6 +759,7 @@ body{font-family:'Crimson Text',Georgia,serif;background:var(--perg);color:var(-
       <div class="app-dir" id="app-dir"></div>
     </div>
     <div class="app-hdr-avatar">
+      <button class="btn-reglas" onclick="abrirReglas()" style="font-size:10px;padding:5px 11px;border:1px solid var(--gold-br);border-radius:2px;">📋 REGLAS</button>
       <div class="hdr-player-info" id="hdr-info"></div>
     </div>
   </div>
@@ -831,7 +875,7 @@ const ENC = {
   3:{titulo:'Encuentro 2 · Era II Completada',desc:'Completaste la Gestión del Desempeño (casilleros 5–8). Nueva reunión grupal para evaluar el avance e integrar herramientas de gestión.'}
 };
 
-let g = null, modalData = null, bibOpen = false;
+let g = null, modalData = null, bibOpen = true;
 let agenteData = null;
 
 /* Asigna nombre de equipo ficticio basado en dirección */
@@ -918,6 +962,8 @@ function renderInds(indicadores) {
 function iniciarJuego() {
   document.getElementById('screen-agente').style.display = 'none';
   document.getElementById('app').style.display = 'grid';
+  document.getElementById('bib-panel').style.display = 'block';
+  document.getElementById('bib-arrow').innerText = '▲';
   actualizarHdrAvatar();
   render();
 }
@@ -1115,12 +1161,12 @@ function confirmarModal() {
     const h = modalData.data;
     if(resp===h.respuesta) {
       cerrarModal(); showLoader();
-      google.script.run.withSuccessHandler(res=>{g=res;hideLoader();render();}).withFailureHandler(e=>{hideLoader();alert(e.message);}).completarCapacitacion(g.estado,h.id,h.insigniaID);
+      google.script.run.withSuccessHandler(res=>{const bib=g.biblioteca;g=res;if(!g.biblioteca)g.biblioteca=bib;hideLoader();render();}).withFailureHandler(e=>{hideLoader();alert(e.message);}).completarCapacitacion(g.estado,h.id,h.insigniaID);
     } else alert('Respuesta incorrecta. Revisá el contenido del módulo e intentá de nuevo.');
   } else if(modalData.tipo==='accion') {
     if(resp!=='si'){cerrarModal();return;}
     const d = modalData.data; cerrarModal(); showLoader();
-    google.script.run.withSuccessHandler(res=>{g=res;hideLoader();if(res.finalizado)mostrarFinal();else if(res.encuentro)mostrarEncuentro(res.nroEncuentro);else render();}).withFailureHandler(e=>{hideLoader();alert(e.message);}).procesarAccion(g.estado,d.id,d.cat,d.recurso,d.cantidad,d.impInd,d.valImp);
+    google.script.run.withSuccessHandler(res=>{const bib=g.biblioteca;g=res;if(!g.biblioteca)g.biblioteca=bib;hideLoader();if(res.finalizado)mostrarFinal();else if(res.encuentro)mostrarEncuentro(res.nroEncuentro);else render();}).withFailureHandler(e=>{hideLoader();alert(e.message);}).procesarAccion(g.estado,d.id,d.cat,d.recurso,d.cantidad,d.impInd,d.valImp);
   }
 }
 function cerrarModal(){document.getElementById('modal').style.display='none';modalData=null;}
@@ -1141,13 +1187,70 @@ function cerrarReglas() { document.getElementById('modal-reglas').classList.remo
 /* ── FINAL ── */
 function mostrarFinal() {
   google.script.run.withSuccessHandler(p=>{
-document.getElementById('final-equipo').innerText = (agenteData?.equipo||'').toUpperCase();
+    google.script.run.guardarResultado(g.estado, p);
+    document.getElementById('final-equipo').innerText = (agenteData?.equipo||'').toUpperCase();
     document.getElementById('final-score').innerText = p.promedioIndicadores+' / 5';
     document.getElementById('final-nivel').innerText = p.nivel.toUpperCase();
     document.getElementById('final-detail').innerHTML =
       `Recursos totales: <span>${p.totalRecursos}</span><br>Insignias obtenidas: <span>${p.insignias}</span><br>Dirección: <span>${g.estado.direccion}</span>`;
     document.getElementById('final-screen').style.display='flex';
   }).calcularPuntajeFinal(g.estado);
+}
+
+/* ── RANKING ── */
+function cargarRanking() {
+  google.script.run
+    .withSuccessHandler(function(ranking) {
+      const el = document.getElementById('ranking-list');
+      if(!el) return;
+      if(!ranking || !ranking.length) {
+        el.innerHTML = '<div class="rk-empty">Todavía no hay puntajes registrados.<br>¡Sé el primero en completar la misión!</div>';
+        return;
+      }
+      const medals = ['🥇','🥈','🥉'];
+      el.innerHTML = ranking.map(function(r,i) {
+        return '<div class="rk-item">'
+          + '<div class="rk-pos">' + (medals[i] || ('#'+(i+1))) + '</div>'
+          + '<div class="rk-info">'
+          +   '<div class="rk-nm">' + r.nombre + '</div>'
+          +   '<div class="rk-eq">' + r.equipo + '</div>'
+          + '</div>'
+          + '<div class="rk-score-col">'
+          +   '<div class="rk-score">' + r.puntaje.toFixed(1) + '</div>'
+          +   '<div class="rk-nivel">' + r.nivel.toUpperCase() + '</div>'
+          + '</div>'
+          + '</div>';
+      }).join('');
+    })
+    .withFailureHandler(function() {
+      const el = document.getElementById('ranking-list');
+      if(el) el.innerHTML = '<div class="rk-empty">No se pudo cargar el ranking.</div>';
+    })
+    .obtenerRanking();
+}
+
+/* ── ASISTENTE IA ── */
+function preguntarIA() {
+  const inp = document.getElementById('ai-inp');
+  if(!inp) return;
+  const pregunta = inp.value.trim();
+  if(!pregunta) return;
+  const resp = document.getElementById('ai-resp');
+  const spinner = document.getElementById('ai-spinner');
+  resp.style.display = 'none';
+  spinner.style.display = 'block';
+  google.script.run
+    .withSuccessHandler(function(res) {
+      spinner.style.display = 'none';
+      resp.style.display = 'block';
+      resp.innerText = res.respuesta || 'Sin respuesta.';
+    })
+    .withFailureHandler(function() {
+      spinner.style.display = 'none';
+      resp.style.display = 'block';
+      resp.innerText = 'Error al consultar el asistente. Intentá de nuevo.';
+    })
+    .consultarAsistenteIA(pregunta);
 }
 
 /* ── UTILS ── */
@@ -1157,6 +1260,9 @@ function dots(v){
 }
 function showLoader(){document.getElementById('loader').style.display='flex';}
 function hideLoader(){document.getElementById('loader').style.display='none';}
+
+// Cargar ranking al iniciar la página
+cargarRanking();
 </script>
 </body>
 </html>
