@@ -62,8 +62,13 @@ body{background:var(--navy);color:var(--text);min-height:100vh;}
 .mod-info{flex:1;min-width:0;}
 .mod-name{font-size:14px;font-weight:600;color:#eee;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .mod-meta{font-size:12px;color:var(--sub);}
+.mod-badges{display:flex;gap:6px;flex-wrap:wrap;align-items:center;}
 .mod-badge{font-size:11px;background:rgba(184,134,11,.2);color:var(--gold);border-radius:20px;padding:3px 10px;white-space:nowrap;}
 .mod-badge.blue{background:rgba(26,74,122,.4);color:#7ab3e8;}
+.mod-badge.green{background:rgba(46,125,80,.25);color:#7ec89a;}
+.mod-badge.era1{background:rgba(26,74,122,.35);color:#7ab3e8;}
+.mod-badge.era2{background:rgba(42,82,11,.35);color:#a8c06e;}
+.mod-badge.era3{background:rgba(100,30,60,.35);color:#c89ab4;}
 .mod-actions{display:flex;gap:8px;flex-shrink:0;}
 .act-btn{border:1px solid var(--border);border-radius:8px;padding:6px 12px;font-size:12px;cursor:pointer;background:transparent;transition:.12s;white-space:nowrap;}
 .act-edit{color:var(--gold);}
@@ -88,12 +93,22 @@ body{background:var(--navy);color:var(--text);min-height:100vh;}
 .form-ta{min-height:110px;resize:vertical;font-family:inherit;}
 .form-sel option{background:var(--navy2);}
 .form-hint{font-size:11px;color:var(--sub);}
-.opciones-wrap{display:none;}
-.opciones-wrap.visible{display:block;}
 .form-actions{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap;}
 .btn-save{background:var(--green);color:#fff;flex:1;padding:12px 20px;}
 .btn-save:hover{background:#256642;}
 .btn-cancel{background:transparent;border:1px solid var(--border);color:var(--text);padding:12px 18px;}
+
+/* PREGUNTAS MÚLTIPLES */
+.pq-block{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:12px;}
+.pq-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.pq-label{font-size:13px;font-weight:700;color:var(--gold);}
+.pq-remove{background:transparent;border:1px solid rgba(229,115,115,.3);color:#e57373;border-radius:6px;padding:4px 10px;font-size:12px;cursor:pointer;}
+.pq-remove:hover{background:rgba(229,115,115,.12);}
+.pq-opciones{display:none;margin-top:10px;}
+.pq-opciones.visible{display:block;}
+.btn-add-pq{background:transparent;border:1px dashed var(--border);color:var(--gold);border-radius:8px;padding:10px 16px;font-size:13px;cursor:pointer;width:100%;text-align:center;margin-top:4px;}
+.btn-add-pq:hover{background:rgba(184,134,11,.08);}
+.btn-add-pq:disabled{opacity:.4;cursor:not-allowed;}
 
 /* SIT GROUP */
 .sit-group{margin-bottom:8px;border:1px solid var(--border);border-radius:12px;overflow:hidden;}
@@ -113,6 +128,13 @@ body{background:var(--navy);color:var(--text);min-height:100vh;}
 .carta-texto{font-size:13px;color:#ddd;}
 .carta-herr{font-size:12px;color:var(--gold);margin-top:2px;}
 .carta-actions{display:flex;gap:6px;flex-shrink:0;}
+
+/* COMPETENCIA BADGES en lista */
+.comp-badge{display:inline-block;font-size:11px;border-radius:20px;padding:2px 8px;margin:2px 2px 0 0;}
+.comp-Liderazgo{background:rgba(26,74,122,.35);color:#7ab3e8;}
+.comp-Planificación{background:rgba(42,82,11,.35);color:#a8c06e;}
+.comp-Gestión{background:rgba(100,30,60,.35);color:#c89ab4;}
+.comp-Comunicación{background:rgba(140,80,20,.35);color:#e0b07a;}
 
 /* TOAST + CONFIRM */
 .toast{position:fixed;bottom:24px;right:24px;z-index:9999;background:var(--green);color:#fff;border-radius:10px;padding:14px 22px;font-size:14px;font-weight:600;transform:translateY(80px);opacity:0;transition:.25s ease;pointer-events:none;}
@@ -182,73 +204,84 @@ body{background:var(--navy);color:var(--text);min-height:100vh;}
         <div class="form-title" id="form-title">Nueva herramienta</div>
         <input type="hidden" id="f-fila">
         <div class="form-grid">
+
           <div class="form-group full">
             <label class="form-lbl">Nombre de la herramienta *</label>
             <input class="form-inp" id="f-nombre" placeholder="ej: Delegación Efectiva">
-            <span class="form-hint">El nombre ES el identificador — debe coincidir exactamente con el de la hoja Situaciones.</span>
+            <span class="form-hint">El nombre ES el identificador — debe coincidir con el usado en Situaciones.</span>
           </div>
+
           <div class="form-group">
-            <label class="form-lbl">Nivel</label>
+            <label class="form-lbl">ERA a la que corresponde</label>
+            <select class="form-sel" id="f-era">
+              <option value="">— todas las eras —</option>
+              <option value="ERA I">ERA I · Organización del Trabajo</option>
+              <option value="ERA II">ERA II · Gestión del Desempeño</option>
+              <option value="ERA III">ERA III · Desarrollo del Equipo</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-lbl">Nivel de dificultad</label>
             <select class="form-sel" id="f-nivel">
               <option value="Fácil">Fácil</option>
               <option value="Compleja">Compleja</option>
             </select>
           </div>
+
           <div class="form-group">
-            <label class="form-lbl">Área</label>
+            <label class="form-lbl">Área municipal</label>
             <input class="form-inp" id="f-area" placeholder="ej: Hacienda">
           </div>
+
+          <div class="form-group">
+            <label class="form-lbl">Puntos que otorga esta capacitación</label>
+            <select class="form-sel" id="f-puntaje">
+              <option value="5">5 puntos (herramienta fácil)</option>
+              <option value="10">10 puntos (herramienta compleja)</option>
+            </select>
+          </div>
+
           <div class="form-group full">
             <label class="form-lbl">Competencia que fortalece</label>
             <select class="form-sel" id="f-competencia">
               <option value="">— ninguna —</option>
+              <option value="Liderazgo">🔵 Liderazgo</option>
+              <option value="Planificación">🟢 Planificación</option>
+              <option value="Gestión de equipo">🟣 Gestión de equipo</option>
+              <option value="Comunicación">🟠 Comunicación</option>
             </select>
           </div>
+
           <div class="form-group full">
             <label class="form-lbl">Contenido a estudiar *</label>
             <textarea class="form-ta" id="f-contenido" placeholder="Escribí el contenido del módulo de aprendizaje…"></textarea>
           </div>
+
           <div class="form-group">
             <label class="form-lbl">URL de video (opcional)</label>
             <input class="form-inp" id="f-video" placeholder="https://youtube.com/...">
           </div>
+
           <div class="form-group">
             <label class="form-lbl">URL de infografía (opcional)</label>
             <input class="form-inp" id="f-infografia" placeholder="https://...">
           </div>
-          <div class="form-group full">
-            <label class="form-lbl">Pregunta de comprobación *</label>
-            <input class="form-inp" id="f-pregunta" placeholder="ej: ¿Cuáles son los 3 pasos del método SBI?">
-          </div>
-          <div class="form-group full">
-            <label class="form-lbl">Tipo de respuesta</label>
-            <select class="form-sel" id="f-tipo" onchange="toggleTipo()">
-              <option value="libre">Respuesta libre</option>
-              <option value="multiple">Opción múltiple</option>
-            </select>
-          </div>
-          <div class="form-group full opciones-wrap" id="opciones-wrap">
-            <div class="form-grid">
-              <div class="form-group"><label class="form-lbl">Opción A</label><input class="form-inp" id="f-opA"></div>
-              <div class="form-group"><label class="form-lbl">Opción B</label><input class="form-inp" id="f-opB"></div>
-              <div class="form-group"><label class="form-lbl">Opción C (opcional)</label><input class="form-inp" id="f-opC"></div>
-              <div class="form-group"><label class="form-lbl">Opción D (opcional)</label><input class="form-inp" id="f-opD"></div>
-            </div>
-            <div class="form-group" style="margin-top:8px">
-              <label class="form-lbl">Respuesta correcta (texto exacto de la opción)</label>
-              <input class="form-inp" id="f-respuesta-multi">
-            </div>
-          </div>
-          <div class="form-group full" id="libre-wrap">
-            <label class="form-lbl">Respuesta correcta *</label>
-            <input class="form-inp" id="f-respuesta-libre" placeholder="ej: situacion, comportamiento, impacto">
-            <span class="form-hint">El jugador debe escribir exactamente esto (minúsculas). Para confirmar lectura usá "si".</span>
-          </div>
+
           <div class="form-group">
             <label class="form-lbl">ID de insignia (opcional)</label>
-            <input class="form-inp" id="f-insignia" placeholder="ej: INS_FEEDBACK">
+            <input class="form-inp" id="f-insignia" placeholder="ej: INS_LIDERAZGO">
           </div>
+
         </div>
+
+        <!-- PREGUNTAS DE COMPROBACIÓN -->
+        <div style="margin-top:20px;margin-bottom:8px;">
+          <div style="font-size:13px;font-weight:700;color:var(--gold);margin-bottom:12px;">Preguntas de comprobación</div>
+          <div id="pq-container"></div>
+          <button class="btn-add-pq" id="btn-add-pq" onclick="agregarPregunta()">+ Agregar pregunta</button>
+        </div>
+
         <div class="form-actions">
           <button class="btn btn-save" onclick="guardarHerr()">💾 GUARDAR</button>
           <button class="btn btn-cancel btn-ghost" onclick="cancelarForm()">Cancelar</button>
@@ -291,6 +324,10 @@ body{background:var(--navy);color:var(--text);min-height:100vh;}
             <label class="form-lbl">Competencia que fortalece</label>
             <select class="form-sel" id="sf-competencia">
               <option value="">— ninguna —</option>
+              <option value="Liderazgo">🔵 Liderazgo</option>
+              <option value="Planificación">🟢 Planificación</option>
+              <option value="Gestión de equipo">🟣 Gestión de equipo</option>
+              <option value="Comunicación">🟠 Comunicación</option>
             </select>
           </div>
           <div class="form-group full">
@@ -356,9 +393,22 @@ body{background:var(--navy);color:var(--text);min-height:100vh;}
 <div class="toast" id="toast"></div>
 
 <script>
-let herramientas = [], situaciones = [], competencias = [];
+const COMPETENCIAS = [
+  { codigo: "Liderazgo",         emoji: "🔵" },
+  { codigo: "Planificación",     emoji: "🟢" },
+  { codigo: "Gestión de equipo", emoji: "🟣" },
+  { codigo: "Comunicación",      emoji: "🟠" }
+];
+const ERAS = [
+  { valor: "ERA I",   label: "ERA I",   cls: "era1" },
+  { valor: "ERA II",  label: "ERA II",  cls: "era2" },
+  { valor: "ERA III", label: "ERA III", cls: "era3" }
+];
+
+let herramientas = [], situaciones = [];
 let tabActual = 'herr';
 let pendingDelete = null;
+let numPreguntas = 0;
 
 // ── AUTH ──
 function login() {
@@ -387,8 +437,7 @@ function cargarTodo() {
     .withSuccessHandler(function(d) {
       herramientas = d.herramientas || [];
       situaciones  = d.situaciones  || [];
-      competencias = d.competencias || [];
-      llenarSelects();
+      llenarHerramientasSelect();
       renderTab();
       spin(false);
     })
@@ -421,14 +470,21 @@ function renderHerr() {
     return;
   }
   el.innerHTML = herramientas.map(function(h) {
-    const ic = iconHerr(h.nivel);
+    const ic = (h.nivel||'').toLowerCase().indexOf('comp') > -1 ? '🔧' : '📖';
+    const eraTag = eraClass(h.era);
+    const compTag = h.competencia ? '<span class="comp-badge comp-'+h.competencia.split(' ')[0]+'">'+esc(h.competencia)+'</span>' : '';
+    const ptsBadge = h.puntaje ? '<span class="mod-badge green">'+h.puntaje+' pts</span>' : '';
+    const eraBadge = eraTag ? '<span class="mod-badge '+eraTag.cls+'">'+eraTag.label+'</span>' : '';
+    const numPqs = [h.pregunta, h.pregunta2, h.pregunta3].filter(Boolean).length;
+    const pqBadge = numPqs > 0 ? '<span class="mod-badge blue">'+numPqs+' pregunta'+(numPqs>1?'s':'')+'</span>' : '';
     return '<div class="mod-card">' +
       '<div class="mod-icon">'+ic+'</div>' +
       '<div class="mod-info">' +
         '<div class="mod-name">'+esc(h.nombre)+'</div>' +
-        '<div class="mod-meta">'+esc(h.area||'—')+' · '+esc(h.competencia||'—')+'</div>' +
+        '<div class="mod-meta">'+esc(h.area||'—')+' · '+esc(h.nivel||'')+'</div>' +
+        (compTag ? '<div style="margin-top:4px">'+compTag+'</div>' : '') +
       '</div>' +
-      '<span class="mod-badge">'+esc(h.nivel||'')+'</span>' +
+      '<div class="mod-badges">'+eraBadge+ptsBadge+pqBadge+'</div>' +
       '<div class="mod-actions">' +
         '<button class="act-btn act-edit" onclick="editarHerr('+h._fila+')">✏️ Editar</button>' +
         '<button class="act-btn act-del" onclick="pedirEliminar(\'herr\','+h._fila+',\''+esc(h.nombre)+'\')">🗑️</button>' +
@@ -436,8 +492,14 @@ function renderHerr() {
     '</div>';
   }).join('');
 }
-function iconHerr(nivel) {
-  return (nivel||'').toLowerCase().indexOf('comp') > -1 ? '🔧' : '📖';
+
+function eraClass(era) {
+  if (!era) return null;
+  const s = era.toUpperCase();
+  if (s.indexOf('III') > -1) return { cls: 'era3', label: 'ERA III' };
+  if (s.indexOf('II') > -1)  return { cls: 'era2', label: 'ERA II' };
+  if (s.indexOf('I') > -1)   return { cls: 'era1', label: 'ERA I' };
+  return null;
 }
 
 // ── RENDER SITUACIONES ──
@@ -447,11 +509,10 @@ function renderSit() {
     el.innerHTML = '<div class="empty-state">No hay situaciones cargadas. Agregá una con "+ Nueva situación (carta)".</div>';
     return;
   }
-  // Agrupar por ERA||AREA||SIT
   const grupos = {};
   situaciones.forEach(function(s) {
     const k = s.era+'||'+s.area+'||'+s.situacion;
-    if (!grupos[k]) grupos[k] = { era: s.era, area: s.area, situacion: s.situacion, desc: s.descripcion, comp: s.competencia, cartas: [] };
+    if (!grupos[k]) grupos[k] = { era: s.era, area: s.area, situacion: s.situacion, comp: s.competencia, cartas: [] };
     grupos[k].cartas.push(s);
   });
   const keys = Object.keys(grupos).sort();
@@ -495,77 +556,202 @@ function renderTab() {
   else renderSit();
 }
 
+// ── PREGUNTAS DINÁMICAS ──
+function crearBloquePregunta(n, data) {
+  data = data || {};
+  const tieneOpciones = !!(data.opcionA || data.opcionB);
+  const div = document.createElement('div');
+  div.className = 'pq-block';
+  div.id = 'pq-block-'+n;
+  div.innerHTML =
+    '<div class="pq-header">' +
+      '<span class="pq-label">Pregunta '+n+(n===1?' (requerida)':'')+'</span>' +
+      (n > 1 ? '<button class="pq-remove" onclick="quitarPregunta('+n+')">✕ Quitar</button>' : '') +
+    '</div>' +
+    '<div class="form-group full" style="margin-bottom:10px">' +
+      '<label class="form-lbl">Texto de la pregunta</label>' +
+      '<input class="form-inp" id="pq'+n+'-pregunta" placeholder="ej: ¿Cuáles son los pasos del proceso?" value="'+esc(data.pregunta||'')+'">'+
+    '</div>' +
+    '<div class="form-group" style="margin-bottom:10px">' +
+      '<label class="form-lbl">Tipo de respuesta</label>' +
+      '<select class="form-sel" id="pq'+n+'-tipo" onchange="togglePqTipo('+n+')">' +
+        '<option value="libre"'+(tieneOpciones?'':' selected')+'>Respuesta libre</option>' +
+        '<option value="multiple"'+(tieneOpciones?' selected':'')+'>Opción múltiple</option>' +
+      '</select>' +
+    '</div>' +
+    '<div class="pq-opciones'+(tieneOpciones?' visible':'')+'" id="pq'+n+'-opciones">' +
+      '<div class="form-grid" style="margin-bottom:8px">' +
+        '<div class="form-group"><label class="form-lbl">Opción A</label><input class="form-inp" id="pq'+n+'-opA" value="'+esc(data.opcionA||'')+'"></div>' +
+        '<div class="form-group"><label class="form-lbl">Opción B</label><input class="form-inp" id="pq'+n+'-opB" value="'+esc(data.opcionB||'')+'"></div>' +
+        '<div class="form-group"><label class="form-lbl">Opción C (opc.)</label><input class="form-inp" id="pq'+n+'-opC" value="'+esc(data.opcionC||'')+'"></div>' +
+        '<div class="form-group"><label class="form-lbl">Opción D (opc.)</label><input class="form-inp" id="pq'+n+'-opD" value="'+esc(data.opcionD||'')+'"></div>' +
+      '</div>' +
+      '<div class="form-group">' +
+        '<label class="form-lbl">Respuesta correcta (texto exacto de la opción)</label>' +
+        '<input class="form-inp" id="pq'+n+'-respuesta-multi" value="'+esc(tieneOpciones ? data.respuesta||'' : '')+'">'+
+      '</div>' +
+    '</div>' +
+    '<div class="form-group" id="pq'+n+'-libre-wrap" style="'+(tieneOpciones?'display:none':'')+';margin-top:8px">' +
+      '<label class="form-lbl">Respuesta correcta</label>' +
+      '<input class="form-inp" id="pq'+n+'-respuesta-libre" placeholder="ej: situacion, comportamiento, impacto" value="'+esc(!tieneOpciones ? data.respuesta||'' : '')+'">'+
+      '<span class="form-hint">El jugador debe escribir exactamente esto. Para confirmar lectura usá "si".</span>'+
+    '</div>';
+  return div;
+}
+
+function inicializarPreguntas(h) {
+  numPreguntas = 0;
+  document.getElementById('pq-container').innerHTML = '';
+  const bloques = [
+    { pregunta: h.pregunta||'', respuesta: h.respuesta||'', opcionA: h.opcionA||'', opcionB: h.opcionB||'', opcionC: h.opcionC||'', opcionD: h.opcionD||'' },
+    { pregunta: h.pregunta2||'', respuesta: h.respuesta2||'', opcionA: h.opcionA2||'', opcionB: h.opcionB2||'', opcionC: h.opcionC2||'', opcionD: h.opcionD2||'' },
+    { pregunta: h.pregunta3||'', respuesta: h.respuesta3||'', opcionA: h.opcionA3||'', opcionB: h.opcionB3||'', opcionC: h.opcionC3||'', opcionD: h.opcionD3||'' }
+  ];
+  // Siempre agregar al menos la pregunta 1
+  agregarPregunta(bloques[0]);
+  if (bloques[1].pregunta) agregarPregunta(bloques[1]);
+  if (bloques[2].pregunta) agregarPregunta(bloques[2]);
+}
+
+function agregarPregunta(data) {
+  if (numPreguntas >= 3) return;
+  numPreguntas++;
+  const container = document.getElementById('pq-container');
+  container.appendChild(crearBloquePregunta(numPreguntas, data || {}));
+  actualizarBtnAgregar();
+}
+
+function quitarPregunta(n) {
+  const el = document.getElementById('pq-block-'+n);
+  if (el) el.remove();
+  // Renumerar
+  const bloques = document.querySelectorAll('.pq-block');
+  numPreguntas = 0;
+  bloques.forEach(function(b) {
+    numPreguntas++;
+    const num = numPreguntas;
+    b.id = 'pq-block-'+num;
+    b.querySelector('.pq-label').textContent = 'Pregunta '+num+(num===1?' (requerida)':'');
+    const btn = b.querySelector('.pq-remove');
+    if (btn) btn.setAttribute('onclick','quitarPregunta('+num+')');
+    // Actualizar IDs internos
+    b.querySelectorAll('[id]').forEach(function(el){
+      el.id = el.id.replace(/^pq\d+-/, 'pq'+num+'-');
+    });
+    b.querySelectorAll('[onchange]').forEach(function(el){
+      el.setAttribute('onchange','togglePqTipo('+num+')');
+    });
+  });
+  actualizarBtnAgregar();
+}
+
+function togglePqTipo(n) {
+  const t = document.getElementById('pq'+n+'-tipo').value;
+  document.getElementById('pq'+n+'-opciones').classList.toggle('visible', t==='multiple');
+  document.getElementById('pq'+n+'-libre-wrap').style.display = t==='libre' ? '' : 'none';
+}
+
+function actualizarBtnAgregar() {
+  const btn = document.getElementById('btn-add-pq');
+  btn.disabled = numPreguntas >= 3;
+  btn.textContent = numPreguntas >= 3 ? '(máximo 3 preguntas)' : '+ Agregar otra pregunta';
+}
+
+function obtenerDatosPreguntas() {
+  const pqs = [];
+  for (let i = 1; i <= numPreguntas; i++) {
+    const bloque = document.getElementById('pq-block-'+i);
+    if (!bloque) continue;
+    const tipo = document.getElementById('pq'+i+'-tipo').value;
+    const pregunta = document.getElementById('pq'+i+'-pregunta').value.trim();
+    const respuesta = tipo === 'multiple'
+      ? document.getElementById('pq'+i+'-respuesta-multi').value.trim().toLowerCase()
+      : document.getElementById('pq'+i+'-respuesta-libre').value.trim().toLowerCase();
+    const opcionA = tipo === 'multiple' ? document.getElementById('pq'+i+'-opA').value.trim() : '';
+    const opcionB = tipo === 'multiple' ? document.getElementById('pq'+i+'-opB').value.trim() : '';
+    const opcionC = tipo === 'multiple' ? document.getElementById('pq'+i+'-opC').value.trim() : '';
+    const opcionD = tipo === 'multiple' ? document.getElementById('pq'+i+'-opD').value.trim() : '';
+    pqs.push({ pregunta, respuesta, opcionA, opcionB, opcionC, opcionD });
+  }
+  return pqs;
+}
+
 // ── FORM HERRAMIENTA ──
 function nuevaHerr() {
-  limpiarFormHerr();
   document.getElementById('form-title').textContent = 'Nueva herramienta';
+  document.getElementById('f-fila').value = '';
+  document.getElementById('f-nombre').value = '';
+  document.getElementById('f-era').value = '';
+  document.getElementById('f-nivel').value = 'Fácil';
+  document.getElementById('f-area').value = '';
+  document.getElementById('f-puntaje').value = '5';
+  document.getElementById('f-competencia').value = '';
+  document.getElementById('f-contenido').value = '';
+  document.getElementById('f-video').value = '';
+  document.getElementById('f-infografia').value = '';
+  document.getElementById('f-insignia').value = '';
+  inicializarPreguntas({});
   mostrarFormHerr();
 }
+
 function editarHerr(fila) {
   const h = herramientas.find(function(x){ return x._fila===fila; });
   if (!h) return;
-  limpiarFormHerr();
   document.getElementById('form-title').textContent = 'Editar herramienta';
   document.getElementById('f-fila').value = h._fila;
   document.getElementById('f-nombre').value = h.nombre;
-  document.getElementById('f-nivel').value = h.nivel||'Fácil';
-  document.getElementById('f-area').value = h.area;
-  document.getElementById('f-competencia').value = h.competencia;
-  document.getElementById('f-contenido').value = h.contenido;
-  document.getElementById('f-video').value = h.videoUrl;
-  document.getElementById('f-infografia').value = h.infografiaUrl;
-  document.getElementById('f-pregunta').value = h.pregunta;
-  document.getElementById('f-insignia').value = h.insigniaID;
-  const multi = h.opcionA || h.opcionB;
-  document.getElementById('f-tipo').value = multi ? 'multiple' : 'libre';
-  if (multi) {
-    document.getElementById('f-opA').value = h.opcionA;
-    document.getElementById('f-opB').value = h.opcionB;
-    document.getElementById('f-opC').value = h.opcionC;
-    document.getElementById('f-opD').value = h.opcionD;
-    document.getElementById('f-respuesta-multi').value = h.respuesta;
-  } else {
-    document.getElementById('f-respuesta-libre').value = h.respuesta;
-  }
-  toggleTipo();
+  document.getElementById('f-era').value = h.era || '';
+  document.getElementById('f-nivel').value = h.nivel || 'Fácil';
+  document.getElementById('f-area').value = h.area || '';
+  document.getElementById('f-puntaje').value = String(h.puntaje || 5);
+  document.getElementById('f-competencia').value = h.competencia || '';
+  document.getElementById('f-contenido').value = h.contenido || '';
+  document.getElementById('f-video').value = h.videoUrl || '';
+  document.getElementById('f-infografia').value = h.infografiaUrl || '';
+  document.getElementById('f-insignia').value = h.insigniaID || '';
+  inicializarPreguntas(h);
   mostrarFormHerr();
 }
-function limpiarFormHerr() {
-  ['f-fila','f-nombre','f-area','f-contenido','f-video','f-infografia','f-pregunta','f-insignia','f-opA','f-opB','f-opC','f-opD','f-respuesta-multi','f-respuesta-libre'].forEach(function(id){ document.getElementById(id).value=''; });
-  document.getElementById('f-competencia').value='';
-  document.getElementById('f-nivel').value='Fácil';
-  document.getElementById('f-tipo').value='libre';
-  toggleTipo();
-}
-function toggleTipo() {
-  const t = document.getElementById('f-tipo').value;
-  document.getElementById('opciones-wrap').classList.toggle('visible', t==='multiple');
-  document.getElementById('libre-wrap').style.display = t==='libre' ? '' : 'none';
-}
+
 function guardarHerr() {
-  const tipo = document.getElementById('f-tipo').value;
+  const nombre = document.getElementById('f-nombre').value.trim();
+  const contenido = document.getElementById('f-contenido').value.trim();
+  if (!nombre)    return toast('El nombre es obligatorio', true);
+  if (!contenido) return toast('El contenido es obligatorio', true);
+  const pqs = obtenerDatosPreguntas();
+  if (!pqs[0] || !pqs[0].pregunta) return toast('La primera pregunta es obligatoria', true);
+  if (!pqs[0].respuesta) return toast('La respuesta de la primera pregunta es obligatoria', true);
   const d = {
     _fila:        parseInt(document.getElementById('f-fila').value)||0,
-    nombre:       document.getElementById('f-nombre').value.trim(),
+    nombre:       nombre,
+    era:          document.getElementById('f-era').value,
     nivel:        document.getElementById('f-nivel').value,
     area:         document.getElementById('f-area').value.trim(),
+    puntaje:      parseInt(document.getElementById('f-puntaje').value)||5,
     competencia:  document.getElementById('f-competencia').value,
-    contenido:    document.getElementById('f-contenido').value.trim(),
+    contenido:    contenido,
     videoUrl:     document.getElementById('f-video').value.trim(),
     infografiaUrl:document.getElementById('f-infografia').value.trim(),
-    pregunta:     document.getElementById('f-pregunta').value.trim(),
     insigniaID:   document.getElementById('f-insignia').value.trim(),
-    respuesta:    tipo==='multiple' ? document.getElementById('f-respuesta-multi').value.trim().toLowerCase()
-                                    : document.getElementById('f-respuesta-libre').value.trim().toLowerCase(),
-    opcionA: tipo==='multiple' ? document.getElementById('f-opA').value.trim() : '',
-    opcionB: tipo==='multiple' ? document.getElementById('f-opB').value.trim() : '',
-    opcionC: tipo==='multiple' ? document.getElementById('f-opC').value.trim() : '',
-    opcionD: tipo==='multiple' ? document.getElementById('f-opD').value.trim() : ''
+    pregunta:     pqs[0] ? pqs[0].pregunta : '',
+    respuesta:    pqs[0] ? pqs[0].respuesta : '',
+    opcionA:      pqs[0] ? pqs[0].opcionA : '',
+    opcionB:      pqs[0] ? pqs[0].opcionB : '',
+    opcionC:      pqs[0] ? pqs[0].opcionC : '',
+    opcionD:      pqs[0] ? pqs[0].opcionD : '',
+    pregunta2:    pqs[1] ? pqs[1].pregunta : '',
+    respuesta2:   pqs[1] ? pqs[1].respuesta : '',
+    opcionA2:     pqs[1] ? pqs[1].opcionA : '',
+    opcionB2:     pqs[1] ? pqs[1].opcionB : '',
+    opcionC2:     pqs[1] ? pqs[1].opcionC : '',
+    opcionD2:     pqs[1] ? pqs[1].opcionD : '',
+    pregunta3:    pqs[2] ? pqs[2].pregunta : '',
+    respuesta3:   pqs[2] ? pqs[2].respuesta : '',
+    opcionA3:     pqs[2] ? pqs[2].opcionA : '',
+    opcionB3:     pqs[2] ? pqs[2].opcionB : '',
+    opcionC3:     pqs[2] ? pqs[2].opcionC : '',
+    opcionD3:     pqs[2] ? pqs[2].opcionD : ''
   };
-  if (!d.nombre)    return toast('El nombre es obligatorio', true);
-  if (!d.contenido) return toast('El contenido es obligatorio', true);
-  if (!d.pregunta)  return toast('La pregunta es obligatoria', true);
-  if (!d.respuesta) return toast('La respuesta correcta es obligatoria', true);
   google.script.run
     .withSuccessHandler(function(){ toast('Herramienta guardada ✓'); ocultarForms(); recargar(); })
     .withFailureHandler(function(e){ toast('Error: '+e.message, true); })
@@ -574,14 +760,20 @@ function guardarHerr() {
 
 // ── FORM SITUACIÓN ──
 function nuevaSit() {
-  limpiarFormSit();
+  ['sf-fila','sf-sit','sf-desc','sf-nro','sf-texto'].forEach(function(id){ document.getElementById(id).value=''; });
+  document.getElementById('sf-era').value = 'ERA I ORGANIZACION DEL TRABAJO';
+  document.getElementById('sf-trayecto').value = 'Operativo';
+  document.getElementById('sf-area').value = 'Hacienda';
+  document.getElementById('sf-competencia').value = '';
+  document.getElementById('sf-tipo').value = 'Sin capacitación (neutro)';
+  document.getElementById('sf-puntaje').value = '0';
+  document.getElementById('sf-herr').value = '';
   document.getElementById('sit-form-title').textContent = 'Nueva carta de situación';
   mostrarFormSit();
 }
 function editarSit(fila) {
   const s = situaciones.find(function(x){ return x._fila===fila; });
   if (!s) return;
-  limpiarFormSit();
   document.getElementById('sit-form-title').textContent = 'Editar carta';
   document.getElementById('sf-fila').value = s._fila;
   document.getElementById('sf-era').value = s.era;
@@ -596,16 +788,6 @@ function editarSit(fila) {
   document.getElementById('sf-puntaje').value = s.puntaje;
   document.getElementById('sf-herr').value = s.herramienta;
   mostrarFormSit();
-}
-function limpiarFormSit() {
-  ['sf-fila','sf-sit','sf-desc','sf-nro','sf-texto'].forEach(function(id){ document.getElementById(id).value=''; });
-  document.getElementById('sf-era').value = 'ERA I ORGANIZACION DEL TRABAJO';
-  document.getElementById('sf-trayecto').value = 'Operativo';
-  document.getElementById('sf-area').value = 'Hacienda';
-  document.getElementById('sf-competencia').value = '';
-  document.getElementById('sf-tipo').value = 'Sin capacitación (neutro)';
-  document.getElementById('sf-puntaje').value = '0';
-  document.getElementById('sf-herr').value = '';
 }
 function guardarSit() {
   const d = {
@@ -672,15 +854,7 @@ function confirmarEliminar() {
 }
 
 // ── HELPERS ──
-function llenarSelects() {
-  const comps = ['f-competencia','sf-competencia'];
-  comps.forEach(function(id){
-    const sel = document.getElementById(id);
-    const cur = sel.value;
-    sel.innerHTML = '<option value="">— ninguna —</option>' +
-      competencias.map(function(c){ return '<option value="'+esc(c.codigo)+'">'+esc(c.nombre)+'</option>'; }).join('');
-    sel.value = cur;
-  });
+function llenarHerramientasSelect() {
   const herrSel = document.getElementById('sf-herr');
   const curH = herrSel.value;
   herrSel.innerHTML = '<option value="">— ninguna —</option>' +

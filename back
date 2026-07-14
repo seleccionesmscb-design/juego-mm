@@ -108,11 +108,10 @@ function obtenerEquipo(direccion) {
 // ─────────────────────────────────────────────
 function cargarCompetencias(ss) {
   const DEFAULTS = [
-    { codigo: "Liderazgo",                              nombre: "Liderazgo" },
-    { codigo: "Toma de Decisiones",                     nombre: "Toma de Decisiones" },
-    { codigo: "Planificación y Gestión de Resultados",  nombre: "Planificación y Gestión de Resultados" },
-    { codigo: "Desarrollo de las Personas",             nombre: "Desarrollo de las Personas" },
-    { codigo: "Visión Estratégica",                     nombre: "Visión Estratégica" }
+    { codigo: "Liderazgo",          nombre: "Liderazgo" },
+    { codigo: "Planificación",      nombre: "Planificación" },
+    { codigo: "Gestión de equipo",  nombre: "Gestión de equipo" },
+    { codigo: "Comunicación",       nombre: "Comunicación" }
   ];
   const hoja = ss.getSheetByName("Situaciones y respuestas");
   if (!hoja) return DEFAULTS;
@@ -261,6 +260,12 @@ function iniciarPartida(legajo, direccion, nombreEquipo, nombreLider) {
 // si hay al menos 2 opciones cargadas, se muestra como opción múltiple
 // y RespuestaCorrecta debe coincidir con el texto de la opción correcta.
 // ─────────────────────────────────────────────
+// Columnas hoja "Herramientas (contenido)":
+// 0=Herramienta 1=Nivel 2=Área 3=Competencia 4=Contenido 5=Pregunta1 6=Respuesta1
+// 7=OpcionA1 8=OpcionB1 9=OpcionC1 10=OpcionD1 11=VideoUrl 12=InfografiaUrl 13=InsigniaID
+// 14=Era 15=Puntaje
+// 16=Pregunta2 17=Respuesta2 18=OpcionA2 19=OpcionB2 20=OpcionC2 21=OpcionD2
+// 22=Pregunta3 23=Respuesta3 24=OpcionA3 25=OpcionB3 26=OpcionC3 27=OpcionD3
 function cargarHerramientas(ss) {
   const hoja = ss.getSheetByName("Herramientas (contenido)");
   if (!hoja) return [];
@@ -268,9 +273,25 @@ function cargarHerramientas(ss) {
     .filter(function(f){ return String(f[0]).trim() !== ""; })
     .map(function(f) {
       const nombre = String(f[0]).trim();
-      const opciones = [f[7], f[8], f[9], f[10]]
-        .map(function(o){ return (o || "").toString().trim(); })
-        .filter(function(o){ return o !== ""; });
+      function opcArr(a, b, c, d) {
+        return [a,b,c,d].map(function(o){ return (o||"").toString().trim(); }).filter(Boolean);
+      }
+      const preguntas = [];
+      if (String(f[5]||"").trim()) preguntas.push({
+        pregunta: String(f[5]).trim(),
+        respuesta: String(f[6]||"si").trim().toLowerCase(),
+        opciones: opcArr(f[7],f[8],f[9],f[10])
+      });
+      if (String(f[16]||"").trim()) preguntas.push({
+        pregunta: String(f[16]).trim(),
+        respuesta: String(f[17]||"").trim().toLowerCase(),
+        opciones: opcArr(f[18],f[19],f[20],f[21])
+      });
+      if (String(f[22]||"").trim()) preguntas.push({
+        pregunta: String(f[22]).trim(),
+        respuesta: String(f[23]||"").trim().toLowerCase(),
+        opciones: opcArr(f[24],f[25],f[26],f[27])
+      });
       return {
         id:            nombre,
         nombre:        nombre,
@@ -278,8 +299,10 @@ function cargarHerramientas(ss) {
         area:          String(f[2] || "").trim(),
         competencia:   String(f[3] || "").trim(),
         contenido:     String(f[4] || "").trim(),
-        pregunta:      String(f[5] || "").trim() || "¿Confirmás la lectura del módulo?",
-        respuesta:     String(f[6] || "si").trim().toLowerCase(),
+        era:           String(f[14]|| "").trim(),
+        puntaje:       Number(f[15]) || 0,
+        pregunta:      preguntas.length ? preguntas[0].pregunta : "¿Confirmás la lectura del módulo?",
+        respuesta:     preguntas.length ? preguntas[0].respuesta : "si",
         opcionA:       String(f[7] || "").trim(),
         opcionB:       String(f[8] || "").trim(),
         opcionC:       String(f[9] || "").trim(),
@@ -287,7 +310,8 @@ function cargarHerramientas(ss) {
         videoUrl:      String(f[11] || "").trim(),
         infografiaUrl: String(f[12] || "").trim(),
         insigniaID:    String(f[13] || "").trim(),
-        opciones:      opciones
+        opciones:      preguntas.length ? preguntas[0].opciones : [],
+        preguntas:     preguntas
       };
     });
 }
@@ -647,18 +671,32 @@ function obtenerTodasHerramientas() {
         opcionD:      f[10] || '',
         videoUrl:     f[11] || '',
         infografiaUrl:f[12] || '',
-        insigniaID:   f[13] || ''
+        insigniaID:   f[13] || '',
+        era:          f[14] || '',
+        puntaje:      Number(f[15]) || 0,
+        pregunta2:    f[16] || '',
+        respuesta2:   f[17] || '',
+        opcionA2:     f[18] || '',
+        opcionB2:     f[19] || '',
+        opcionC2:     f[20] || '',
+        opcionD2:     f[21] || '',
+        pregunta3:    f[22] || '',
+        respuesta3:   f[23] || '',
+        opcionA3:     f[24] || '',
+        opcionB3:     f[25] || '',
+        opcionC3:     f[26] || '',
+        opcionD3:     f[27] || ''
       };
     });
 }
 
 function obtenerCompetenciasCatalogo() {
-  const ss = SpreadsheetApp.openById(SS_ID);
-  const hoja = ss.getSheetByName('Competencias_Gestion');
-  if (!hoja) return [];
-  return hoja.getDataRange().getValues().slice(1)
-    .filter(f => f[0])
-    .map(f => ({ id: String(f[0]).trim(), nombre: f[1] || '' }));
+  return [
+    { codigo: "Liderazgo",          nombre: "Liderazgo" },
+    { codigo: "Planificación",      nombre: "Planificación" },
+    { codigo: "Gestión de equipo",  nombre: "Gestión de equipo" },
+    { codigo: "Comunicación",       nombre: "Comunicación" }
+  ];
 }
 
 function guardarHerramienta(datos) {
@@ -684,7 +722,21 @@ function guardarHerramienta(datos) {
     datos.opcionD       || '',
     datos.videoUrl      || '',
     datos.infografiaUrl || '',
-    datos.insigniaID    || ''
+    datos.insigniaID    || '',
+    datos.era           || '',
+    Number(datos.puntaje) || 0,
+    datos.pregunta2     || '',
+    datos.respuesta2    || '',
+    datos.opcionA2      || '',
+    datos.opcionB2      || '',
+    datos.opcionC2      || '',
+    datos.opcionD2      || '',
+    datos.pregunta3     || '',
+    datos.respuesta3    || '',
+    datos.opcionA3      || '',
+    datos.opcionB3      || '',
+    datos.opcionC3      || '',
+    datos.opcionD3      || ''
   ];
 
   if (datos._fila && datos._fila >= 2) {
@@ -697,7 +749,7 @@ function guardarHerramienta(datos) {
 
 function eliminarHerramienta(fila) {
   const ss = SpreadsheetApp.openById(SS_ID);
-  const hoja = ss.getSheetByName('Herramientas');
+  const hoja = ss.getSheetByName('Herramientas (contenido)');
   if (!hoja || fila < 2) return { ok: false };
   hoja.deleteRow(Number(fila));
   return { ok: true };
