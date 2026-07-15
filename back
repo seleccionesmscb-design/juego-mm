@@ -322,16 +322,16 @@ function completarCapacitacion(estado, toolID, insigniaID) {
   if (!estado.herramientas.includes(toolID)) estado.herramientas.push(toolID);
   if (insigniaID && !estado.insignias.includes(insigniaID)) estado.insignias.push(insigniaID);
 
-  // Fortalecer la competencia: primero busca en la herramienta; si no coincide
-  // con el catálogo, usa la competencia de la situación actual.
+  // Fortalecer la competencia de la herramienta (matching normalizado para evitar problemas de tildes)
   const herramienta = cargarHerramientas(ss).find(function(h){ return h.id === toolID; });
-  const competenciaHerr = herramienta ? herramienta.competencia : "";
-  const competenciaConocida = estado.competencias.hasOwnProperty(competenciaHerr);
-  const cod = competenciaConocida ? competenciaHerr
-            : (estado.situacionActualId ? estado.situacionActualId.split("||")[2] : "");
+  const cod = hallCompetencia(estado, herramienta ? herramienta.competencia : "");
   if (cod) {
-    if (!estado.competencias.hasOwnProperty(cod)) estado.competencias[cod] = 0;
-    estado.competencias[cod] = Math.min(5, estado.competencias[cod] + 1);
+    estado.competencias[cod] = Math.min(5, (estado.competencias[cod] || 0) + 1);
+  }
+
+  // Sumar el puntaje de la herramienta (5 o 10 pts) al score general
+  if (herramienta && herramienta.puntaje) {
+    estado.puntaje = (estado.puntaje || 0) + herramienta.puntaje;
   }
 
   guardarProgreso(estado);
@@ -414,35 +414,57 @@ function cargarAcciones(ss, herramientasUsuario, situacionId) {
   const hoja = ss.getSheetByName("Situaciones y respuestas");
   if (!hoja) return [];
 
-  // Forward-fill ERA/Área/Situación: si una fila las tiene vacías hereda la fila anterior.
+  // Forward-fill ERA/Área/Situación/Competencia: si una fila las tiene vacías hereda la fila anterior.
   // Esto soporta sheets donde solo la primera carta de cada situación tiene esos campos.
-  let curEra = '', curArea = '', curNombre = '';
+  let curEra = '', curArea = '', curNombre = '', curComp = '';
   const rows = [];
   hoja.getDataRange().getValues().slice(1).forEach(function(f) {
     if (String(f[0]).trim()) curEra    = String(f[0]).trim();
     if (String(f[2]).trim()) curArea   = String(f[2]).trim();
-    if (String(f[3]).trim()) curNombre = String(f[3]).trim();
+    if (String(f[3]).trim()) { curNombre = String(f[3]).trim(); curComp = String(f[5]).trim(); }
     if (curEra === eraStr && curArea === areaStr && curNombre === nombre) {
-      rows.push(f);
+      rows.push([f, curComp]);
     }
   });
 
-  return rows.map(function(f) {
+  return rows.map(function(item) {
+    const f    = item[0];
+    const comp = item[1];
     const tipo     = String(f[7]).trim();
     const herr     = String(f[10] || "").trim();
     const tipoNorm = tipo.toLowerCase()
       .normalize("NFD").replace(/[̀-ͯ]/g, "");
     const req  = (tipoNorm.includes("herramienta") && herr) ? herr : "";
+    const pts  = Number(f[9]) || 0;
     return {
       id:               situacionId + "_C" + f[6],
       texto:            String(f[8]).trim(),
-      puntaje:          Number(f[9]) || 0,
+      puntaje:          pts,
+      valor:            pts,   // usado por el frontend en seleccionarCarta / procesarAccion
+      cat:              comp,  // competencia → determina colores de la carta
+      competencia:      comp,
       req:              req,
       herramientaNombre: herr,
       tipo:             tipo,
       bloqueada:        req !== "" && !(herramientasUsuario || []).includes(req)
     };
   });
+}
+
+// ─────────────────────────────────────────────
+// HELPERS — competencias
+// ─────────────────────────────────────────────
+function normStr(s) {
+  return String(s || '').trim().toLowerCase()
+    .normalize("NFD").replace(/[̀-ͯ]/g, "");
+}
+
+// Busca la clave exacta en estado.competencias que coincide (normalizado) con cat
+function hallCompetencia(estado, cat) {
+  const n = normStr(cat);
+  if (!n) return "";
+  return Object.keys(estado.competencias || {})
+    .find(function(k){ return normStr(k) === n; }) || "";
 }
 
 // ─────────────────────────────────────────────
@@ -455,6 +477,12 @@ function procesarAccion(estado, accionID, cat, recursoGanado, cantidadRecurso, v
 
   if (recursoGanado && estado.recursos.hasOwnProperty(recursoGanado)) {
     estado.recursos[recursoGanado] += (Number(cantidadRecurso) || 0);
+  }
+
+  // Fortalecer la competencia de la carta jugada (+1 por acción)
+  const compKey = hallCompetencia(estado, cat);
+  if (compKey) {
+    estado.competencias[compKey] = Math.min(5, (estado.competencias[compKey] || 0) + 1);
   }
 
   const esFinalizado = estado.casillero >= TOTAL_CASILLEROS;

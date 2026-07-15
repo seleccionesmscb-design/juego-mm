@@ -796,20 +796,21 @@ function renderLanes(cas) {
 }
 
 /* ── CARTAS ── */
+function normCat(s){ return String(s||'').toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,""); }
 function catColor(cat) {
   if(!cat) return {band:'#6b4423',med:'linear-gradient(160deg,#93a04f,#59642a)',frame:'linear-gradient(160deg,#5d6a2c,#38401a)',stud:'#93a04f'};
-  const c = cat.toLowerCase();
+  const c = normCat(cat);
   if(c.includes('comunic')) return {band:'#1a5a3a',med:'linear-gradient(160deg,#4a9a6a,#1a5a3a)',frame:'linear-gradient(160deg,#2a6a4a,#1a3a28)',stud:'#4a9a6a'};
   if(c.includes('liderazg')||c.includes('profesion')) return {band:'#a8410f',med:'linear-gradient(160deg,#e39445,#a8410f)',frame:'linear-gradient(160deg,#a8551f,#6e3212)',stud:'#e39445'};
-  if(c.includes('bienestar')||c.includes('climat')) return {band:'#b07a22',med:'linear-gradient(160deg,#e2b64e,#a8731b)',frame:'linear-gradient(160deg,#9a6a24,#5e3d10)',stud:'#e2b64e'};
+  if(c.includes('gestion')||c.includes('equipo')) return {band:'#5a3a7a',med:'linear-gradient(160deg,#9a6ab0,#5a3a7a)',frame:'linear-gradient(160deg,#6a4a8a,#3a2050)',stud:'#9a6ab0'};
   if(c.includes('planif')||c.includes('organiz')) return {band:'#6b4423',med:'linear-gradient(160deg,#93a04f,#59642a)',frame:'linear-gradient(160deg,#5d6a2c,#38401a)',stud:'#93a04f'};
   return {band:'#6b4423',med:'linear-gradient(160deg,#93a04f,#59642a)',frame:'linear-gradient(160deg,#5d6a2c,#38401a)',stud:'#93a04f'};
 }
 function catIcon(cat) {
-  if(!cat) return '⚡'; const c = cat.toLowerCase();
+  if(!cat) return '⚡'; const c = normCat(cat);
   if(c.includes('comunic')) return '💬';
   if(c.includes('liderazg')||c.includes('profesion')) return '🧭';
-  if(c.includes('bienestar')||c.includes('climat')) return '🌱';
+  if(c.includes('gestion')||c.includes('equipo')) return '🤝';
   if(c.includes('planif')||c.includes('organiz')) return '📋';
   return '⚡';
 }
@@ -830,6 +831,7 @@ function renderCartas() {
     if(c.bloqueada) {
       const herr = g.biblioteca ? g.biblioteca.find(h=>h.id===c.req) : null;
       const hn = herr ? herr.nombre : c.req;
+      const lockCol = catColor(c.competencia);
       return `<div class="mm-card" onclick="abrirHerrDesdeCarta('${c.req}')">
         <div class="mm-frame" style="background:linear-gradient(160deg,#8a7a62,#5a4d3c);border:1px solid rgba(40,20,8,.5)">
           <div class="mm-inner locked">
@@ -837,13 +839,14 @@ function renderCartas() {
             <div class="mm-lock">🔒</div>
             <div class="mm-title">${c.texto}</div>
             <div class="mm-desc" style="font-style:italic">Estudiá "${hn}" para desbloquear</div>
+            ${c.competencia?`<div class="mm-foot" style="background:${lockCol.band};color:#fff;font-size:9px;padding:3px 6px;text-align:center;border-radius:3px;margin-top:4px">⭐ FORTALECE: ${c.competencia.toUpperCase()}${c.puntaje?' · '+c.puntaje+' PTS':''}</div>`:''}
           </div>
         </div>
       </div>`;
     }
 
-    const puntos = typeof c.valor === 'number' ? `${c.valor} PTS` : '';
-    return `<div class="mm-card ${isSel?'selected':''}" onclick="seleccionarCarta('${c.id}','${c.cat}','${c.recursoGanado}',${c.cantidadRecurso},${c.valor||0},'${(c.texto||'').split("'").join("\\'")}')">
+    const puntos = c.valor > 0 ? `${c.valor} PTS` : '';
+    return `<div class="mm-card ${isSel?'selected':''}" onclick="seleccionarCarta('${c.id}','${c.cat}','${c.recursoGanado}',${c.cantidadRecurso||0},${c.valor||0},'${(c.texto||'').split("'").join("\\'")}')">
       <div class="mm-frame" style="background:${col.frame};border:1px solid rgba(40,20,8,.5)${isSel?';outline:3px solid var(--gold-br);outline-offset:2px':''}">
         <div class="mm-inner">
           <div class="mm-stud" style="top:7px;left:7px;background:${col.stud}"></div>
