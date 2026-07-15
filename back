@@ -418,9 +418,11 @@ function cargarAcciones(ss, herramientasUsuario, situacionId) {
   });
 
   return rows.map(function(f) {
-    const tipo  = String(f[7]).trim();
-    const herr  = String(f[10] || "").trim();
-    const req   = (tipo === "Herramienta fácil" || tipo === "Herramienta compleja") ? herr : "";
+    const tipo     = String(f[7]).trim();
+    const herr     = String(f[10] || "").trim();
+    const tipoNorm = tipo.toLowerCase()
+      .normalize("NFD").replace(/[̀-ͯ]/g, "");
+    const req  = (tipoNorm.includes("herramienta") && herr) ? herr : "";
     return {
       id:               situacionId + "_C" + f[6],
       texto:            String(f[8]).trim(),
@@ -652,10 +654,10 @@ function obtenerTodasHerramientas() {
   const ss = SpreadsheetApp.openById(SS_ID);
   const hoja = ss.getSheetByName('Herramientas (contenido)');
   if (!hoja) return [];
-  return hoja.getDataRange().getValues().slice(1)
-    .filter(function(f){ return String(f[0]).trim() !== ''; })
-    .map(function(f, i) {
-      return {
+  const result = [];
+  hoja.getDataRange().getValues().slice(1).forEach(function(f, i) {
+    if (String(f[0]).trim() === '') return;
+    result.push({
         _fila:        i + 2,
         id:           String(f[0]).trim(),
         nombre:       String(f[0]).trim(),
@@ -686,8 +688,9 @@ function obtenerTodasHerramientas() {
         opcionB3:     f[25] || '',
         opcionC3:     f[26] || '',
         opcionD3:     f[27] || ''
-      };
-    });
+      });
+  });
+  return result;
 }
 
 function obtenerCompetenciasCatalogo() {
@@ -759,24 +762,25 @@ function obtenerTodasSituaciones() {
   const ss = SpreadsheetApp.openById(SS_ID);
   const hoja = ss.getSheetByName('Situaciones y respuestas');
   if (!hoja) return [];
-  return hoja.getDataRange().getValues().slice(1)
-    .filter(function(f){ return f[0] && f[3]; })
-    .map(function(f, i) {
-      return {
-        _fila:        i + 2,
-        era:          String(f[0]).trim(),
-        trayecto:     String(f[1]).trim(),
-        area:         String(f[2]).trim(),
-        situacion:    String(f[3]).trim(),
-        descripcion:  String(f[4]).trim(),
-        competencia:  String(f[5]).trim(),
-        nroCarta:     String(f[6]).trim(),
-        tipoRespuesta:String(f[7]).trim(),
-        textoRespuesta:String(f[8]).trim(),
-        puntaje:      String(f[9]).trim(),
-        herramienta:  String(f[10] || '').trim()
-      };
+  const result = [];
+  hoja.getDataRange().getValues().slice(1).forEach(function(f, i) {
+    if (!f[0] && !f[3]) return;
+    result.push({
+      _fila:         i + 2,
+      era:           String(f[0]).trim(),
+      trayecto:      String(f[1]).trim(),
+      area:          String(f[2]).trim(),
+      situacion:     String(f[3]).trim(),
+      descripcion:   String(f[4]).trim(),
+      competencia:   String(f[5]).trim(),
+      nroCarta:      String(f[6]).trim(),
+      tipoRespuesta: String(f[7]).trim(),
+      textoRespuesta:String(f[8]).trim(),
+      puntaje:       String(f[9]).trim(),
+      herramienta:   String(f[10] || '').trim()
     });
+  });
+  return result;
 }
 
 function guardarSituacion(datos) {

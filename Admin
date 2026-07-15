@@ -455,6 +455,7 @@ function cambiarTab(t) {
   });
   ocultarForms();
   document.getElementById('btn-nuevo').textContent = t==='herr' ? '+ Nueva herramienta' : '+ Nueva situación (carta)';
+  renderTab();
 }
 
 function nuevo() {
