@@ -360,24 +360,27 @@ function obtenerSituacionAleatoria(ss, area, casillero) {
   if (!hoja) return { id: "", titulo: "Sin datos", desc: "Verificá la hoja 'Situaciones y respuestas'.", tipo: "situacion" };
 
   const tag  = eraDeCasillero(casillero || 0);
-  const rows = hoja.getDataRange().getValues().slice(1).filter(function(f){ return f[0] && f[3]; });
 
+  // Forward-fill ERA/Área/Situación/Descripción para soportar sheets con celdas combinadas o vacías
+  let curEra = '', curArea = '', curNombre = '', curDesc = '', curComp = '', curTray = '';
   const mapa = {};
-  rows.forEach(function(f) {
-    const eraStr = String(f[0]).trim();
-    if (!filaMatchEra(eraStr, tag)) return;
-    const areaRow = String(f[2]).trim();
-    const nombre  = String(f[3]).trim();
-    const key = eraStr + "||" + areaRow + "||" + nombre;
+  hoja.getDataRange().getValues().slice(1).forEach(function(f) {
+    if (String(f[0]).trim()) curEra    = String(f[0]).trim();
+    if (String(f[1]).trim()) curTray   = String(f[1]).trim();
+    if (String(f[2]).trim()) curArea   = String(f[2]).trim();
+    if (String(f[3]).trim()) { curNombre = String(f[3]).trim(); curDesc = String(f[4]).trim(); curComp = String(f[5]).trim(); }
+    if (!curEra || !curNombre) return;
+    if (!filaMatchEra(curEra, tag)) return;
+    const key = curEra + "||" + curArea + "||" + curNombre;
     if (!mapa[key]) {
       mapa[key] = {
         id:          key,
-        titulo:      nombre,
-        desc:        String(f[4]).trim(),
-        competencia: String(f[5]).trim(),
-        era:         eraStr,
-        area:        areaRow,
-        trayecto:    String(f[1]).trim(),
+        titulo:      curNombre,
+        desc:        curDesc,
+        competencia: curComp,
+        era:         curEra,
+        area:        curArea,
+        trayecto:    curTray,
         tipo:        "situacion"
       };
     }
@@ -411,10 +414,17 @@ function cargarAcciones(ss, herramientasUsuario, situacionId) {
   const hoja = ss.getSheetByName("Situaciones y respuestas");
   if (!hoja) return [];
 
-  const rows = hoja.getDataRange().getValues().slice(1).filter(function(f) {
-    return String(f[0]).trim() === eraStr &&
-           String(f[2]).trim() === areaStr &&
-           String(f[3]).trim() === nombre;
+  // Forward-fill ERA/Área/Situación: si una fila las tiene vacías hereda la fila anterior.
+  // Esto soporta sheets donde solo la primera carta de cada situación tiene esos campos.
+  let curEra = '', curArea = '', curNombre = '';
+  const rows = [];
+  hoja.getDataRange().getValues().slice(1).forEach(function(f) {
+    if (String(f[0]).trim()) curEra    = String(f[0]).trim();
+    if (String(f[2]).trim()) curArea   = String(f[2]).trim();
+    if (String(f[3]).trim()) curNombre = String(f[3]).trim();
+    if (curEra === eraStr && curArea === areaStr && curNombre === nombre) {
+      rows.push(f);
+    }
   });
 
   return rows.map(function(f) {
