@@ -639,7 +639,7 @@ const ENC = {
   3:{titulo:'Encuentro 2 · Era II Completada',desc:'Completaste la Gestión del Desempeño (10 situaciones). Nueva reunión grupal para evaluar el avance e integrar herramientas de gestión.'}
 };
 
-let g = null, agenteData = null, currentScreen = 'tablero', selectedCard = null, capHerr = null, capTab = 'texto', capOpcionSeleccionada = null;
+let g = null, agenteData = null, currentScreen = 'tablero', selectedCard = null, capHerr = null, capTab = 'texto', capOpcionSeleccionada = null, capPreguntaIndex = 0;
 
 /* ── LOGIN ── */
 function validarLegajo() {
@@ -915,15 +915,14 @@ function abrirHerrDesdeCarta(id) { go('capacitacion'); abrirHerramienta(id); }
 function abrirHerramienta(id) {
   const h = g.biblioteca.find(x=>x.id===id); if(!h) return;
   capHerr = h;
+  capPreguntaIndex = 0;
   document.getElementById('cap-card-list').style.display = 'none';
   document.getElementById('cap-card-detail').style.display = 'block';
   document.getElementById('cap-area-badge').innerText = (h.area||'').toUpperCase();
   document.getElementById('cap-tit').innerText = h.nombre;
-  document.getElementById('cap-preg').innerText = h.pregunta || '¿Confirmás la lectura del módulo?';
-  document.getElementById('cap-inp').value = '';
   document.getElementById('cap-err').style.display = 'none';
   capOpcionSeleccionada = null;
-  renderCapOpciones(h);
+  mostrarPreguntaActual();
 
   const disponibles = [];
   if(h.videoUrl) disponibles.push('video');
@@ -994,6 +993,22 @@ function renderCapContenido() {
     el.innerText = h.contenido;
   }
 }
+function _preguntasDeHerr(h) {
+  return h.preguntas && h.preguntas.length
+    ? h.preguntas
+    : [{ pregunta: h.pregunta || '¿Confirmás la lectura del módulo?', respuesta: h.respuesta || 'si', opciones: h.opciones || [] }];
+}
+function mostrarPreguntaActual() {
+  const h = capHerr; if(!h) return;
+  const preguntas = _preguntasDeHerr(h);
+  const pq = preguntas[capPreguntaIndex] || preguntas[0];
+  const total = preguntas.length;
+  document.getElementById('cap-preg').innerText = (total > 1 ? `Pregunta ${capPreguntaIndex + 1} de ${total}: ` : '') + (pq.pregunta || '¿Confirmás la lectura del módulo?');
+  document.getElementById('cap-inp').value = '';
+  document.getElementById('cap-err').style.display = 'none';
+  capOpcionSeleccionada = null;
+  renderCapOpciones({ opciones: pq.opciones || [] });
+}
 function renderCapOpciones(h) {
   const wrap = document.getElementById('cap-opciones');
   const inp = document.getElementById('cap-inp');
@@ -1012,16 +1027,23 @@ function seleccionarOpcionCap(i) {
 function verificarCapacitacion() {
   if(!capHerr) return;
   const h = capHerr;
-  const esMultiple = h.opciones && h.opciones.length >= 2;
+  const preguntas = _preguntasDeHerr(h);
+  const pq = preguntas[capPreguntaIndex] || preguntas[0];
+  const esMultiple = pq.opciones && pq.opciones.length >= 2;
   let correcto;
   if (esMultiple) {
-    correcto = capOpcionSeleccionada !== null && (h.opciones[capOpcionSeleccionada]||'').trim().toLowerCase() === h.respuesta;
+    correcto = capOpcionSeleccionada !== null && (pq.opciones[capOpcionSeleccionada]||'').trim().toLowerCase() === pq.respuesta;
   } else {
     const resp = document.getElementById('cap-inp').value.trim().toLowerCase();
-    correcto = resp === h.respuesta;
+    correcto = resp === pq.respuesta;
   }
   if(!correcto) { document.getElementById('cap-err').style.display = 'block'; return; }
   document.getElementById('cap-err').style.display = 'none';
+  capPreguntaIndex++;
+  if(capPreguntaIndex < preguntas.length) {
+    mostrarPreguntaActual();
+    return;
+  }
   showLoader();
   google.script.run
     .withSuccessHandler(res=>{ g.estado=res.estado; g.cartas=res.cartas; hideLoader(); volverABiblioteca(); render(); go('situacion'); })
