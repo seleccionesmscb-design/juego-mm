@@ -966,6 +966,17 @@ function extraerIdYoutube(url) {
   }
   return '';
 }
+function extraerIdDrive(url) {
+  // Formatos soportados:
+  // https://drive.google.com/file/d/FILE_ID/view?usp=sharing
+  // https://drive.google.com/open?id=FILE_ID
+  // https://drive.google.com/uc?id=FILE_ID
+  const matchFile = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+  if (matchFile) return matchFile[1];
+  const matchId = url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+  if (matchId) return matchId[1];
+  return '';
+}
 function embedVideo(url) {
   const esYoutube = url.indexOf('youtube.com') > -1 || url.indexOf('youtu.be') > -1;
   if (esYoutube) {
@@ -974,10 +985,27 @@ function embedVideo(url) {
     ifr.setAttribute('allowfullscreen', 'true');
     return ifr;
   }
+  const esDrive = url.indexOf('drive.google.com') > -1;
+  if (esDrive) {
+    const id = extraerIdDrive(url);
+    const ifr = document.createElement('iframe');
+    ifr.setAttribute('src', id
+      ? 'https://drive.google.com/file/d/' + id + '/preview'
+      : url);
+    ifr.setAttribute('allowfullscreen', 'true');
+    return ifr;
+  }
   const v = document.createElement('video');
   v.setAttribute('src', url);
   v.setAttribute('controls', 'true');
   return v;
+}
+function urlImagenDrive(url) {
+  if (url.indexOf('drive.google.com') === -1) return url;
+  const id = extraerIdDrive(url);
+  return id
+    ? 'https://drive.google.com/uc?export=view&id=' + id
+    : url;
 }
 function renderCapContenido() {
   const h = capHerr; if(!h) return;
@@ -987,7 +1015,7 @@ function renderCapContenido() {
     el.appendChild(embedVideo(h.videoUrl));
   } else if(capTab==='infografia' && h.infografiaUrl) {
     const img = document.createElement('img');
-    img.setAttribute('src', h.infografiaUrl);
+    img.setAttribute('src', urlImagenDrive(h.infografiaUrl));
     img.setAttribute('alt', 'Infografía');
     el.appendChild(img);
   } else {
