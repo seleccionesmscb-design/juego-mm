@@ -955,3 +955,16 @@ function llamarGemelo(contextoInicial, historial) {
     return { error: true, texto: 'Error de red al contactar Gemini: ' + e.message };
   }
 }
+
+// ── DIAGNÓSTICO: ejecutar desde el editor de Apps Script para ver modelos disponibles ──
+function listarModelosGemini() {
+  const apiKey = PropertiesService.getScriptProperties().getProperty('GEMINI_API_KEY');
+  const resp = UrlFetchApp.fetch(
+    'https://generativelanguage.googleapis.com/v1beta/models?key=' + apiKey,
+    { muteHttpExceptions: true }
+  );
+  const body = JSON.parse(resp.getContentText());
+  const nombres = (body.models || []).map(function(m){ return m.name; });
+  Logger.log('Modelos disponibles:\n' + nombres.join('\n'));
+  return nombres;
+}
