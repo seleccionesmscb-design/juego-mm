@@ -334,6 +334,32 @@ button{font:inherit}
 /* ── BOTÓN REGLAS FLOTANTE ── */
 #btn-reglas-float{position:fixed;bottom:22px;right:22px;z-index:4000;display:flex;align-items:center;gap:8px;background:var(--navy);color:var(--perg);border:2px solid var(--gold-br);border-radius:50px;padding:11px 18px;font-family:'Cinzel',serif;font-size:11px;font-weight:700;letter-spacing:1.5px;cursor:pointer;box-shadow:0 6px 22px rgba(50,18,4,.48);transition:.18s;animation:mmglow 3s infinite;}
 #btn-reglas-float:hover{background:var(--gold-br);border-color:var(--navy);transform:translateY(-2px);}
+
+/* ── GEMELO PEDAGÓGICO ── */
+.gemelo-wrap{display:none;margin-top:22px;border-top:2px solid var(--gold-br);padding-top:20px;}
+.gemelo-header{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.gemelo-avatar{width:36px;height:36px;border-radius:50%;background:var(--navy);display:flex;align-items:center;justify-content:center;font-size:18px;border:2px solid var(--gold-br);flex-shrink:0;}
+.gemelo-titulo{font-family:'Cinzel',serif;font-size:11px;font-weight:700;letter-spacing:2px;color:var(--navy);}
+.gemelo-subtit{font-size:11px;color:#7a5530;margin-top:2px;}
+.gemelo-turno-bar{display:flex;gap:5px;align-items:center;margin-bottom:12px;}
+.gemelo-turno-dot{width:10px;height:10px;border-radius:50%;background:#ddd;transition:.3s;}
+.gemelo-turno-dot.done{background:var(--gold-br);}
+.gemelo-turno-dot.active{background:var(--navy);}
+.gemelo-turno-lbl{font-size:10px;color:#888;margin-left:6px;font-family:'Cinzel',serif;letter-spacing:1px;}
+.gemelo-msgs{max-height:320px;overflow-y:auto;display:flex;flex-direction:column;gap:10px;margin-bottom:14px;padding-right:4px;}
+.gemelo-msg{padding:11px 14px;border-radius:10px;font-size:13px;line-height:1.55;max-width:92%;}
+.gemelo-msg.gem{background:var(--navy);color:var(--perg);align-self:flex-start;border-bottom-left-radius:3px;}
+.gemelo-msg.usr{background:var(--gold-br);color:#fff;align-self:flex-end;border-bottom-right-radius:3px;}
+.gemelo-msg.pensando{background:rgba(74,33,9,.08);color:#7a5530;font-style:italic;align-self:flex-start;}
+.gemelo-inp-row{display:flex;gap:8px;align-items:flex-end;}
+.gemelo-inp{flex:1;border:1.5px solid rgba(74,33,9,.25);border-radius:8px;padding:10px 12px;font-size:13px;font-family:inherit;resize:none;min-height:46px;max-height:100px;background:rgba(255,252,245,.8);color:var(--navy);transition:.18s;}
+.gemelo-inp:focus{outline:none;border-color:var(--gold-br);}
+.gemelo-inp:disabled{opacity:.5;background:#f5f0e8;}
+.gemelo-send{background:var(--navy);color:var(--perg);border:none;border-radius:8px;padding:11px 16px;font-family:'Cinzel',serif;font-size:11px;font-weight:700;letter-spacing:1px;cursor:pointer;white-space:nowrap;transition:.18s;}
+.gemelo-send:hover:not(:disabled){background:var(--gold-br);}
+.gemelo-send:disabled{opacity:.4;cursor:default;}
+.gemelo-completar{display:none;width:100%;margin-top:14px;background:var(--gold-br);color:#fff;border:none;border-radius:10px;padding:14px;font-family:'Cinzel',serif;font-size:12px;font-weight:700;letter-spacing:2px;cursor:pointer;transition:.18s;}
+.gemelo-completar:hover{background:var(--navy);}
   </style>
 </head>
 <body>
@@ -525,14 +551,39 @@ button{font:inherit}
         <p class="cap-p">Mirá, leé o revisá el contenido y respondé la pregunta para desbloquear la carta y sumarla a tu mano.</p>
         <div class="cap-tabs" id="cap-tabs" style="display:none"></div>
         <div class="cap-cont" id="cap-cont"></div>
-        <div class="cap-q">
+        <div class="cap-q" id="cap-q-section">
           <div class="cap-q-lbl">Cuestionario · respondé para desbloquear</div>
           <div class="cap-q-txt" id="cap-preg"></div>
           <div id="cap-opciones" style="display:none;margin-bottom:12px"></div>
           <input class="modal-inp" id="cap-inp" placeholder="Escribí tu respuesta…">
           <div id="cap-err" class="cap-err" style="display:none">Respuesta incorrecta. Revisá el contenido del módulo e intentá de nuevo.</div>
-          <button class="btn-primary" style="width:auto;padding:12px 24px" onclick="verificarCapacitacion()">VERIFICAR Y DESBLOQUEAR CARTA</button>
+          <button class="btn-primary" style="width:auto;padding:12px 24px" id="cap-verificar-btn" onclick="verificarCapacitacion()">VERIFICAR Y DESBLOQUEAR CARTA</button>
           <button class="link-btn" onclick="volverABiblioteca()" style="margin-left:10px">← Volver a los módulos</button>
+        </div>
+
+        <!-- GEMELO PEDAGÓGICO (aparece después de que el jugador responde) -->
+        <div class="gemelo-wrap" id="gemelo-wrap">
+          <div class="gemelo-header">
+            <div class="gemelo-avatar">🎓</div>
+            <div>
+              <div class="gemelo-titulo">GEMELO PEDAGÓGICO</div>
+              <div class="gemelo-subtit">Tu tutor de gestión · reflejo de tu práctica cotidiana</div>
+            </div>
+          </div>
+          <div class="gemelo-turno-bar" id="gemelo-turno-bar">
+            <div class="gemelo-turno-dot" id="gdot-1"></div>
+            <div class="gemelo-turno-dot" id="gdot-2"></div>
+            <div class="gemelo-turno-dot" id="gdot-3"></div>
+            <div class="gemelo-turno-dot" id="gdot-4"></div>
+            <div class="gemelo-turno-dot" id="gdot-5"></div>
+            <span class="gemelo-turno-lbl" id="gemelo-turno-lbl">Turno 1 de 5</span>
+          </div>
+          <div class="gemelo-msgs" id="gemelo-msgs"></div>
+          <div class="gemelo-inp-row" id="gemelo-inp-row">
+            <textarea class="gemelo-inp" id="gemelo-inp" rows="2" placeholder="Escribí tu respuesta al gemelo…" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();enviarMensajeGemelo();}"></textarea>
+            <button class="gemelo-send" id="gemelo-send" onclick="enviarMensajeGemelo()">Enviar</button>
+          </div>
+          <button class="gemelo-completar" id="gemelo-completar" onclick="completarConGemelo()">✓ DESBLOQUEAR CARTA Y CONTINUAR</button>
         </div>
       </div>
       <div>
@@ -908,6 +959,13 @@ function renderBibList() {
 }
 function volverABiblioteca() {
   capHerr = null;
+  gemeloHistorial = [];
+  gemeloTurno = 0;
+  gemeloContextoInicial = '';
+  const capQ = document.getElementById('cap-q-section');
+  if(capQ) capQ.style.display = '';
+  const gemeloWrap = document.getElementById('gemelo-wrap');
+  if(gemeloWrap) gemeloWrap.style.display = 'none';
   document.getElementById('cap-card-list').style.display = 'block';
   document.getElementById('cap-card-detail').style.display = 'none';
 }
@@ -1009,23 +1067,238 @@ function seleccionarOpcionCap(i) {
   capOpcionSeleccionada = i;
   renderCapOpciones(capHerr);
 }
+function herramientaTieneGemelo(h) {
+  if(!h) return false;
+  const esMultiple = h.opciones && h.opciones.length >= 2;
+  if(esMultiple) return false; // opción múltiple: no aplica devolución libre
+  const cont = (h.contenido||'').trim();
+  const resp = (h.respuesta||'').trim();
+  const preg = (h.pregunta||'').trim();
+  if(cont.length < 20 || resp.length < 3 || preg.length < 5) return false;
+  // excluir placeholders conocidos
+  const placeholders = ['bbzzbzb','xxx','test','pendiente','completar'];
+  if(placeholders.some(function(p){ return cont.toLowerCase() === p; })) return false;
+  return true;
+}
+
 function verificarCapacitacion() {
   if(!capHerr) return;
   const h = capHerr;
   const esMultiple = h.opciones && h.opciones.length >= 2;
-  let correcto;
-  if (esMultiple) {
-    correcto = capOpcionSeleccionada !== null && (h.opciones[capOpcionSeleccionada]||'').trim().toLowerCase() === h.respuesta;
-  } else {
-    const resp = document.getElementById('cap-inp').value.trim().toLowerCase();
-    correcto = resp === h.respuesta;
+
+  if(esMultiple) {
+    // Opción múltiple: chequeo estricto, sin gemelo
+    const correcto = capOpcionSeleccionada !== null &&
+      (h.opciones[capOpcionSeleccionada]||'').trim().toLowerCase() === h.respuesta;
+    if(!correcto) { document.getElementById('cap-err').style.display='block'; return; }
+    document.getElementById('cap-err').style.display='none';
+    showLoader();
+    google.script.run
+      .withSuccessHandler(function(res){ g.estado=res.estado; g.cartas=res.cartas; hideLoader(); volverABiblioteca(); render(); go('situacion'); })
+      .withFailureHandler(function(e){ hideLoader(); alert(e.message); })
+      .completarCapacitacion(g.estado, h.id, h.insigniaID);
+    return;
   }
-  if(!correcto) { document.getElementById('cap-err').style.display = 'block'; return; }
-  document.getElementById('cap-err').style.display = 'none';
+
+  const respJugador = document.getElementById('cap-inp').value.trim();
+  if(!respJugador) { document.getElementById('cap-err').style.display='block'; return; }
+  document.getElementById('cap-err').style.display='none';
+
+  if(herramientaTieneGemelo(h)) {
+    // Texto libre con contenido completo: activar gemelo pedagógico
+    iniciarGemelo(respJugador);
+  } else {
+    // Texto libre sin contenido suficiente para gemelo: chequeo simple
+    const correcto = respJugador.toLowerCase() === h.respuesta;
+    if(!correcto) { document.getElementById('cap-err').style.display='block'; return; }
+    showLoader();
+    google.script.run
+      .withSuccessHandler(function(res){ g.estado=res.estado; g.cartas=res.cartas; hideLoader(); volverABiblioteca(); render(); go('situacion'); })
+      .withFailureHandler(function(e){ hideLoader(); alert(e.message); })
+      .completarCapacitacion(g.estado, h.id, h.insigniaID);
+  }
+}
+
+/* ── GEMELO PEDAGÓGICO ── */
+let gemeloHistorial = [];  // [{role:'user'|'model', text:'...'}]
+let gemeloTurno = 0;       // 1-5
+let gemeloContextoInicial = '';
+
+function gemeloArmarContexto(h, respJugador) {
+  const sit = g.situacion || {};
+  const cartasTextos = (g.cartas || []).map(function(c, i){
+    return (i+1) + '. ' + (c.texto||'') + ' [' + (c.tipo||'') + ']';
+  }).join('\n');
+
+  return [
+    'SITUACIÓN: ' + (sit.titulo || '(no disponible)'),
+    'DESCRIPCIÓN: ' + (sit.desc || ''),
+    'COMPETENCIA QUE FORTALECE: ' + (h.competencia || ''),
+    '',
+    'OPCIONES DE ACCIÓN EN LA SITUACIÓN:',
+    cartasTextos || '(no disponibles)',
+    '',
+    'CÁPSULA (Contenido a estudiar):',
+    h.contenido || '',
+    '',
+    'RESPUESTA CORRECTA DE REFERENCIA (uso interno — no mostrar al jugador ni citar textual):',
+    h.respuesta || '',
+    '',
+    'PREGUNTA DE COMPROBACIÓN: ' + (h.pregunta || ''),
+    'RESPUESTA DEL JUGADOR: ' + respJugador
+  ].join('\n');
+}
+
+function gemeloAgregarMensaje(role, texto) {
+  const msgs = document.getElementById('gemelo-msgs');
+  const div = document.createElement('div');
+  div.className = 'gemelo-msg ' + (role === 'model' ? 'gem' : 'usr');
+  div.innerText = texto;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function gemeloActualizarTurnos() {
+  // gemeloTurno = último turno del gemelo completado (1, 3 ó 5)
+  // Los turnos del jugador (2 y 4) son intermedios; los del gemelo son los visibles
+  const turnosHechos = gemeloTurno; // turnos completados hasta ahora
+  for(let i=1;i<=5;i++){
+    const dot = document.getElementById('gdot-'+i);
+    if(!dot) continue;
+    dot.className = 'gemelo-turno-dot' + (i <= turnosHechos ? ' done' : (i === turnosHechos + 1 ? ' active' : ''));
+  }
+  const lbl = document.getElementById('gemelo-turno-lbl');
+  if(lbl) lbl.innerText = gemeloTurno >= 5 ? 'Conversación finalizada' : 'Turno ' + gemeloTurno + ' de 5';
+}
+
+function gemeloSetCargando(cargando) {
+  const send = document.getElementById('gemelo-send');
+  const inp = document.getElementById('gemelo-inp');
+  if(send) send.disabled = cargando;
+  if(inp) inp.disabled = cargando;
+}
+
+function iniciarGemelo(respJugador) {
+  const h = capHerr;
+  gemeloHistorial = [];
+  gemeloTurno = 1;
+  gemeloContextoInicial = gemeloArmarContexto(h, respJugador);
+
+  // Ocultar sección de pregunta, mostrar gemelo
+  document.getElementById('cap-q-section').style.display = 'none';
+  const wrap = document.getElementById('gemelo-wrap');
+  wrap.style.display = 'block';
+  document.getElementById('gemelo-msgs').innerHTML = '';
+  document.getElementById('gemelo-completar').style.display = 'none';
+  const inpRow = document.getElementById('gemelo-inp-row');
+  if(inpRow) inpRow.style.display = 'none'; // esperar la primera respuesta del gemelo
+  gemeloActualizarTurnos();
+
+  // Añadir indicador de carga
+  const msgs = document.getElementById('gemelo-msgs');
+  const pensando = document.createElement('div');
+  pensando.className = 'gemelo-msg pensando';
+  pensando.id = 'gemelo-pensando';
+  pensando.innerText = 'El gemelo está leyendo tu respuesta…';
+  msgs.appendChild(pensando);
+  msgs.scrollTop = msgs.scrollHeight;
+
+  google.script.run
+    .withSuccessHandler(function(res){
+      const p = document.getElementById('gemelo-pensando');
+      if(p) p.remove();
+      if(res.error) {
+        gemeloAgregarMensaje('model', '⚠️ ' + res.texto);
+        document.getElementById('gemelo-completar').style.display = 'block';
+        return;
+      }
+      const textoGemelo = res.texto || '';
+      gemeloAgregarMensaje('model', textoGemelo);
+      gemeloHistorial.push({ role: 'model', text: textoGemelo });
+      gemeloTurno = 1; // gemelo respondió su turno 1; siguiente es el jugador (turno 2)
+      gemeloActualizarTurnos();
+      // Habilitar input para respuesta del jugador (turno 2)
+      const row = document.getElementById('gemelo-inp-row');
+      if(row) row.style.display = 'flex';
+      const inp = document.getElementById('gemelo-inp');
+      if(inp) { inp.value = ''; inp.disabled = false; inp.focus(); }
+      gemeloSetCargando(false);
+    })
+    .withFailureHandler(function(err){
+      const p = document.getElementById('gemelo-pensando');
+      if(p) p.remove();
+      gemeloAgregarMensaje('model', '⚠️ Error al conectar con el gemelo. Podés continuar con la carta.');
+      document.getElementById('gemelo-completar').style.display = 'block';
+    })
+    .llamarGemelo(gemeloContextoInicial, []);
+}
+
+function enviarMensajeGemelo() {
+  const inp = document.getElementById('gemelo-inp');
+  const texto = inp ? inp.value.trim() : '';
+  // El jugador solo puede responder cuando gemeloTurno es 1 (→ turno 2) o 3 (→ turno 4)
+  if(!texto || (gemeloTurno !== 1 && gemeloTurno !== 3)) return;
+
+  gemeloAgregarMensaje('user', texto);
+  gemeloHistorial.push({ role: 'user', text: texto });
+  inp.value = '';
+  gemeloSetCargando(true);
+
+  // El próximo turno del gemelo es gemeloTurno + 2 (1→3, 3→5)
+  const turnoGemelo = gemeloTurno + 2;
+
+  const msgs = document.getElementById('gemelo-msgs');
+  const pensando = document.createElement('div');
+  pensando.className = 'gemelo-msg pensando';
+  pensando.id = 'gemelo-pensando';
+  pensando.innerText = 'El gemelo está pensando…';
+  msgs.appendChild(pensando);
+  msgs.scrollTop = msgs.scrollHeight;
+
+  google.script.run
+    .withSuccessHandler(function(res){
+      const p = document.getElementById('gemelo-pensando');
+      if(p) p.remove();
+      if(res.error) {
+        gemeloAgregarMensaje('model', '⚠️ ' + res.texto);
+        document.getElementById('gemelo-completar').style.display = 'block';
+        gemeloSetCargando(false);
+        return;
+      }
+      const textoGemelo = res.texto || '';
+      gemeloAgregarMensaje('model', textoGemelo);
+      gemeloHistorial.push({ role: 'model', text: textoGemelo });
+      gemeloTurno = turnoGemelo; // 3 ó 5
+      gemeloActualizarTurnos();
+
+      if(gemeloTurno >= 5) {
+        // Turno 5 = cierre del gemelo: conversación terminada
+        const row = document.getElementById('gemelo-inp-row');
+        if(row) row.style.display = 'none';
+        document.getElementById('gemelo-completar').style.display = 'block';
+      } else {
+        // Turno 3: el jugador puede enviar su compromiso (turno 4)
+        gemeloSetCargando(false);
+        if(inp) inp.focus();
+      }
+    })
+    .withFailureHandler(function(err){
+      const p = document.getElementById('gemelo-pensando');
+      if(p) p.remove();
+      gemeloAgregarMensaje('model', '⚠️ Error de conexión. Podés continuar con la carta.');
+      document.getElementById('gemelo-completar').style.display = 'block';
+      gemeloSetCargando(false);
+    })
+    .llamarGemelo(gemeloContextoInicial, gemeloHistorial);
+}
+
+function completarConGemelo() {
+  if(!capHerr) return;
+  const h = capHerr;
   showLoader();
   google.script.run
-    .withSuccessHandler(res=>{ g.estado=res.estado; g.cartas=res.cartas; hideLoader(); volverABiblioteca(); render(); go('situacion'); })
-    .withFailureHandler(e=>{hideLoader();alert(e.message);})
+    .withSuccessHandler(function(res){ g.estado=res.estado; g.cartas=res.cartas; hideLoader(); volverABiblioteca(); render(); go('situacion'); })
+    .withFailureHandler(function(e){ hideLoader(); alert(e.message); })
     .completarCapacitacion(g.estado, h.id, h.insigniaID);
 }
 
